@@ -17,10 +17,11 @@ const ArticleTopicCard = (props) => (
             </p>
             <Button
             buttonText="Explore"
-            width = "132px"
-            height = "36px"
-            padding = "7px 28px 7px 28px"
-            fontSize = "15px"
+            width = "100px"
+            height = "24px"
+            padding = "5px 22px 5px 22px"
+            fontSize = "10px"
+            borderRadius = "5px"
             />
         </div>
     </div>

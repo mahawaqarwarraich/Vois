@@ -8,7 +8,8 @@ const Button = (props) => (
                 width: props.width,
                 height: props.height,
                 padding: props.padding,
-                fontSize: props.fontSize
+                fontSize: props.fontSize,
+                borderRadius: props.borderRadius,
             }}>
         {props.buttonText}
     </button>

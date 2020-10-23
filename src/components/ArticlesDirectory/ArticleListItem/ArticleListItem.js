@@ -28,6 +28,7 @@ const ArticleListItem = (props) => (
                     height = "36px"
                     padding = "7px 28px 7px 28px"
                     fontSize = "15px"
+                    borderRadius = "5px"
                 />
             </div>
 
