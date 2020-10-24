@@ -12,7 +12,6 @@ import TextEditor from "./containers/TextEditor";
 // import Articles from "./containers/ArticlesDirectory/Articles/Articles";
 // import ArticlesPage from "./containers/Pages/ArticlesPage/ArticlesPage";
 
-
 import './App.css';
 
 function App() {
@@ -40,8 +39,7 @@ function App() {
             {/*<ArticleTopicsPage />*/}
             {/*<Articles />*/}
             {/*<ArticlesPage />*/}
-
-            <TextEditor/>
+            <TextEditor/>g
         </div>
     );
 }
