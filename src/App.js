@@ -39,7 +39,7 @@ function App() {
             {/*<ArticleTopicsPage />*/}
             {/*<Articles />*/}
             {/*<ArticlesPage />*/}
-            <TextEditor/>g
+            <TextEditor/>
         </div>
     );
 }
