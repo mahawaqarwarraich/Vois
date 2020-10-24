@@ -1,23 +1,23 @@
 import React from 'react';
-import './ArticleTopicsPage.scss';
+import './ArticlesPage.scss';
 
 import ArticleMainHeader from "../../../components/ArticlesDirectory/ArticleMainHeader/ArticleMainHeader";
 import SearchBar from "../../../components/ArticlesDirectory/UIElements/SearchBar/SearchBar";
-import ArticleTopics from "../../ArticlesDirectory/ArticleTopics/ArticleTopics";
+import Articles from "../../ArticlesDirectory/Articles/Articles";
 import Button from "../../../components/ArticlesDirectory/UIElements/Button/Button";
 
-const ArticleTopicsPage = (props) => {
+const ArticlesPage = (props) => {
     return (
         <React.Fragment>
             <ArticleMainHeader
-                Button1 = "All Topics"
-                Button2 = "Popular"
-                Button3 = "Trending"
+                Button1 = "Published"
+                Button2 = "Saved"
+                Button3 = "Drafts"
             />
             <SearchBar
-                placeHolder = "Ex. Information Technlogy"
+                placeHolder="Ex. 10 business that grow exponentially"
             />
-            <ArticleTopics />
+            <Articles />
             <div className="ArticleTopicsPage__Button">
                 <Button
                     buttonText="Show More"
@@ -33,4 +33,4 @@ const ArticleTopicsPage = (props) => {
     );
 }
 
-export default ArticleTopicsPage;
+export default ArticlesPage;
