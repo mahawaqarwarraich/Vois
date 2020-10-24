@@ -9,14 +9,14 @@ import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition'
 // import ArticleTopics from "./containers/ArticlesDirectory/ArticleTopics/ArticleTopics";
 // import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
 import TextEditor from "./containers/TextEditor";
+// import Articles from "./containers/ArticlesDirectory/Articles/Articles";
+// import ArticlesPage from "./containers/Pages/ArticlesPage/ArticlesPage";
 
 import './App.css';
 
 function App() {
 
     const [boldState, setBoldState] = useState(false);
-
-
 
 
     useEffect(() => {
@@ -37,8 +37,9 @@ function App() {
             {/*<SearchBar />*/}
             {/*<ArticleTopics />*/}
             {/*<ArticleTopicsPage />*/}
+            {/*<Articles />*/}
+            {/*<ArticlesPage />*/}
             <TextEditor/>
-
         </div>
     );
 }

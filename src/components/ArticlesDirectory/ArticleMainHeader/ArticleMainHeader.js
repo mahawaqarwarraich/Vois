@@ -13,7 +13,7 @@ const ArticleMainHeader = (props) => (
                 <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button">
                     <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button-Text">
                         <p>
-                            All Topics
+                            {props.Button1}
                         </p>
                     </div>
                     <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button-Bar">
@@ -23,7 +23,7 @@ const ArticleMainHeader = (props) => (
                 <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button">
                     <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button-Text">
                         <p>
-                            Popular
+                            {props.Button2}
                         </p>
                     </div>
                     {/*<div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button-Bar">*/}
@@ -33,7 +33,7 @@ const ArticleMainHeader = (props) => (
                 <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button">
                     <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button-Text">
                         <p>
-                           Trending
+                            {props.Button3}
                         </p>
                     </div>
                     {/*<div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button-Bar">*/}

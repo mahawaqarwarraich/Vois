@@ -24,10 +24,10 @@ const ArticleListItem = (props) => (
 
                 <Button
                     buttonText="Explore"
-                    width = "132px"
-                    height = "36px"
-                    padding = "7px 28px 7px 28px"
-                    fontSize = "15px"
+                    width = "114px"
+                    height = "31px"
+                    padding = "6px 24px 6px 24px"
+                    fontSize = "13px"
                     borderRadius = "5px"
                 />
             </div>
