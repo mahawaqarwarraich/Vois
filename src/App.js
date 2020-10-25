@@ -6,7 +6,7 @@ import React from 'react';
 // import ArticleMainHeader from "./components/ArticlesDirectory/ArticleMainHeader/ArticleMainHeader";
 // import SearchBar from "./components/ArticlesDirectory/UIElements/SearchBar/SearchBar";
 // import ArticleTopics from "./containers/ArticlesDirectory/ArticleTopics/ArticleTopics";
-// import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
+ import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
 // import Articles from "./containers/ArticlesDirectory/Articles/Articles";
 import ArticlesPage from "./containers/Pages/ArticlesPage/ArticlesPage";
 
