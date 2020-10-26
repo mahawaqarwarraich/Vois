@@ -9,7 +9,6 @@ function DraftEditor(props) {
         props.resetTranscript()
 
 
-
     }, [props.transcript])
 
     return (
@@ -20,9 +19,11 @@ function DraftEditor(props) {
                 wrapperClassName="wrapperClassName"
                 editorClassName="editorClassName"
                 onEditorStateChange={props.onEditorStateChange}
+                customStyleFn={props.customStyleFn}
             />
             <h1>{props.irs}</h1>
-            <button onClick={() => props.setEditorContentProgramatically("This editor is super cool !")}>click me</button>
+            <button onClick={() => props.setEditorContentProgramatically("This editor is super cool !\n")}>click me
+            </button>
         </>
     );
 
