@@ -1,12 +1,16 @@
 import React, {useEffect, useState} from "react";
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import createStyles from "draft-js-custom-styles";
 import {useSpeechRecognition} from "react-speech-recognition";
 
 import DraftEditor from "./DraftEditor";
 
 function TextEditor(props) {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+    const customStylesToManage = ["font-size", "color", "font-family"];
+    const {styles, customStyleFn, exporter} = createStyles(customStylesToManage, "CUSTOM_")
 
     const commands = [
         {
@@ -61,6 +65,26 @@ function TextEditor(props) {
             command: 'blockquote',
             callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'blockquote'))
         },
+        {
+            command: 'ordered list',
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'ordered-list-item'))
+        },
+        {
+            command: 'unordered list',
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'unordered-list-item'))
+        },
+        {
+            command: 'new line',
+            callback: () => setEditorState(editorState => RichUtils.insertSoftNewline(editorState)),
+        },
+        {
+            command: 'set font',
+            callback: () => setEditorState(editorState => styles.fontSize.toggle(editorState, "24px")),
+        },
+        {
+            command: 'set font family',
+            callback: () => setEditorState(editorState => styles.fontFamily.toggle(editorState, "Times New Roman")),
+        },
 
     ];
 
@@ -70,6 +94,7 @@ function TextEditor(props) {
     const onEditorStateChange = editorState => {
         setEditorState(editorState);
         console.log(editorState.getCurrentContent());
+
     }
 
     const insertText = (text, editorState) => {
@@ -84,7 +109,7 @@ function TextEditor(props) {
     }
 
     const setEditorContentProgramatically = (text) => {
-        if (text !== 'bold')
+        if (text !== 'new line')
             setEditorState(currEditorState => {
                 return insertText(text, currEditorState);
             })
@@ -97,7 +122,8 @@ function TextEditor(props) {
         <React.Fragment>
             <DraftEditor interimTranscript={interimTranscript} transcript={finalTranscript}
                          resetTranscript={resetTranscript} onEditorStateChange={onEditorStateChange}
-                         setEditorContentProgramatically={setEditorContentProgramatically} editorState={editorState}/>
+                         setEditorContentProgramatically={setEditorContentProgramatically} editorState={editorState}
+                         customStyleFn={customStyleFn}/>
             {interimTranscript}
             <h1>{finalTranscript}</h1>
             <p>Available Commands:</p>

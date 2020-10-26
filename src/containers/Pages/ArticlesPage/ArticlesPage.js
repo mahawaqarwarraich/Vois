@@ -5,6 +5,7 @@ import ArticleMainHeader from "../../../components/ArticlesDirectory/ArticleMain
 import SearchBar from "../../../components/ArticlesDirectory/UIElements/SearchBar/SearchBar";
 import Articles from "../../ArticlesDirectory/Articles/Articles";
 import Button from "../../../components/ArticlesDirectory/UIElements/Button/Button";
+import {Route} from "react-router-dom";
 
 const ArticlesPage = (props) => {
     return (
@@ -17,7 +18,7 @@ const ArticlesPage = (props) => {
             <SearchBar
                 placeHolder="Ex. 10 business that grow exponentially"
             />
-            <Articles />
+            <Articles {...props} />
             <div className="ArticleTopicsPage__Button">
                 <Button
                     buttonText="Show More"

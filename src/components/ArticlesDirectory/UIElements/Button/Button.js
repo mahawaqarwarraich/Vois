@@ -10,7 +10,8 @@ const Button = (props) => (
                 padding: props.padding,
                 fontSize: props.fontSize,
                 borderRadius: props.borderRadius,
-            }}>
+            }}
+            onClick={props.onClick}>
         {props.buttonText}
     </button>
 );
