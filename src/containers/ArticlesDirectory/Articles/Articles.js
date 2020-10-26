@@ -8,20 +8,23 @@ const Articles = (props) => {
     const [allArticles,manipulateArticles] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:8000/get-all-articles')
+        const topic = props.match.params.topicName;
+        axios.get('http://localhost:8000/get-articles-by-topic/' + topic)
             .then(result => {
-                //console.log(articles.data.articles);
                 const articles = result.data.articles;
                 const tempArticles = [];
 
                 for (const article in articles) {
-                    console.log(articles[article]);
                     tempArticles.push(articles[article]);
                 }
                 manipulateArticles(tempArticles);
             })
     }, [])
 
+    const showBlogHandler = id => {
+        const url = props.match.url + "/" + id;
+        props.history.push(url);
+    }
     return (
         <div className="AllArticles">
 
@@ -32,6 +35,7 @@ const Articles = (props) => {
                     body = {article.Body}
                     cover = {article.PictureSecureId}
                     date = {article.PostedOn}
+                    showBlogHandler = {() => showBlogHandler(article._id)}
                 />
             ))}
         </div>

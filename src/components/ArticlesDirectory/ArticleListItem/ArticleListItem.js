@@ -30,6 +30,7 @@ const ArticleListItem = (props) => (
                     padding = "6px 24px 6px 24px"
                     fontSize = "13px"
                     borderRadius = "5px"
+                    onClick = {props.showBlogHandler}
                 />
             </div>
         </div>
