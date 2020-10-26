@@ -6,20 +6,21 @@ import Button from "../UIElements/Button/Button";
 
 const ArticleListItem = (props) => (
     <div className="ArticleListItem">
-        <div className="ArticleListItem__Img">
+        <div className="ArticleListItem__Img" style={{backgroundImage: `url(${props.cover})`}}>
 
         </div>
         <div className="ArticleListItem__Content">
             <h1 className="ArticleListItem__Content--Heading">
-                10 Business Tricks Every Business Man Should Know
+                {props.title}
             </h1>
             <p className="ArticleListItem__Content--Paragraph">
-                Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage ...
+                {props.body.substr(0,180) + "..."}
             </p>
 
             <div className="ArticleListItem__Content--DateAndButtonDiv">
                 <p className="ArticleListItem__Content--DateAndButtonDiv-PublishedDate">
-                    Oct 18 - 3:24 PM
+                    {/*Oct 18 - 3:24 PM*/}
+                    {props.date}
                 </p>
 
                 <Button
@@ -29,10 +30,9 @@ const ArticleListItem = (props) => (
                     padding = "6px 24px 6px 24px"
                     fontSize = "13px"
                     borderRadius = "5px"
+                    onClick = {props.showBlogHandler}
                 />
             </div>
-
-
         </div>
     </div>
 );

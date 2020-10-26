@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
+import { Route } from 'react-router-dom';
 
 // import HomePage from "./containers/Pages/HomePage";
 // import ArticleTopicCard from "./components/ArticlesDirectory/ArticleTopicCard/ArticleTopicCard";
@@ -11,11 +12,14 @@ import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopic
 import TextEditor from "./containers/TextEditor";
 // import Articles from "./containers/ArticlesDirectory/Articles/Articles";
 import BlogManager from "./containers/Blog/BlogManager";
+// import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
+import Articles from "./containers/ArticlesDirectory/Articles/Articles";
 import ArticlesPage from "./containers/Pages/ArticlesPage/ArticlesPage";
+
 
 import './App.css';
 
-function App() {
+function App(props) {
 
     useEffect(() => {
         SpeechRecognition.startListening({continuous: true});
@@ -27,6 +31,7 @@ function App() {
     }
 
     return (
+        <>
         <div className="App">
             {/*<HomePage />*/}
             {/*<ArticleTopicCard />*/}
@@ -38,8 +43,11 @@ function App() {
             {/*<Articles />*/}
             {/*<ArticlesPage />*/}
             {/*<TextEditor/>*/}
-            <BlogManager />
         </div>
+        <Route path="/blog" exact render={props => <BlogManager {...props} />} />
+        <Route path="/article-topics" exact render={props => <ArticleTopicsPage {...props} />} />
+        <Route path="/article-topics/:topicName" exact render={props => <ArticlesPage {...props}/>} />
+        </>
     );
 }
 
