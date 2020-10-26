@@ -17,7 +17,7 @@ const ArticleTopicsPage = (props) => {
             <SearchBar
                 placeHolder = "Ex. Information Technlogy"
             />
-            <ArticleTopics />
+            <ArticleTopics {...props}/>
             <div className="ArticleTopicsPage__Button">
                 <Button
                     buttonText="Show More"

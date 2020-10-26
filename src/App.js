@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
+import { Route } from 'react-router-dom';
 
 // import HomePage from "./containers/Pages/HomePage";
 // import ArticleTopicCard from "./components/ArticlesDirectory/ArticleTopicCard/ArticleTopicCard";
@@ -7,14 +8,15 @@ import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition'
 // import ArticleMainHeader from "./components/ArticlesDirectory/ArticleMainHeader/ArticleMainHeader";
 // import SearchBar from "./components/ArticlesDirectory/UIElements/SearchBar/SearchBar";
 // import ArticleTopics from "./containers/ArticlesDirectory/ArticleTopics/ArticleTopics";
+ import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
 // import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
 import TextEditor from "./containers/TextEditor";
-// import Articles from "./containers/ArticlesDirectory/Articles/Articles";
-// import ArticlesPage from "./containers/Pages/ArticlesPage/ArticlesPage";
+import Articles from "./containers/ArticlesDirectory/Articles/Articles";
+import ArticlesPage from "./containers/Pages/ArticlesPage/ArticlesPage";
 
 import './App.css';
 
-function App() {
+function App(props) {
 
     const [boldState, setBoldState] = useState(false);
 
@@ -29,6 +31,7 @@ function App() {
     }
 
     return (
+        <>
         <div className="App">
             {/*<HomePage />*/}
             {/*<ArticleTopicCard />*/}
@@ -39,8 +42,11 @@ function App() {
             {/*<ArticleTopicsPage />*/}
             {/*<Articles />*/}
             {/*<ArticlesPage />*/}
-            <TextEditor/>g
+            {/*<TextEditor/>*/}
         </div>
+        <Route path="/article-topics" exact render={props => <ArticleTopicsPage {...props} />} />
+        <Route path="/article-topics/:topicName" exact render={props => <ArticlesPage {...props}/>} />
+        </>
     );
 }
 
