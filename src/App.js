@@ -44,7 +44,8 @@ function App(props) {
             {/*<ArticlesPage />*/}
             {/*<TextEditor/>*/}
         </div>
-        <Route path="/blog" exact render={props => <BlogManager {...props} />} />
+        <Route path="/text-editor" exact render={props => <TextEditor {...props} />} />
+        <Route path="/article/:id" exact render={props => <BlogManager {...props} />} />
         <Route path="/article-topics" exact render={props => <ArticleTopicsPage {...props} />} />
         <Route path="/article-topics/:topicName" exact render={props => <ArticlesPage {...props}/>} />
         </>

@@ -2,12 +2,31 @@ import React, { useEffect, useState } from 'react';
 import './ArticleTopics.scss';
 import axios from 'axios';
 
+import {useSpeechRecognition} from "react-speech-recognition";
 import ArticleTopicCard from "../../../components/ArticlesDirectory/ArticleTopicCard/ArticleTopicCard";
 
 
 const ArticleTopics = (props) => {
 
     const [articleTopics,manipulateArticleTopics] = useState([]);
+
+
+    const commands = [
+        {
+            command: 'open *',
+            callback: (articleTopic) => showArticlesByTopicHandler(articleTopic),
+        },
+        {
+            command: 'scroll down',
+            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset+500)
+        },
+        {
+            command: 'scroll up',
+            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset-500)
+        },
+    ];
+
+    const { Transcript } = useSpeechRecognition({commands});
 
     useEffect(()=> {
         axios.get('http://localhost:8000/get-topics')
@@ -22,7 +41,14 @@ const ArticleTopics = (props) => {
             })
     },[]);
 
+
+
     const showArticlesByTopicHandler = topicName => {
+        articleTopics.forEach(articleTopic => {
+            if (articleTopic.TopicName.toLowerCase() == topicName.toLowerCase()) {
+                topicName = articleTopic.TopicName;
+            }
+        })
         const url = props.match.url + "/" + topicName;
         props.history.push(url);
     }
