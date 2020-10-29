@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import {EditorState, Modifier, RichUtils} from 'draft-js';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import createStyles from "draft-js-custom-styles";
 import {useSpeechRecognition} from "react-speech-recognition";
+import {convertToRaw} from 'draft-js';
+import axios from 'axios';
 
 import DraftEditor from "./DraftEditor";
 
@@ -14,88 +16,150 @@ function TextEditor(props) {
 
     const commands = [
         {
+            command: 'go back',
+            callback: () => props.history.goBack(),
+            description: 'Go back to the previous page',
+        },
+        {
+            command: 'go to home page',
+            callback: () => props.history.push('/'),
+            description: 'Goes to the home page',
+        },
+        {
+            command: 'set article title *',
+            callback: title => setTitle(title),
+            description: 'Sets Title of the article'
+        },
+        {
+            command: 'publish article',
+            callback: () => publishArticle(),
+            description: 'Publishes the article and navigates to the published article page',
+        },
+        {
             command: 'bold',
             callback: () => setEditorState(editorState => RichUtils.toggleInlineStyle(editorState, 'BOLD')),
+            description: 'Toggles Bold style to the text',
         },
         {
             command: 'italics',
             callback: () => setEditorState(editorState => RichUtils.toggleInlineStyle(editorState, 'ITALIC')),
+            description: 'Toggles Italics style to the text',
         },
         {
             command: 'underline',
             callback: () => setEditorState(editorState => RichUtils.toggleInlineStyle(editorState, 'UNDERLINE')),
+            description: 'Toggles Underline style to the text',
         },
         {
             command: 'strikethrough',
             callback: () => setEditorState(editorState => RichUtils.toggleInlineStyle(editorState, 'STRIKETHROUGH')),
+            description: 'Toggles Strikethrough style to the text',
         },
         {
             command: 'code',
             callback: () => setEditorState(editorState => RichUtils.toggleInlineStyle(editorState, 'CODE')),
+            description: 'Toggles code style to the text',
         },
         {
             command: 'heading level 1',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-one'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-one')),
+            description: 'Toggles heading 1 block style',
         },
         {
             command: 'heading level 2',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-two'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-two')),
+            description: 'Toggles heading 2 block style',
         },
         {
             command: 'heading level 3',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-three'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-three')),
+            description: 'Toggles heading 3 block style',
         },
         {
             command: 'heading level 4',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-four'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-four')),
+            description: 'Toggles heading 4 block style',
         },
         {
             command: 'heading level 5',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-five'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-five')),
+            description: 'Toggles heading 5 block style',
         },
         {
             command: 'heading level 6',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-six'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'header-six')),
+            description: 'Toggles heading 6 block style',
         },
         {
             command: 'code block',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'code-block'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'code-block')),
+            description: 'Toggles code block style',
         },
         {
             command: 'blockquote',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'blockquote'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'blockquote')),
+            description: 'Toggles blockquote block style',
         },
         {
             command: 'ordered list',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'ordered-list-item'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'ordered-list-item')),
+            description: 'inserts an Ordered-List-Item',
         },
         {
             command: 'unordered list',
-            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'unordered-list-item'))
+            callback: () => setEditorState(editorState => RichUtils.toggleBlockType(editorState, 'unordered-list-item')),
+            description: 'inserts an Unordered-List-Item',
         },
         {
             command: 'new line',
             callback: () => setEditorState(editorState => RichUtils.insertSoftNewline(editorState)),
+            description: 'Inserts a New Line'
         },
         {
             command: 'set font',
             callback: () => setEditorState(editorState => styles.fontSize.toggle(editorState, "24px")),
+            description: 'Sets Font-Size to 24px'
         },
         {
             command: 'set font family',
             callback: () => setEditorState(editorState => styles.fontFamily.toggle(editorState, "Times New Roman")),
+            description: 'Sets Font-Family to Times New Roman'
         },
 
     ];
 
-    const {resetTranscript, interimTranscript, finalTranscript} = useSpeechRecognition({commands});
+    const commandsAndDesc = [];
 
+    commands.forEach(cmd => {
+        commandsAndDesc.push({command: cmd.command, description: cmd.description})
+    })
+
+    useEffect(() => {
+        props.setCommands(commandsAndDesc);
+    }, [])
+
+    const {resetTranscript, interimTranscript, finalTranscript} = useSpeechRecognition({commands});
+    const [editorJSON, setEditorJSON] = useState('');
 
     const onEditorStateChange = editorState => {
-        setEditorState(editorState);
-        console.log(editorState.getCurrentContent());
+        setEditorState(prevEditorState => {
+
+            return editorState;
+        });
+        // setEditorJSON(JSON.stringify(convertToRaw(editorState.getCurrentContent())))
+
+        // console.log(editorState.getCurrentContent());
 
     }
+
+
+    // const onEditorChange = () => {
+    //     setEditorJSON(JSON.stringify(convertToRaw(editorState.getContents())));
+    // }
+
+    useEffect(() => {
+        console.log(editorJSON, "here");
+    }, [editorJSON])
 
     const insertText = (text, editorState) => {
         const currContent = editorState.getCurrentContent();
@@ -109,30 +173,62 @@ function TextEditor(props) {
     }
 
     const setEditorContentProgramatically = (text) => {
-        if (text !== 'new line')
+        let shouldProvoke = true;
+        commands.forEach(cmd => {
+            if (text === cmd.command) {
+                shouldProvoke = false;
+            }
+        })
+        if (text.includes('set article title'))
+            shouldProvoke = false;
+        if (shouldProvoke) {
             setEditorState(currEditorState => {
                 return insertText(text, currEditorState);
             })
+        }
 
         // this.focusEditor();
     };
 
 
+
+    const [title, setTitle] = useState('');
+    const titleInputEl = useRef(null);
+
+    const publishArticle = () => {
+        if (title !== '' && editorState.getCurrentContent().hasText()) {
+            axios.post("http://localhost:8000/add-article", {
+                title: title,
+                body: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+            }).then(res => {
+                console.log(res.data.article._id);
+                const _id = res.data.article._id;
+                props.history.push("/article/" + _id);
+            })
+            console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())), "tada!");
+        }
+    }
+
     return (
-        <React.Fragment>
+        <div style={{padding: '20px 2.5% 20px 2.5%'}}>
+            <input style={{
+                width: '100%',
+                padding: '7px 18px',
+                border: '1px solid #d3d3d3',
+                borderRadius: '4px',
+                marginBottom: '25px',
+                fontSize: '18px'
+            }} ref={titleInputEl} name="article-title" type="text" value={title}
+                   onChange={e => setTitle(e.target.value)} placeholder='Untitled - Say " Set Article Title
+            <titlename>" to set the title name'/>
+
             <DraftEditor interimTranscript={interimTranscript} transcript={finalTranscript}
                          resetTranscript={resetTranscript} onEditorStateChange={onEditorStateChange}
                          setEditorContentProgramatically={setEditorContentProgramatically} editorState={editorState}
                          customStyleFn={customStyleFn}/>
             {interimTranscript}
-            <h1>{finalTranscript}</h1>
-            <p>Available Commands:</p>
-            <ul>
-                {commands.map(cmd => {
-                    return <li key={cmd.command}>{cmd.command}</li>
-                })}
-            </ul>
-        </React.Fragment>);
+        </div>
+    );
 
 }
 

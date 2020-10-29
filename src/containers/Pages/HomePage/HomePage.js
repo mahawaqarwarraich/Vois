@@ -10,25 +10,33 @@ function HomePageManager(props) {
 
     const [tabsConfigState, setTabsConfigState] = useState([...(tabsConfig.tabs)]);
     const urlForCmd = {};
+    const commandsAndDesc = [];
     tabsConfig.tabs.forEach(tab => {
         urlForCmd[tab.cmdSlice.toLowerCase()] = {
             url: tab.goTo
         }
+        commandsAndDesc.push({command: tab.cmd, description: tab.cmdDesc});
     });
 
     const handleNavigation = (base, cmd) => {
         console.log(urlForCmd[cmd.toLowerCase()] ? urlForCmd[cmd.toLowerCase()].url : 'Unknown Command : ' + cmd);
+        let gotourl = '';
         if (urlForCmd[cmd.toLowerCase()]) {
             let cmdArray = cmd.toLowerCase().split(' ');
             base = base.toLowerCase();
             const targetCmd = base + " " + cmd;
             let tabsConfigCopy = _.cloneDeep(tabsConfig);
             tabsConfig.tabs.forEach((tab, index) => {
-                if (tab.cmd.toLowerCase() === targetCmd.toLowerCase())
+                if (tab.cmd.toLowerCase() === targetCmd.toLowerCase()) {
                     tabsConfigCopy.tabs[index].hover = true;
+                    gotourl = tab.goTo;
+                }
             });
             setTabsConfigState([...(tabsConfigCopy.tabs)]);
         }
+        setTimeout(() => {
+            props.history.push(gotourl);
+        }, 800)
     }
 
     const {resetTranscript} = useSpeechRecognition();
@@ -47,8 +55,9 @@ function HomePageManager(props) {
     const {transcript} = useSpeechRecognition({commands});
 
     useEffect(() => {
-        SpeechRecognition.startListening({continuous: true});
-        console.log("hello")
+        if (props.setCommands)
+            props.setCommands(commandsAndDesc);
+
     }, [])
 
     if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
@@ -58,7 +67,7 @@ function HomePageManager(props) {
 
     return (
 
-        <HomePage config={{tabs: [...tabsConfigState]}}/>
+        <HomePage config={{tabs: [...tabsConfigState]}} setCommands={props.setCommands}/>
 
     );
 
