@@ -12,12 +12,12 @@ function BlogUI(props) {
         },
         {
             command: 'scroll down',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset+500)
+            callback: () => window.scrollTo({top: window.pageYOffset+500,behavior:"smooth"})
         },
         {
             command: 'scroll up',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset-500)
-        },
+            callback: () => window.scrollTo({top: window.pageYOffset-500,behavior:"smooth"})
+        }
     ];
 
     const { Transcript } = useSpeechRecognition({commands});
