@@ -26,6 +26,7 @@ const config = {
             cmd: 'Navigate Portfolio Web Page',
             cmdSlice: 'Portfolio Web Page',
             goTo: '/portfolio-builder',
+            cmdDesc: 'Navigates to the Portfolio Web Page Builder'
         },
         {
             id: 'ntr',
@@ -37,6 +38,7 @@ const config = {
             cmd: 'Navigate Resume Builder',
             cmdSlice: 'Resume Builder',
             goTo: '/cv-builder',
+            cmdDesc: 'Navigates to the CV Builder Page',
         },
         {
             id: 'nbl',
@@ -48,6 +50,7 @@ const config = {
             cmd: 'Navigate Text Editor',
             cmdSlice: 'Text Editor',
             goTo: '/text-editor',
+            cmdDesc: 'Navigates to the Text Editor Page',
         },
         {
             id: 'nbr',
@@ -59,6 +62,7 @@ const config = {
             cmd: 'Navigate Articles Directory',
             cmdSlice: 'Articles Directory',
             goTo: '/articles-directory',
+            cmdDesc: 'Navigates to the Articles Directory Page',
         },
 
     ],

@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
-import { Route } from 'react-router-dom';
+import {Route} from 'react-router-dom';
 
-// import HomePage from "./containers/Pages/HomePage";
+import HomePage from "./containers/Pages/HomePage";
 // import ArticleTopicCard from "./components/ArticlesDirectory/ArticleTopicCard/ArticleTopicCard";
 // import ArticleListItem from "./components/ArticlesDirectory/ArticleListItem/ArticleListItem";
 // import ArticleMainHeader from "./components/ArticlesDirectory/ArticleMainHeader/ArticleMainHeader";
@@ -18,6 +18,7 @@ import ArticlesPage from "./containers/Pages/ArticlesPage/ArticlesPage";
 
 
 import './App.css';
+import Sidebar from "./containers/Sidebar";
 
 function App(props) {
 
@@ -27,27 +28,62 @@ function App(props) {
 
 
     if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
-        return null
+        alert('can not use speech recognition...')
     }
+
+    const [sidebar, setSidebar] = useState('');
+
+    const [setSidebarState, setsetSidebarState] = useState(null);
+
+    const setSidebarStateFunc = setSidebarStateFunc => {
+        setsetSidebarState(prevState => {
+            return setSidebarStateFunc;
+        });
+    };
+
 
     return (
         <>
-        <div className="App">
-            {/*<HomePage />*/}
-            {/*<ArticleTopicCard />*/}
-            {/*<ArticleListItem />*/}
-            {/*<ArticleMainHeader />*/}
-            {/*<SearchBar />*/}
-            {/*<ArticleTopics />*/}
-            {/*<ArticleTopicsPage />*/}
-            {/*<Articles />*/}
-            {/*<ArticlesPage />*/}
-            {/*<TextEditor/>*/}
-        </div>
-        <Route path="/text-editor" exact render={props => <TextEditor {...props} />} />
-        <Route path="/article/:id" exact render={props => <BlogManager {...props} />} />
-        <Route path="/article-topics" exact render={props => <ArticleTopicsPage {...props} />} />
-        <Route path="/article-topics/:topicName" exact render={props => <ArticlesPage {...props}/>} />
+            <div className="App">
+                {/*<HomePage />*/}
+                {/*<ArticleTopicCard />*/}
+                {/*<ArticleListItem />*/}
+                {/*<ArticleMainHeader />*/}
+                {/*<SearchBar />*/}
+                {/*<ArticleTopics />*/}
+                {/*<ArticleTopicsPage />*/}
+                {/*<Articles />*/}
+                {/*<ArticlesPage />*/}
+                {/*<TextEditor/>*/}
+
+                <div style={{width: '15%',maxHeight:'100vh', overflow: 'auto', borderRight: '1.5px solid #d3d3d3'}}><Sidebar setsetStateFunc={setSidebarStateFunc}/></div>
+                <div style={{width: '85%'}}>{setSidebarState ?
+                    (<React.Fragment>
+                            <Route path="/text-editor" render={props => <TextEditor
+                                setCommands={newState => setSidebarState(newState)}
+                                {...props} />}/>
+                            <Route path="/blog" exact render={props => <BlogManager
+                                setCommands={newState => setSidebarState(newState)}
+                                {...props} />}/>
+                            <Route path="/articles-directory" exact render={props => <ArticleTopicsPage
+                                setCommands={newState => setSidebarState(newState)}
+                                {...props} />}/>
+                            <Route path="/articles-directory/:topicName" exact
+                                   render={props => <ArticlesPage
+                                       setCommands={newState => setSidebarState(newState)}
+                                       {...props}/>}/>
+                            <Route path="/" exact
+                                   render={props => <HomePage
+                                       setCommands={newState => setSidebarState(newState)}
+                                       {...props} />}/>
+                            <Route path="/article/:id" exact render={props => <BlogManager {...props} />} />
+                        </React.Fragment>
+                    )
+                    : ''}
+
+
+                </div>
+            </div>
         </>
     );
 }
