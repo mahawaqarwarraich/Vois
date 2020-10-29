@@ -14,7 +14,7 @@ function BlogBody(props) {
         <div className="role-play"></div>
         <div className="blog-content">
           <div className="blog-content--print py-fnt-s--1p6 py-ink--dark">
-            {props.config.body.content ? props.config.body.content : 'Loading...'}
+            {props.config.content ? props.config.content : 'Loading...'}
           </div>
           <div
             className="blog-actions py-fnt-s--1p4 py-fnt-w--bold"

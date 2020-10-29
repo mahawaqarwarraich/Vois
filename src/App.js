@@ -76,6 +76,7 @@ function App(props) {
                                    render={props => <HomePage
                                        setCommands={newState => setSidebarState(newState)}
                                        {...props} />}/>
+                            <Route path="/article/:id" exact render={props => <BlogManager {...props} />} />
                         </React.Fragment>
                     )
                     : ''}
@@ -83,7 +84,6 @@ function App(props) {
 
                 </div>
             </div>
-
         </>
     );
 }

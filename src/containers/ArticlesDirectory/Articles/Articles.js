@@ -1,11 +1,34 @@
 import React, {useState, useEffect} from 'react';
 import './Articles.scss';
 import axios from 'axios';
+import {useSpeechRecognition} from "react-speech-recognition";
 
 import ArticleListItem from "../../../components/ArticlesDirectory/ArticleListItem/ArticleListItem";
 
 const Articles = (props) => {
     const [allArticles,manipulateArticles] = useState([]);
+
+
+    const commands = [
+        {
+            command: 'open *',
+            callback: (articleTitle) => showBlogByVoiceHandler(articleTitle),
+        },
+        {
+            command: 'go back',
+            callback: () => props.history.goBack(),
+        },
+        {
+            command: 'scroll down',
+            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset+500)
+        },
+        {
+            command: 'scroll up',
+            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset-500)
+        },
+    ];
+
+    const { Transcript } = useSpeechRecognition({commands});
 
     useEffect(() => {
         const topic = props.match.params.topicName;
@@ -21,8 +44,21 @@ const Articles = (props) => {
             })
     }, [])
 
+
+    const showBlogByVoiceHandler = articleTitle => {
+        console.log(articleTitle);
+        articleTitle = articleTitle.toLowerCase();
+
+        allArticles.forEach(article => {
+            if (article.Title.toLowerCase() == articleTitle) {
+                const url = "/article/" + article._id;
+                props.history.push(url);
+            }
+        })
+    }
+
     const showBlogHandler = id => {
-        const url = props.match.url + "/" + id;
+        const url = "/article/" + id;
         props.history.push(url);
     }
     return (
