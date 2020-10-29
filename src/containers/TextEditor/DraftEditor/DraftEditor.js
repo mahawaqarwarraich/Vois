@@ -20,8 +20,8 @@ function DraftEditor(props) {
                 editorClassName="editorClassName"
                 onEditorStateChange={props.onEditorStateChange}
                 customStyleFn={props.customStyleFn}
+
             />
-            <h1>{props.irs}</h1>
             <button onClick={() => props.setEditorContentProgramatically("This editor is super cool !\n")}>click me
             </button>
         </>
