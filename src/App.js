@@ -15,10 +15,10 @@ import BlogManager from "./containers/Blog/BlogManager";
 // import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
 import Articles from "./containers/ArticlesDirectory/Articles/Articles";
 import ArticlesPage from "./containers/Pages/ArticlesPage/ArticlesPage";
-import Sidebar from "./containers/Sidebar";
 
 
 import './App.css';
+import Sidebar from "./containers/Sidebar";
 
 function App(props) {
 
