@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from "react";
 
 import BlogUI from "../../../components/Blog/BlogUI";
+import axios from 'axios';
 
-function BlogManager() {
+function BlogManager(props) {
     const [blogLiked, setBlogLiked] = useState(false);
 
     const handleBlogLikeToggled = () => {
@@ -19,7 +20,29 @@ function BlogManager() {
         alert("comment manager responded with status: " + status);
     };
 
+    const [blogConfig, setBlogConfig] = useState({});
+
     useEffect(() => {
+        const id = props.match.params.id;
+        axios.get('http://localhost:8000/get-article/' + id)
+            .then(res => {
+                console.log(res);
+                let article = res.data.article;
+                let config = {
+                    header: {
+                        imageURL: article.PictureSecureId,
+                        title: article.Title,
+                        author: "Haysam Tahir",
+                        createdOn: article.PostedOn,
+                    },
+                    body: {
+                        likeToggled: handleBlogLikeToggled,
+                        content: article.Body,
+                    },
+                }
+                setBlogConfig(config);
+            })
+
         //send axios request
         //setBlogConfig
         // config = {
@@ -37,11 +60,9 @@ function BlogManager() {
         // }
     }, [])
 
-    const [blogConfig, setBlogConfig] = useState(undefined);
-
     return (
         <React.Fragment>
-            {blogConfig ? <BlogUI config={blogConfig}/> : 'Loading...'}
+            {blogConfig ? <BlogUI config={{...blogConfig}} {...props}/> : 'Loading...'}
 
         </React.Fragment>
     );
