@@ -14,19 +14,17 @@ function BlogUI(props) {
         },
         {
             command: 'scroll down',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset + 500),
-            description: 'Scrolls down',
+            callback: () => window.scrollTo({top: window.pageYOffset + 500, behavior: "smooth"})
         },
         {
             command: 'scroll up',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset - 500),
-            description: 'Scrolls up',
+            callback: () => window.scrollTo({top: window.pageYOffset - 500, behavior: "smooth"})
         },
         {
             command: 'add comment',
             callback: () => setShowAddComment(true),
             description: 'Opens up an input field for adding a comment.'
-        }
+        },
     ];
     useEffect(() => {
         props.setCommands(commands);

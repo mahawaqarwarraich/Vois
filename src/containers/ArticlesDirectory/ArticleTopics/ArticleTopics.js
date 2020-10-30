@@ -24,14 +24,12 @@ const ArticleTopics = (props) => {
         },
         {
             command: 'scroll down',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset+500),
-            description: 'scrolls down',
+            callback: () => window.scrollTo({top: window.pageYOffset+500,behavior:"smooth"})
         },
         {
             command: 'scroll up',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset-500),
-            description: 'scrolls up'
-        },
+            callback: () => window.scrollTo({top: window.pageYOffset-500,behavior:"smooth"})
+        }
     ];
 
     useEffect(() => {
@@ -56,13 +54,17 @@ const ArticleTopics = (props) => {
 
 
     const showArticlesByTopicHandler = topicName => {
+        let isAvailable;
         articleTopics.forEach(articleTopic => {
             if (articleTopic.TopicName.toLowerCase() == topicName.toLowerCase()) {
                 topicName = articleTopic.TopicName;
+                isAvailable = true;
             }
-        })
-        const url = props.match.url + "/" + topicName;
-        props.history.push(url);
+        });
+        if (isAvailable) {
+            const url = props.match.url + "/" + topicName;
+            props.history.push(url);
+        }
     }
 
     return (

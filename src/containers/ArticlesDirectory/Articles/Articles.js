@@ -24,14 +24,12 @@ const Articles = (props) => {
         },
         {
             command: 'scroll down',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset + 500),
-            description: "scrolls down",
+            callback: () => window.scrollTo({top: window.pageYOffset+500,behavior:"smooth"})
         },
         {
             command: 'scroll up',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset - 500),
-            description: "scrolls up",
-        },
+            callback: () => window.scrollTo({top: window.pageYOffset-500,behavior:"smooth"})
+        }
     ];
 
 
