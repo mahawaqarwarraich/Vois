@@ -1,5 +1,6 @@
 import React from 'react';
 import './ArticleListItem.scss';
+import {Editor} from 'draft-js';
 
 import Button from "../UIElements/Button/Button";
 
@@ -14,7 +15,8 @@ const ArticleListItem = (props) => (
                 {props.title}
             </h1>
             <p className="ArticleListItem__Content--Paragraph">
-                {props.body.substr(0,180) + "..."}
+                <Editor editorState={props.body} readOnly={true}/>
+                {/*{props.body.substr(0,180) + "..."}*/}
             </p>
 
             <div className="ArticleListItem__Content--DateAndButtonDiv">

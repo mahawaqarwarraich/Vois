@@ -16,25 +16,25 @@ $col-share: $col-primary-green;
     margin-bottom: 4rem;
 
     .role-play {
-      width: 24.3%;
+      width: 0%;
       @media (max-width: 1275px) {
         width: 19.3%;
       }
     }
 
     .blog-content {
-      width: 49.3%;
-      @media (max-width: 1275px) {
-        width: 59.3%;
-      }
-      @media (max-width: 1052px) {
-        width: 75%;
-      }
+      width: 80%;
+      //@media (max-width: 1275px) {
+      //  width: 59.3%;
+      //}
+      //@media (max-width: 1052px) {
+      //  width: 75%;
+      //}
       margin: 0 auto;
 
       &--print {
         padding: 1.75rem 1.8rem;
-        background-color: $col-text-light-background-100;
+        //background-color: $col-text-light-background-100;
         border: 1px solid $col-silver-border-100;
         border-radius: 0.5rem 0.5rem 0 0;
 

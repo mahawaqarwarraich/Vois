@@ -18,7 +18,7 @@ const ArticlesPage = (props) => {
             <SearchBar
                 placeHolder="Ex. 10 business that grow exponentially"
             />
-            <Articles {...props} />
+            <Articles setCommands={props.setCommands} {...props} />
             <div className="ArticleTopicsPage__Button">
                 <Button
                     buttonText="Show More"

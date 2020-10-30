@@ -7,12 +7,22 @@ import {convertToRaw} from 'draft-js';
 import axios from 'axios';
 
 import DraftEditor from "./DraftEditor";
+import BlogHeader from "../../components/Blog/BlogUI/BlogHeader";
+import ArticleTopicSelector from "../Blog/ArticleTopicSelector";
 
 function TextEditor(props) {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
+    const [showTopics, setShowTopics] = useState(false);
+    const [topic, setTopic] = useState('');
 
     const customStylesToManage = ["font-size", "color", "font-family"];
     const {styles, customStyleFn, exporter} = createStyles(customStylesToManage, "CUSTOM_")
+
+    const handleTopicChange = topic => setTopic(topic);
+    const hideTopics = () => {
+        setShowTopics(false);
+        updateSidebar();
+    }
 
     const commands = [
         {
@@ -21,14 +31,19 @@ function TextEditor(props) {
             description: 'Go back to the previous page',
         },
         {
-            command: 'go to home page',
+            command: 'go to homepage',
             callback: () => props.history.push('/'),
             description: 'Goes to the home page',
         },
         {
-            command: 'set article title *',
+            command: 'set title *',
             callback: title => setTitle(title),
             description: 'Sets Title of the article'
+        },
+        {
+            command: 'set topic',
+            callback: () => setShowTopics(true),
+            description: 'Opens the list of topics to select from',
         },
         {
             command: 'publish article',
@@ -113,7 +128,8 @@ function TextEditor(props) {
         {
             command: 'new line',
             callback: () => setEditorState(editorState => RichUtils.insertSoftNewline(editorState)),
-            description: 'Inserts a New Line'
+            description: 'Inserts a New Line',
+            // callback: () => setEditorContentProgramatically('\u000A'),
         },
         {
             command: 'set font',
@@ -134,8 +150,12 @@ function TextEditor(props) {
         commandsAndDesc.push({command: cmd.command, description: cmd.description})
     })
 
-    useEffect(() => {
+    const updateSidebar = () => {
         props.setCommands(commandsAndDesc);
+    }
+
+    useEffect(() => {
+        updateSidebar()
     }, [])
 
     const {resetTranscript, interimTranscript, finalTranscript} = useSpeechRecognition({commands});
@@ -179,11 +199,13 @@ function TextEditor(props) {
                 shouldProvoke = false;
             }
         })
-        if (text.includes('set article title'))
+        if (text.includes('set title'))
+            shouldProvoke = false;
+        if (showTopics)
             shouldProvoke = false;
         if (shouldProvoke) {
             setEditorState(currEditorState => {
-                return insertText(text, currEditorState);
+                return insertText(text.length > 0 ? text + ' ' : text, currEditorState);
             })
         }
 
@@ -191,36 +213,57 @@ function TextEditor(props) {
     };
 
 
-
     const [title, setTitle] = useState('');
     const titleInputEl = useRef(null);
 
     const publishArticle = () => {
-        if (title !== '' && editorState.getCurrentContent().hasText()) {
+        if (title !== '' && editorState.getCurrentContent().hasText() && topic !== '') {
             axios.post("http://localhost:8000/add-article", {
                 title: title,
                 body: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+                topic: topic,
             }).then(res => {
+                console.log(res);
                 console.log(res.data.article._id);
                 const _id = res.data.article._id;
-                props.history.push("/article/" + _id);
+                props.history.push("/article-new/" + _id);
+                // alert("Blog published successfully!");
             })
             console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())), "tada!");
         }
     }
 
+    const [blogHeaderConfig, setBlogHeaderConfig] = useState({
+        imageURL: '',
+        author: 'Haysam Bin Tahir',
+        createdOn: `${(new Date()).toDateString()}`,
+    })
+
     return (
-        <div style={{padding: '20px 2.5% 20px 2.5%'}}>
-            <input style={{
-                width: '100%',
-                padding: '7px 18px',
-                border: '1px solid #d3d3d3',
-                borderRadius: '4px',
-                marginBottom: '25px',
-                fontSize: '18px'
-            }} ref={titleInputEl} name="article-title" type="text" value={title}
-                   onChange={e => setTitle(e.target.value)} placeholder='Untitled - Say " Set Article Title
-            <titlename>" to set the title name'/>
+        <div style={{margin: '20px 2.5% 20px 2.5%', position: 'relative'}}>
+            <BlogHeader config={{
+                ...blogHeaderConfig,
+                title: title.length > 0 ? title : 'Untitled - Say "set title <titlename>" to set a title'
+            }}/>
+            <ArticleTopicSelector topic={topic} setCommands={props.setCommands} show={showTopics} setTopic={handleTopicChange}
+                                  hide={hideTopics}/>
+            {/*<input style={{*/}
+            {/*    width: '75%',*/}
+            {/*    padding: '7px 18px',*/}
+            {/*    border: '1px solid #d3d3d3',*/}
+            {/*    borderRadius: '4px',*/}
+            {/*    marginBottom: '25px',*/}
+            {/*    fontSize: '18px',*/}
+            {/*    position: 'absolute',*/}
+            {/*    top: '10px',*/}
+            {/*    left: '50%',*/}
+            {/*    transform: 'translateX(-50%)',*/}
+            {/*    backgroundColor: 'transparent',*/}
+            {/*    borderColor: '#1a1616'*/}
+
+            {/*}} ref={titleInputEl} name="article-title" type="text" value={title}*/}
+            {/*       onChange={e => setTitle(e.target.value)} placeholder='Untitled - Say " Set Article Title*/}
+            {/*<titlename>" to set the title for this article'/>*/}
 
             <DraftEditor interimTranscript={interimTranscript} transcript={finalTranscript}
                          resetTranscript={resetTranscript} onEditorStateChange={onEditorStateChange}

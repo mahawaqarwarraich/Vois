@@ -13,18 +13,30 @@ const ArticleTopics = (props) => {
 
     const commands = [
         {
+            command: 'go back',
+            callback: () => props.history.goBack(),
+            description: "Goes back to the previous page",
+        },
+        {
             command: 'open *',
             callback: (articleTopic) => showArticlesByTopicHandler(articleTopic),
+            description: 'Opens an article topic'
         },
         {
             command: 'scroll down',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset+500)
+            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset+500),
+            description: 'scrolls down',
         },
         {
             command: 'scroll up',
-            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset-500)
+            callback: () => window.scrollTo(window.pageYOffset, window.pageYOffset-500),
+            description: 'scrolls up'
         },
     ];
+
+    useEffect(() => {
+        props.setCommands(commands);
+    }, [])
 
     const { Transcript } = useSpeechRecognition({commands});
 

@@ -7,27 +7,29 @@ import ArticleMainHeader from "../../../components/ArticlesDirectory/ArticleMain
 import SearchBar from "../../../components/ArticlesDirectory/UIElements/SearchBar/SearchBar";
 import ArticleTopics from "../../ArticlesDirectory/ArticleTopics/ArticleTopics";
 import Button from "../../../components/ArticlesDirectory/UIElements/Button/Button";
+import ArticlesPage from "../ArticlesPage/ArticlesPage";
+import {Route} from "react-router-dom";
 
 const ArticleTopicsPage = (props) => {
-    const commands = [
-        {
-            command: 'go back',
-            callback: () => props.history.goBack(),
-            description: 'Goes back to the previous page'
-        }
-    ]
-
-    const { transcript } = useSpeechRecognition({commands});
+    // const commands = [
+    //     {
+    //         command: 'go back',
+    //         callback: () => props.history.goBack(),
+    //         description: 'Goes back to the previous page'
+    //     }
+    // ]
+    //
+    // const { transcript } = useSpeechRecognition({commands});
 
     const commandsAndDescription = [];
 
-    commands.forEach(cmd => {
-        commandsAndDescription.push({command: cmd.command, description: cmd.description});
-    })
+    // commands.forEach(cmd => {
+    //     commandsAndDescription.push({command: cmd.command, description: cmd.description});
+    // })
 
-    useEffect(() => {
-        props.setCommands(commandsAndDescription);
-    }, [])
+    // useEffect(() => {
+    //     props.setCommands(commandsAndDescription);
+    // }, [])
     return (
         <React.Fragment>
             <ArticleMainHeader
@@ -38,7 +40,7 @@ const ArticleTopicsPage = (props) => {
             <SearchBar
                 placeHolder="Ex. Information Technlogy"
             />
-            <ArticleTopics {...props}/>
+            <ArticleTopics setCommands={props.setCommands} {...props}/>
             <div className="ArticleTopicsPage__Button">
                 <Button
                     buttonText="Show More"

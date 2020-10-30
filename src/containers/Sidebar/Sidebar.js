@@ -19,17 +19,19 @@ function Sidebar(props) {
     }, [])
 
     return (
-        <div className="sidebar">
-            <h6 className="h6">Commands and Descriptions</h6>
-            <div className="commands">
-                {commands.length > 0 ? commands.map(cmd => {
-                    return (<div className="command" key={cmd.command}>
-                        <div className="button">{cmd.command}</div>
-                        <div className="caption">{cmd.description}</div>
-                    </div>)
-                }) : 'loading commands...'}
+        <React.Fragment>
+            <div className="sidebar">
+                <h6 className="h6">Commands and Descriptions</h6>
+                <div className="commands">
+                    {commands.length > 0 ? commands.map(cmd => {
+                        return (<div className="command" key={cmd.command}>
+                            <div className="button">{cmd.command}</div>
+                            <div className="caption">{cmd.description}</div>
+                        </div>)
+                    }) : 'loading commands...'}
+                </div>
             </div>
-        </div>
+        </React.Fragment>
     )
 
 }

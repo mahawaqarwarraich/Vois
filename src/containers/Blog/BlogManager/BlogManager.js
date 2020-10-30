@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from "react";
+import {convertFromRaw, EditorState} from 'draft-js';
 
 import BlogUI from "../../../components/Blog/BlogUI";
 import axios from 'axios';
+import AddComment from "../AddComment";
 
 function BlogManager(props) {
     const [blogLiked, setBlogLiked] = useState(false);
@@ -21,26 +23,51 @@ function BlogManager(props) {
     };
 
     const [blogConfig, setBlogConfig] = useState({});
+    const [viewBlog, setViewBlog] = useState(false);
 
     useEffect(() => {
         const id = props.match.params.id;
+
         axios.get('http://localhost:8000/get-article/' + id)
             .then(res => {
                 console.log(res);
                 let article = res.data.article;
-                let config = {
-                    header: {
-                        imageURL: article.PictureSecureId,
-                        title: article.Title,
-                        author: "Haysam Tahir",
-                        createdOn: article.PostedOn,
-                    },
-                    body: {
-                        likeToggled: handleBlogLikeToggled,
-                        content: article.Body,
-                    },
+                let config;
+
+                console.log(article.Body);
+                if (props.json) {
+                    config = {
+                        header: {
+                            imageURL: article.PictureSecureId,
+                            title: article.Title,
+                            author: "Haysam Tahir",
+                            createdOn: article.PostedOn,
+                        },
+                        body: {
+                            likeToggled: handleBlogLikeToggled,
+                            content: EditorState.createWithContent(convertFromRaw(JSON.parse(article.Body))),
+                        },
+                    }
+                    console.log(config.body.content);
+                } else {
+                    config = {
+                        header: {
+                            imageURL: article.PictureSecureId,
+                            title: article.Title,
+                            author: "Haysam Tahir",
+                            createdOn: article.PostedOn,
+                        },
+                        body: {
+                            likeToggled: handleBlogLikeToggled,
+                            content: article.Body,
+                        },
+                    }
                 }
-                setBlogConfig(config);
+
+                setBlogConfig(prevconfig => {
+                    setViewBlog(true);
+                    return config;
+                });
             })
 
         //send axios request
@@ -60,9 +87,11 @@ function BlogManager(props) {
         // }
     }, [])
 
+
+
     return (
         <React.Fragment>
-            {blogConfig ? <BlogUI config={{...blogConfig}} {...props}/> : 'Loading...'}
+            {blogConfig ? <BlogUI viewBlog={viewBlog} json={props.json ? true : false} setCommands={props.setCommands} config={{...blogConfig}} {...props}/> : 'Loading...'}
 
         </React.Fragment>
     );

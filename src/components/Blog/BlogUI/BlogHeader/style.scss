@@ -7,10 +7,14 @@ $col-comment: $col-primary-blue;
 $col-like: $col-primary-red;
 $col-share: $col-primary-green;
 
+
+
 .blog {
+
   &-header {
     width: 100%;
-    height: 60vh;
+    height: 45vh;
+    max-height: 45vh;
     position: relative;
     margin-bottom: 5rem;
 
@@ -33,7 +37,7 @@ $col-share: $col-primary-green;
       @media (max-width: 450px) {
         width: 75%;
       }
-      padding: 4rem 0;
+      padding: 1rem 0;
       background-color: #fff;
 
       &--heading {
@@ -46,3 +50,4 @@ $col-share: $col-primary-green;
     }
   }
 }
+

@@ -1,4 +1,5 @@
-import React from "react";
+import React, {useEffect} from "react";
+import {Editor, convertFromRaw} from 'draft-js';
 
 import "./style.scss";
 //
@@ -8,13 +9,16 @@ import "./style.scss";
 // import tw from "../../../../Images/social/twitter.png";
 
 function BlogBody(props) {
+  useEffect(() => {
+    console.log(props.config.content)
+  }, [])
   return (
     <React.Fragment>
       <div className="blog-body">
-        <div className="role-play"></div>
+        {/*<div className="role-play"></div>*/}
         <div className="blog-content">
           <div className="blog-content--print py-fnt-s--1p6 py-ink--dark">
-            {props.config.content ? props.config.content : 'Loading...'}
+            {props.json ? props.viewBlog ? props.config ? <Editor editorState={props.config.content} readOnly={true} /> : props.config.content ? props.config.content : 'Loading...' : '' : ''}
           </div>
           <div
             className="blog-actions py-fnt-s--1p4 py-fnt-w--bold"
@@ -84,7 +88,7 @@ function BlogBody(props) {
             {/*</div>*/}
           </div>
         </div>
-        <div className="blog-related"></div>
+        {/*<div className="blog-related"></div>*/}
       </div>
     </React.Fragment>
   );
