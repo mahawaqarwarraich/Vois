@@ -35,17 +35,17 @@ BeMyHand is currently in development. Users can use text editor to write the art
 
 ### Home page Screen
 
-<img align="center" src="https://user-images.githubusercontent.com/38074593/102641145-6cfa6a00-417d-11eb-9623-dd6edd4ce636.png" width = 460 height = 300>
+<img align="center" width = "460" height = "300" src="https://user-images.githubusercontent.com/38074593/102641145-6cfa6a00-417d-11eb-9623-dd6edd4ce636.png">
 
 
 ### Articles Directory
 
-<img align="center" src="https://user-images.githubusercontent.com/38074593/102641306-af23ab80-417d-11eb-99ff-0b01a4bc2c7f.png" width = 460 height = 300>
+<img align="center" width = "460" height = "300" src="https://user-images.githubusercontent.com/38074593/102641306-af23ab80-417d-11eb-99ff-0b01a4bc2c7f.png">
 
 
 ### Text Editor
 
-<img align="center" src="https://user-images.githubusercontent.com/38074593/102641402-d5e1e200-417d-11eb-9dde-969eaa0080b6.png" width = 460 height = 300>
+<img align="center" width = "460" height = "300" src="https://user-images.githubusercontent.com/38074593/102641402-d5e1e200-417d-11eb-9dde-969eaa0080b6.png">
 
 ## User Manual
 
