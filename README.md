@@ -2,6 +2,17 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+Our application empowers a certain class of physically challenged people by providing them a voice and eye-gaze controllable platform. This platform enables them to develop skills in the field of writing by providing them a voice-controlled text editor. They’ll also be needing to publish their articles to showcase their writing skills that they can easily do by publishing their articles in our articles directory. They can easily access, edit, update, and delete any of their written documents from this article directory. Our app also enables them to build a very crucial document of a person’s professional career, a CV. With our fully-fledged voice-controlled CV Builder, the users can build an amazing CV. On top of these ground pillars, our app allows the users to develop their portfolio website and host it with us. Eye-gaze detection will be used for top level navigation within the app. In this way, our app will provide a complete toolkit for our users to boost their professional careers by developing skills and building a professional presence online.
+
+Briefly described, our app provides the following four voice and eye-gazed controllable tools for our users that are a complete toolset for them to build a professional stance:
+1. Portfolio Web Page
+2. CV Builder
+3. Text Editor
+4. Article Directory
+
+We are contributing to the problem of accessibility for these people. Our app will introduce a new platform for them, through which they can gain insights into the IT field and also build a strong professional stance
+
+
 ## Available Scripts
 
 In the project directory, you can run:
