@@ -2,15 +2,29 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-Our application empowers a certain class of physically challenged people by providing them a voice and eye-gaze controllable platform. This platform enables them to develop skills in the field of writing by providing them a voice-controlled text editor. They’ll also be needing to publish their articles to showcase their writing skills that they can easily do by publishing their articles in our articles directory. They can easily access, edit, update, and delete any of their written documents from this article directory. Our app also enables them to build a very crucial document of a person’s professional career, a CV. With our fully-fledged voice-controlled CV Builder, the users can build an amazing CV. On top of these ground pillars, our app allows the users to develop their portfolio website and host it with us. Eye-gaze detection will be used for top level navigation within the app. In this way, our app will provide a complete toolkit for our users to boost their professional careers by developing skills and building a professional presence online.
+A web application that provides the four voice and eye-gaze controllable tools for our users who can not use their hands and provide them a complete toolkit to build a professional stance.
+The tools are:
 
-Briefly described, our app provides the following four voice and eye-gazed controllable tools for our users that are a complete toolset for them to build a professional stance:
-1. Portfolio Web Page
-2. CV Builder
-3. Text Editor
-4. Article Directory
+- Portfolio Web Page
+- CV Builder
+- Text Editor
+= Article Directory
 
-We are contributing to the problem of accessibility for these people. Our app will introduce a new platform for them, through which they can gain insights into the IT field and also build a strong professional stance
+
+### Description of the main product element
+
+### `Text Editor` 
+This is a core module of our application that provides facility to write documents using voice and dictation. At the end the document can be saved as draft, converted and downloaded to PDF or Docx. It includes all the necessary components which a text editor should have to write professional documents i.e. headings, paragraphs, bullet points, inserting images, and applying decoration to the text like bold and italics. 
+
+### `Articles Directory`
+This module makes our users able to manage their articles directory by creating new articles, saving those as drafts, making articles private or public, maintaining version history and publishing them and this all by using their voice and eye-gaze.
+This is the module where our target users can showcase their writing skills to the world. The recruiters/employers can visit and see their published work and contact them using their details available in their profile. 
+
+### `CV Builder`
+This module builds a professional CV by providing our users three professional templates at the very beginning. By selecting one out of the given 3 templates, all the fields can be filled by our user using their voice and all in a smooth and user-oriented way. The CV can be saved, added to the Portfolio Web Page (next module) or downloaded as a PDF. 
+
+#### `Portfolio Builder`
+This module makes a complete online presence of our users by providing them a webpage where they can add their top-quality work as well as their documents like CV, their details and this all using their voice and eye-gaze. Like CV Builder, it also provides 3 basic templates where a user can select one can build and style it by dragging and dropping complete sections, elements or styles. We provide a unique link to every user which they can share to the world and using that link they can visit their portfolio web page and see their work. 
 
 ## Project Status
 
@@ -32,6 +46,10 @@ BeMyHand is currently in development. Users can use text editor to write the art
 ### Text Editor
 
 <img src="https://user-images.githubusercontent.com/38074593/102641402-d5e1e200-417d-11eb-9dde-969eaa0080b6.png" width = 720 height = 480>
+
+## User Manual
+
+
 ## Available Scripts
 
 In the project directory, you can run:
