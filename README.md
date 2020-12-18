@@ -20,14 +20,18 @@ BeMyHand is currently in development. Users can use text editor to write the art
 ## Project Screenshots
 
 ### Home page Screen
+
 ![Home](https://user-images.githubusercontent.com/38074593/102641145-6cfa6a00-417d-11eb-9623-dd6edd4ce636.png)
 
 
 ### Articles Directory
 
+![articles](https://user-images.githubusercontent.com/38074593/102641306-af23ab80-417d-11eb-99ff-0b01a4bc2c7f.png)
+
 
 ### Text Editor
 
+![text editor](https://user-images.githubusercontent.com/38074593/102641402-d5e1e200-417d-11eb-9dde-969eaa0080b6.png)
 
 ## Available Scripts
 
