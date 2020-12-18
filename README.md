@@ -47,12 +47,25 @@ BeMyHand is currently in development. Users can use text editor to write the art
 
 <img align="center" width = "460" height = "300" src="https://user-images.githubusercontent.com/38074593/102641402-d5e1e200-417d-11eb-9dde-969eaa0080b6.png">
 
-## User Manual
+## Installation and Setup Instructions
 
+1. Download Nodejs Installer from the the link https://nodejs.org/en/download/
+2. After downloading is finished, run the downloaded software
+3. Setup wizard will open, click next
+4. License agreements will be shown, if you agree the agreements, click next
+5. Select installation location and click next
+6. Installation undergoing
+7. Click finish
+8. Open windows cmd
+9. To verify installation, open command prompt 
+10. write "node -v" and see if as a result version of the installed node appears
+11. Download/Clone Client and Server Code from Github
 
-## Available Scripts
-
-In the project directory, you can run:
+    - FrontEnd https://github.com/BeMyHand/BeMyHand.git
+    
+    - BackEnd https://github.com/BeMyHand/BeMyHandBackend.git
+    
+12 Finally, In the project directory, you can run:
 
 ### `npm start`
 
