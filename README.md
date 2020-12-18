@@ -12,6 +12,21 @@ Briefly described, our app provides the following four voice and eye-gazed contr
 
 We are contributing to the problem of accessibility for these people. Our app will introduce a new platform for them, through which they can gain insights into the IT field and also build a strong professional stance
 
+## Project Status
+
+BeMyHand is currently in development. Users can use text editor to write the articles with their voice and can also store them in articles directory.
+
+
+## Project Screenshots
+
+### Home page Screen
+
+
+### Articles Directory
+
+
+### Text Editor
+
 
 ## Available Scripts
 
