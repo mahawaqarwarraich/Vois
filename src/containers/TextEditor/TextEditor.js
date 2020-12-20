@@ -5,6 +5,8 @@ import createStyles from "draft-js-custom-styles";
 import {useSpeechRecognition} from "react-speech-recognition";
 import {convertToRaw} from 'draft-js';
 import axios from 'axios';
+import {stateToHTML} from 'draft-js-export-html';
+
 
 import DraftEditor from "./DraftEditor";
 import BlogHeader from "../../components/Blog/BlogUI/BlogHeader";
@@ -141,6 +143,26 @@ function TextEditor(props) {
             callback: () => setEditorState(editorState => styles.fontFamily.toggle(editorState, "Times New Roman")),
             description: 'Sets Font-Family to Times New Roman'
         },
+        {
+            command: 'convert state',
+            callback: () => {
+                let contentState = editorState.getCurrentContent();
+                console.log("ContentState => ", contentState);
+                let html = stateToHTML(contentState);
+                console.log(html);
+            },
+            description: 'Converts content state to html'
+        },
+        {
+            command: 'download state',
+            callback: () => {
+                let contentState = editorState.getCurrentContent();
+                let htmlString = stateToHTML(contentState);
+                let headerHTMLString = '<p></p>';
+                let footerHTMLString = '<p></p>';
+            },
+            description: 'Downloads the document in docx format'
+        }
 
     ];
 
@@ -156,6 +178,13 @@ function TextEditor(props) {
 
     useEffect(() => {
         updateSidebar()
+        // const url = "https://www.googleapis.com/customsearch/v1/key=AIzaSyAmFfu2RsIuY7DoarLaK-GNoMQAkXoq4sQ&cx=b99ad2dddfcac4813&searchType=image&q=tom%and%jerry";
+        // axios.get(proxyurl + url)
+        //     .then(res => {
+        //         console.log(res);
+        //     }).catch(err => {
+        //         console.log(err);
+        // });
     }, [])
 
     const {resetTranscript, interimTranscript, finalTranscript} = useSpeechRecognition({commands});
@@ -184,11 +213,8 @@ function TextEditor(props) {
     const insertText = (text, editorState) => {
         const currContent = editorState.getCurrentContent();
         const currSelection = editorState.getSelection();
-
         const newContent = Modifier.replaceText(currContent, currSelection, text, editorState.getCurrentInlineStyle());
-
         const newEditorState = EditorState.push(editorState, newContent, 'insert-characters');
-
         return EditorState.forceSelection(newEditorState, newContent.getSelectionAfter());
     }
 
@@ -208,8 +234,6 @@ function TextEditor(props) {
                 return insertText(text.length > 0 ? text + ' ' : text, currEditorState);
             })
         }
-
-        // this.focusEditor();
     };
 
 
@@ -239,13 +263,15 @@ function TextEditor(props) {
         createdOn: `${(new Date()).toDateString()}`,
     })
 
+
     return (
         <div style={{margin: '20px 2.5% 20px 2.5%', position: 'relative'}}>
             <BlogHeader config={{
                 ...blogHeaderConfig,
                 title: title.length > 0 ? title : 'Untitled - Say "set title <titlename>" to set a title'
             }}/>
-            <ArticleTopicSelector topic={topic} setCommands={props.setCommands} show={showTopics} setTopic={handleTopicChange}
+            <ArticleTopicSelector topic={topic} setCommands={props.setCommands} show={showTopics}
+                                  setTopic={handleTopicChange}
                                   hide={hideTopics}/>
             {/*<input style={{*/}
             {/*    width: '75%',*/}
