@@ -10,6 +10,8 @@ import DraftEditor from "./DraftEditor";
 import BlogHeader from "../../components/Blog/BlogUI/BlogHeader";
 import ArticleTopicSelector from "../Blog/ArticleTopicSelector";
 
+import authHeader from "../../services/auth-header";
+
 function TextEditor(props) {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [showTopics, setShowTopics] = useState(false);
@@ -222,6 +224,8 @@ function TextEditor(props) {
                 title: title,
                 body: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
                 topic: topic,
+            }, {
+                headers: authHeader(),
             }).then(res => {
                 console.log(res);
                 console.log(res.data.article._id);
