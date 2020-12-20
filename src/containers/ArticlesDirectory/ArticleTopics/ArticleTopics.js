@@ -10,7 +10,6 @@ const ArticleTopics = (props) => {
 
     const [articleTopics,manipulateArticleTopics] = useState([]);
 
-
     const commands = [
         {
             command: 'go back',

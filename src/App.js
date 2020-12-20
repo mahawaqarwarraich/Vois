@@ -11,6 +11,10 @@ import HomePage from "./containers/Pages/HomePage";
 import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
 // import TextEditor from "./containers/TextEditor";
 
+import SignupPage from "./components/Pages/User/SingupPage/SIgnupPage";
+import LoginPage from "./components/Pages/User/LoginPage/LoginPage";
+import ProfilePage from "./components/Pages/User/ProfilePage/ProfilePage";
+
 // import Articles from "./containers/ArticlesDirectory/Articles/Articles";
 import BlogManager from "./containers/Blog/BlogManager";
 // import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
@@ -91,6 +95,17 @@ function App(props) {
                                    render={props => <ArticlesPage
                                        setCommands={newState => setSidebarState(newState)}
                                        {...props}/>}/>
+                            <Route
+                                path="/signup"
+                                exact
+                                render={(props) => <SignupPage {...props} />}
+                            />
+                            <Route path="/login" exact render={(props) => <LoginPage {...props} />} />
+                            <Route
+                                path="/profile/:userId"
+                                exact
+                                render={(props) => <ProfilePage {...props} />}
+                            />
                             <Route path="/" exact
                                    render={props => <HomePage
                                        setCommands={newState => setSidebarState(newState)}

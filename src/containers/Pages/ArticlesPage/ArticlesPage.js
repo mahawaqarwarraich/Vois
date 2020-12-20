@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './ArticlesPage.scss';
 
 import ArticleMainHeader from "../../../components/ArticlesDirectory/ArticleMainHeader/ArticleMainHeader";
@@ -8,17 +8,27 @@ import Button from "../../../components/ArticlesDirectory/UIElements/Button/Butt
 import {Route} from "react-router-dom";
 
 const ArticlesPage = (props) => {
+    const [buttonClickedName, setButtonClickedName] = useState("all-articles");
+
+    const toolBarButtonClickedHandler = (buttonName) => {
+        setButtonClickedName(buttonName);
+    }
     return (
         <React.Fragment>
             <ArticleMainHeader
-                Button1 = "Published"
-                Button2 = "Saved"
-                Button3 = "Drafts"
+                Button1 = "All Articles"
+                Button2 = "My Articles"
+                Button3 = "Saved"
+                page ={JSON.parse(localStorage.getItem("user")).username ? "user" : "no_user"}
+                toolBarButtonClickedHandler = {toolBarButtonClickedHandler}
             />
             <SearchBar
                 placeHolder="Ex. 10 business that grow exponentially"
             />
-            <Articles setCommands={props.setCommands} {...props} />
+            <Articles
+                setCommands={props.setCommands}
+                {...props}
+                buttonName = {buttonClickedName}/>
             <div className="ArticleTopicsPage__Button">
                 <Button
                     buttonText="Show More"
