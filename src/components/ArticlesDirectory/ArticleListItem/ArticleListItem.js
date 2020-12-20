@@ -26,7 +26,7 @@ const ArticleListItem = (props) => (
                 </p>
 
                 <Button
-                    buttonText="Explore"
+                    buttonText="Open"
                     width = "114px"
                     height = "31px"
                     padding = "6px 24px 6px 24px"

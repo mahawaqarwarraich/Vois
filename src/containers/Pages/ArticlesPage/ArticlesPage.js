@@ -6,6 +6,8 @@ import SearchBar from "../../../components/ArticlesDirectory/UIElements/SearchBa
 import Articles from "../../ArticlesDirectory/Articles/Articles";
 import Button from "../../../components/ArticlesDirectory/UIElements/Button/Button";
 import {Route} from "react-router-dom";
+import Fab from "@material-ui/core/Fab";
+import MicIcon from '@material-ui/icons/Mic';
 
 const ArticlesPage = (props) => {
     const [buttonClickedName, setButtonClickedName] = useState("all-articles");
@@ -13,13 +15,16 @@ const ArticlesPage = (props) => {
     const toolBarButtonClickedHandler = (buttonName) => {
         setButtonClickedName(buttonName);
     }
+    console.log(props.match.params.userId);
+    console.log(props.match.params.topicName);
     return (
-        <React.Fragment>
+        <React.Fragment style={{position:"relative"}}>
             <ArticleMainHeader
                 Button1 = "All Articles"
                 Button2 = "My Articles"
                 Button3 = "Saved"
                 page ={JSON.parse(localStorage.getItem("user")).username ? "user" : "no_user"}
+                fromProfile = {props.match.params.userId ? true : false}
                 toolBarButtonClickedHandler = {toolBarButtonClickedHandler}
             />
             <SearchBar
@@ -39,6 +44,16 @@ const ArticlesPage = (props) => {
                     borderRadius = "10px"
                 />
             </div>
+            {!props.match.params.userId && JSON.parse(localStorage.getItem("user")) ?
+                // <Fab color="secondary" aria-label="add" style={{position: "fixed", bottom: "5%", right: "5%"}}>
+                //     <AddIcon/>
+                // </Fab>
+                <Fab color="secondary" aria-label="add" style={{position: "fixed", bottom: "5%", right: "5%"}} variant="extended">
+                    <MicIcon style={{marginRight:"0.7rem"}} />
+                    Create New Article
+                </Fab>
+                : <></>
+            }
 
         </React.Fragment>
     );

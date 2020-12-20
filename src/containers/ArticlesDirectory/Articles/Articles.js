@@ -40,14 +40,18 @@ const Articles = (props) => {
         props.setCommands(commands);
         const topic = props.match.params.topicName;
         let url = "";
-        if (props.buttonName === "all-articles") {
-            url = 'http://localhost:8000/get-articles-by-topic/' + topic;
-        }
-        else if (props.buttonName === "my-articles") {
-            url = 'http://localhost:8000/get-articles-by-topic/' + topic + '/' + AuthService.getCurrentUser().userId;
-        }
-        else {
+        if (props.match.params.userId) {
+            url = 'http://localhost:8000/get-all-user-articles/' + props.match.params.userId;
+        } else {
+            if (props.buttonName === "all-articles") {
+                url = 'http://localhost:8000/get-articles-by-topic/' + topic;
+            }
+            else if (props.buttonName === "my-articles") {
+                url = 'http://localhost:8000/get-articles-by-topic/' + topic + '/' + AuthService.getCurrentUser().userId;
+            }
+            else {
 
+            }
         }
         axios.get(url)
             .then(result => {

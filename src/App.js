@@ -95,6 +95,10 @@ function App(props) {
                                    render={props => <ArticlesPage
                                        setCommands={newState => setSidebarState(newState)}
                                        {...props}/>}/>
+                            <Route path="/articles-directory/user-articles/:userId" exact
+                                   render={props => <ArticlesPage
+                                       setCommands={newState => setSidebarState(newState)}
+                                       {...props}/>}/>
                             <Route
                                 path="/signup"
                                 exact

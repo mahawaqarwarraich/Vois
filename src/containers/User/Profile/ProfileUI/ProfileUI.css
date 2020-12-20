@@ -47,33 +47,11 @@
 .profile__details--content-username {
     text-align: center;
     font-weight: normal;
-    margin-bottom: 4.375rem;
+    margin-bottom: 2rem;
 
 }
-.profile__details--content-description {
-    border: 1px solid rgba(0,0,0,0.2);
-    margin-left: 1.25rem;
-    display: flex;
-    flex-direction: column;
-    padding: 1.25rem 0.3125rem;
-}
-.profile__details--content-description-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 1.25rem;
-}
-.profile__details--content-description-header-heading {
-    font-size: 0.9375rem;
-}
-.profile__details--content-description-header-edit {
-    font-size: 0.9375rem;
-    text-decoration: none;
-}
-.profile__details--content-description-header-edit:hover {
-    color: #4285F4;
-}
-.profile__details--content-description-content {
-    font-size: 0.8125rem;
+.profile__details--content-menu {
+    margin: 3rem 0;
 }
 .profile__details--boundary {
     border-right: 1px solid rgba(0,0,0,0.08);

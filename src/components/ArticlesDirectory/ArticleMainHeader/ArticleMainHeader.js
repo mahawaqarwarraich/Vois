@@ -24,7 +24,6 @@ const ArticleMainHeader = (props) => {
         }
     ];
 
-
     const { Transcript } = useSpeechRecognition({commands});
 
     const toolbarButtonClicked = (buttonName) => {
@@ -35,7 +34,7 @@ const ArticleMainHeader = (props) => {
         <div className="ArticleMainHeader">
             <div className="ArticleMainHeader__Img">
                 <h1 className="ArticleMainHeader__Img--AboveText">
-                    Articles
+                    {props.fromProfile ? "User Articles" : "Articles"}
                 </h1>
             </div>
             <div className="ArticleMainHeader__Toolbar">
@@ -50,7 +49,7 @@ const ArticleMainHeader = (props) => {
                         {buttonClickedName === "all-articles" ?
                             <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button-Bar" /> : <div /> }
                     </div>
-                    {props.page === "user" ? <React.Fragment>
+                    {props.page === "user" && !props.fromProfile ? <React.Fragment>
                         <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button"
                              onClick={() => {toolbarButtonClicked("my-articles");props.toolBarButtonClickedHandler("my-articles")}}>
                             <div className="ArticleMainHeader__Toolbar--ButtonsPalette-Button-Text">
