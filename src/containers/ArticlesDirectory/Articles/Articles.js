@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './Articles.scss';
 import axios from 'axios';
 import {useSpeechRecognition} from "react-speech-recognition";
+import AuthService from "../../../services/auth-service";
 
 import {EditorState, convertFromRaw} from 'draft-js';
 
@@ -38,7 +39,17 @@ const Articles = (props) => {
     useEffect(() => {
         props.setCommands(commands);
         const topic = props.match.params.topicName;
-        axios.get('http://localhost:8000/get-articles-by-topic/' + topic)
+        let url = "";
+        if (props.buttonName === "all-articles") {
+            url = 'http://localhost:8000/get-articles-by-topic/' + topic;
+        }
+        else if (props.buttonName === "my-articles") {
+            url = 'http://localhost:8000/get-articles-by-topic/' + topic + '/' + AuthService.getCurrentUser().userId;
+        }
+        else {
+
+        }
+        axios.get(url)
             .then(result => {
                 const articles = result.data.articles;
                 const tempArticles = [];
@@ -48,8 +59,10 @@ const Articles = (props) => {
                 }
                 manipulateArticles(tempArticles);
             })
-    }, [])
-
+            .catch(err => {
+                console.log(err);
+            });
+    }, [props.buttonName]);
 
     const showBlogByVoiceHandler = articleTitle => {
         console.log(articleTitle);
