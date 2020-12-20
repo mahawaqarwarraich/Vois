@@ -22,8 +22,8 @@ function DraftEditor(props) {
                 customStyleFn={props.customStyleFn}
 
             />
-            <button onClick={() => props.setEditorContentProgramatically("This editor is super cool !\n")}>click me
-            </button>
+            {/*<button onClick={() => props.setEditorContentProgramatically("This editor is super cool !\n")}>click me*/}
+            {/*</button>*/}
         </>
     );
 
