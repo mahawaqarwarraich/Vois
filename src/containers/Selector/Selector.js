@@ -25,7 +25,9 @@ function Selector(props) {
                 'backdrop-filter': 'saturate(180%) blur(20px)',
                 zIndex: 500
             }}></div>
-            <div style={{
+            <div
+            id={"selector-element"}
+                style={{
                 width: '70vw',
                 height: 'auto',
                 maxHeight: '75vh',

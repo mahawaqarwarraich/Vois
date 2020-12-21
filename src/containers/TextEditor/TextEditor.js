@@ -6,11 +6,13 @@ import {useSpeechRecognition} from "react-speech-recognition";
 import {convertToRaw} from 'draft-js';
 import axios from 'axios';
 import {stateToHTML} from 'draft-js-export-html';
+import FormData from "form-data";
 
 
 import DraftEditor from "./DraftEditor";
 import BlogHeader from "../../components/Blog/BlogUI/BlogHeader";
 import ArticleTopicSelector from "../Blog/ArticleTopicSelector";
+import ArticleCoverImageSelector from "../Blog/ArticleCoverImageSelector";
 
 import authHeader from "../../services/auth-header";
 
@@ -156,6 +158,11 @@ function TextEditor(props) {
             description: 'Converts content state to html'
         },
         {
+            command: 'set cover image',
+            callback: () => setShowImageSelector(true),
+            description: 'Opens options for selecting cover image',
+        },
+        {
             command: 'download state',
             callback: () => {
                 let contentState = editorState.getCurrentContent();
@@ -180,13 +187,7 @@ function TextEditor(props) {
 
     useEffect(() => {
         updateSidebar()
-        // const url = "https://www.googleapis.com/customsearch/v1/key=AIzaSyAmFfu2RsIuY7DoarLaK-GNoMQAkXoq4sQ&cx=b99ad2dddfcac4813&searchType=image&q=tom%and%jerry";
-        // axios.get(proxyurl + url)
-        //     .then(res => {
-        //         console.log(res);
-        //     }).catch(err => {
-        //         console.log(err);
-        // });
+
     }, [])
 
     const {resetTranscript, interimTranscript, finalTranscript} = useSpeechRecognition({commands});
@@ -231,6 +232,8 @@ function TextEditor(props) {
             shouldProvoke = false;
         if (showTopics)
             shouldProvoke = false;
+        if (showCoverImageSelector)
+            shouldProvoke = false;
         if (shouldProvoke) {
             setEditorState(currEditorState => {
                 return insertText(text.length > 0 ? text + ' ' : text, currEditorState);
@@ -243,18 +246,28 @@ function TextEditor(props) {
     const titleInputEl = useRef(null);
 
     const publishArticle = () => {
-        if (title !== '' && editorState.getCurrentContent().hasText() && topic !== '') {
-            axios.post("http://localhost:8000/add-article", {
-                title: title,
-                body: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
-                topic: topic,
-            }, {
+        if (title !== '' && editorState.getCurrentContent().hasText() && topic !== '' && blogHeaderConfig.imageURL !== '') {
+
+            let data = new FormData();
+            if (isImageLocal)
+                data.append("picture", document.querySelector("#coverImage").files[0]);
+            else
+                data.append("link", blogHeaderConfig.imageURL);
+
+            data.append("title", title);
+            data.append("topic", topic);
+            data.append("body", JSON.stringify(convertToRaw(editorState.getCurrentContent())));
+            console.log(blogHeaderConfig.imageURL);
+            console.log(isImageLocal);
+
+            axios.post("http://localhost:8000/add-article", data, {
                 headers: authHeader(),
             }).then(res => {
                 console.log(res);
                 console.log(res.data.article._id);
                 const _id = res.data.article._id;
-                props.history.push("/article-new/" + _id);
+
+                props.history.push("/article/" + _id);
                 // alert("Blog published successfully!");
             })
             console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())), "tada!");
@@ -266,17 +279,49 @@ function TextEditor(props) {
         author: 'Haysam Bin Tahir',
         createdOn: `${(new Date()).toDateString()}`,
     })
+    const [showCoverImageSelector, setShowImageSelector] = useState(false);
+    const [isImageLocal, setIsImageLocal] = useState(false);
+    const setCoverImage = (imageUrl, isImageLocal = false) => {
+        setIsImageLocal(isImageLocal);
+        let blogHeaderConfigCopy = {...blogHeaderConfig};
+        blogHeaderConfigCopy.imageURL = imageUrl;
+        setBlogHeaderConfig({...blogHeaderConfigCopy});
 
+    }
+
+    const handleCoverImageChange = (event) => {
+        if (event.target.files && event.target.files[0]) {
+            setCoverImage(URL.createObjectURL(event.target.files[0]), true);
+            setShowImageSelector(false);
+            updateSidebar()
+        }
+    };
 
     return (
         <div style={{margin: '20px 2.5% 20px 2.5%', position: 'relative'}}>
             <BlogHeader config={{
                 ...blogHeaderConfig,
-                title: title.length > 0 ? title : 'Untitled - Say "set title <titlename>" to set a title'
+                title: title.length > 0 ? title : 'Untitled - Say "set title <titlename>" to set a title',
+                setCommands: props.setCommands,
+                showCoverImageSelectorButton: true,
+                setShowCoverImageSelector: () => setShowImageSelector(true),
             }}/>
+            {showCoverImageSelector ? <ArticleCoverImageSelector
+                setCoverImage={setCoverImage}
+                hide={() => setShowImageSelector(false)}
+                setCommands={props.setCommands}
+                handleCoverImageChange={handleCoverImageChange}/> : ''}
+            <input
+                id={"coverImage"}
+                type={"file"}
+                accept={"image/*"}
+                onChange={handleCoverImageChange}
+                hidden
+            />
             <ArticleTopicSelector topic={topic} setCommands={props.setCommands} show={showTopics}
                                   setTopic={handleTopicChange}
                                   hide={hideTopics}/>
+
             {/*<input style={{*/}
             {/*    width: '75%',*/}
             {/*    padding: '7px 18px',*/}

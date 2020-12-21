@@ -10,6 +10,7 @@ $col-share: $col-primary-green;
 .blog {
   &-body {
     display: flex;
+    justify-content: space-around;
     @media (max-width: 1085px) {
       flex-direction: column;
     }
@@ -23,14 +24,14 @@ $col-share: $col-primary-green;
     }
 
     .blog-content {
-      width: 80%;
+      width: 72.5%;
       //@media (max-width: 1275px) {
       //  width: 59.3%;
       //}
       //@media (max-width: 1052px) {
       //  width: 75%;
       //}
-      margin: 0 auto;
+
 
       &--print {
         padding: 1.75rem 1.8rem;

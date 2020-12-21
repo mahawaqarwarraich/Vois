@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -12,6 +13,7 @@
     "draft-js": "^0.11.7",
     "draft-js-custom-styles": "^2.1.1",
     "draft-js-export-html": "^1.4.1",
+    "form-data": "^3.0.0",
     "html-docx-js": "^0.3.1",
     "html-to-docx": "^1.1.32",
     "lodash": "^4.17.20",

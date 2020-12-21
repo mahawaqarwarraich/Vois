@@ -1,97 +1,89 @@
 import React, {useEffect} from "react";
 import {Editor, convertFromRaw} from 'draft-js';
+import Paper from '@material-ui/core/Paper';
+import MicIcon from '@material-ui/icons/Mic';
+import Typography from "@material-ui/core/Typography";
+import CommentIcon from '@material-ui/icons/Comment';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
+import { withStyles } from '@material-ui/core/styles';
+
 
 import "./style.scss";
-//
-// import fb from "../../../../Images/social/facebook.png";
-// import wa from "../../../../Images/social/whatsapp.png";
-// import li from "../../../../Images/social/linkedin.png";
-// import tw from "../../../../Images/social/twitter.png";
+
+const RedTextTypography = withStyles({
+    root: {
+        color: "#FF0000"
+    }
+})(Typography);
+
+const BlueTextTypography = withStyles({
+    root: {
+        color: "#4285f4"
+    }
+})(Typography);
 
 function BlogBody(props) {
-  useEffect(() => {
-    console.log(props.config.content)
-  }, [])
-  return (
-    <React.Fragment>
-      <div className="blog-body">
-        {/*<div className="role-play"></div>*/}
-        <div className="blog-content">
-          <div className="blog-content--print py-fnt-s--1p6 py-ink--dark">
-            {props.json ? props.viewBlog ? props.config ? <Editor editorState={props.config.content} readOnly={true} /> : props.config.content ? props.config.content : 'Loading...' : '' : ''}
-          </div>
-          <div
-            className="blog-actions py-fnt-s--1p4 py-fnt-w--bold"
-          >
-            <div className="blog-actions--act blog-actions--act__inactive blog-actions--act-comment">
-              <div className="blog-actions--act-stage blog-actions--act-stage__inactive">
-                <div className="blog-actions--act-stage--curtain">
-                  <i className="far fa-comments"></i>
-                  <span>ADD A COMMENT</span>
+    useEffect(() => {
+        console.log(props.config.content)
+    }, [])
+    return (
+        <React.Fragment>
+            <div className="blog-body">
+                {/*<div className="role-play"></div>*/}
+                <div className="blog-content">
+                    <div className="blog-content--print py-fnt-s--1p6 py-ink--dark">
+                        {props.config.content ?
+                            <Editor editorState={props.config.content} readOnly={true}/> : 'Loading...'}
+                    </div>
                 </div>
-                <div className="blog-actions--act-stage--show__inactive"></div>
-              </div>
-            </div>
-            <div
-              className="blog-actions--act blog-actions--act__inactive blog-actions--act-like"
-              onClick={props.config.likeToggled}
-            >
-              <div className="blog-actions--act-stage blog-actions--act-stage__inactive">
-                <div className="blog-actions--act-stage--curtain">
-                  <i className="far fa-heart"></i>
-                  <span>LIKE</span>
+                <div className="blog-related">
+                    <Paper variant={"outlined"}>
+                        <div style={{
+                            background: '#FAFAFA',
+                            padding: '10px',
+                        }}>
+                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <MicIcon style={{fill: props.isLiked ? '#ff0000' : '#4285f4'}}/>
+                                    <Typography variant="button">Like Article</Typography>
+                                </div>
+                                <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <RedTextTypography variant={"button"}>{props.numOfLikes}</RedTextTypography>
+                                    {props.isLiked ? <FavoriteIcon style={{fill: '#ff0000'}}/> :
+                                        <FavoriteBorderIcon style={{fill: '#ff0000'}}/>}
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{
+                            background: '#FAFAFA',
+                            padding: '10px',
+                        }}>
+                            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <MicIcon style={{fill: '#4285f4'}}/>
+                                    <Typography variant="button">View Comments</Typography>
+                                </div>
+                                <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <BlueTextTypography variant={"button"}>{props.numOfComments}</BlueTextTypography>
+                                    <CommentIcon style={{fill: '#4285f4'}}/>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{
+                            background: '#FAFAFA',
+                            padding: '10px',
+                        }}>
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                <MicIcon style={{fill: '#4285f4'}}/>
+                                <Typography variant="button">Add comment</Typography>
+                            </div>
+                        </div>
+                    </Paper>
                 </div>
-                <div className="blog-actions--act-stage--show__inactive"></div>
-              </div>
             </div>
-            {/*<div className="blog-actions--act blog-actions--act-share">*/}
-            {/*  <div className="blog-actions--act-stage">*/}
-            {/*    <div className="blog-actions--act-stage--curtain">*/}
-            {/*      <i className="fas fa-share"></i>*/}
-            {/*      <span>SHARE THIS BLOG</span>*/}
-            {/*    </div>*/}
-            {/*    <div className="blog-actions--act-stage--show">*/}
-            {/*      <div className="py-social-actor">*/}
-            {/*        <img*/}
-            {/*          className="py-social-actor--pixel"*/}
-            {/*          src={fb}*/}
-            {/*          title="Facebook"*/}
-            {/*          alt="fb"*/}
-            {/*        />*/}
-            {/*      </div>*/}
-            {/*      <div className="py-social-actor">*/}
-            {/*        <img*/}
-            {/*          className="py-social-actor--pixel"*/}
-            {/*          src={tw}*/}
-            {/*          title="Twitter"*/}
-            {/*          alt="tr"*/}
-            {/*        />*/}
-            {/*      </div>*/}
-            {/*      <div className="py-social-actor">*/}
-            {/*        <img*/}
-            {/*          className="py-social-actor--pixel"*/}
-            {/*          src={li}*/}
-            {/*          title="Linkedin"*/}
-            {/*          alt="ig"*/}
-            {/*        />*/}
-            {/*      </div>*/}
-            {/*      <div className="py-social-actor">*/}
-            {/*        <img*/}
-            {/*          className="py-social-actor--pixel"*/}
-            {/*          src={wa}*/}
-            {/*          title="WhatsApp"*/}
-            {/*          alt="wa"*/}
-            {/*        />*/}
-            {/*      </div>*/}
-            {/*    </div>*/}
-            {/*  </div>*/}
-            {/*</div>*/}
-          </div>
-        </div>
-        {/*<div className="blog-related"></div>*/}
-      </div>
-    </React.Fragment>
-  );
+        </React.Fragment>
+    );
 }
 
 export default BlogBody;
