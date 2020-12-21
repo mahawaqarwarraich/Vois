@@ -7,7 +7,7 @@ import CommentIcon from '@material-ui/icons/Comment';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import { withStyles } from '@material-ui/core/styles';
-
+// import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import "./style.scss";
 
@@ -34,7 +34,18 @@ function BlogBody(props) {
                 <div className="blog-content">
                     <div className="blog-content--print py-fnt-s--1p6 py-ink--dark">
                         {props.config.content ?
-                            <Editor editorState={props.config.content} readOnly={true}/> : 'Loading...'}
+                            <Editor editorState={props.config.content} readOnly={true}/>
+                            // <Editor
+                            //     editorState={props.config.content}
+                            //     toolbarClassName="toolbarClassName"
+                            //     wrapperClassName="wrapperClassName"
+                            //     editorClassName="editorClassName"
+                            //     // onEditorStateChange={props.onEditorStateChange}
+                            //     // customStyleFn={props.customStyleFn}
+                            //
+                            //
+                            // />
+                            : 'Loading...'}
                     </div>
                 </div>
                 <div className="blog-related">

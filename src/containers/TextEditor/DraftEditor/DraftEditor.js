@@ -1,5 +1,7 @@
 import React, {useEffect} from "react";
 import {Editor} from "react-draft-wysiwyg";
+// import Editor from "draft-js-plugins-editor";
+
 
 function DraftEditor(props) {
 
@@ -20,6 +22,7 @@ function DraftEditor(props) {
                 editorClassName="editorClassName"
                 onEditorStateChange={props.onEditorStateChange}
                 customStyleFn={props.customStyleFn}
+
 
             />
             {/*<button onClick={() => props.setEditorContentProgramatically("This editor is super cool !\n")}>click me*/}

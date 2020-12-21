@@ -22,6 +22,11 @@ const ArticleTopics = (props) => {
             description: 'Opens an article topic'
         },
         {
+            command: 'search',
+            callback: () => {props.history.push(`${props.match.url}/All%20Articles/search`)},
+            description: 'Search in the entire directory'
+        },
+        {
             command: 'scroll down',
             callback: () => window.scrollTo({top: window.pageYOffset+500,behavior:"smooth"})
         },

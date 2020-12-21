@@ -3,7 +3,7 @@ import './Articles.scss';
 import axios from 'axios';
 import {useSpeechRecognition} from "react-speech-recognition";
 import AuthService from "../../../services/auth-service";
-
+import {Route} from 'react-router-dom';
 import {EditorState, convertFromRaw} from 'draft-js';
 
 import ArticleListItem from "../../../components/ArticlesDirectory/ArticleListItem/ArticleListItem";
@@ -17,6 +17,11 @@ const Articles = (props) => {
             command: 'open *',
             callback: (articleTitle) => showBlogByVoiceHandler(articleTitle),
             description: 'Opens an article'
+        },
+        {
+            command: 'search',
+            callback: () => {props.history.push(`${props.match.url}/search`)},
+            description: 'Search in this directory'
         },
         {
             command: 'go back',

@@ -14,6 +14,7 @@ import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopic
 import SignupPage from "./components/Pages/User/SingupPage/SIgnupPage";
 import LoginPage from "./components/Pages/User/LoginPage/LoginPage";
 import ProfilePage from "./components/Pages/User/ProfilePage/ProfilePage";
+import SearchInDirectory from "./containers/ArticlesDirectory/SearchInDirectory";
 
 // import Articles from "./containers/ArticlesDirectory/Articles/Articles";
 import BlogManager from "./containers/Blog/BlogManager";
@@ -93,6 +94,10 @@ function App(props) {
                                 {...props} />}/>
                             <Route path="/articles-directory/:topicName" exact
                                    render={props => <ArticlesPage
+                                       setCommands={newState => setSidebarState(newState)}
+                                       {...props}/>}/>
+                            <Route path="/articles-directory/:directoryName/search"
+                                   render={props => <SearchInDirectory
                                        setCommands={newState => setSidebarState(newState)}
                                        {...props}/>}/>
                             <Route

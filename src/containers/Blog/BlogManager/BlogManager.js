@@ -192,6 +192,7 @@ function BlogManager(props) {
                 setNumOfComments(res.data.article.Comments.length);
                 if (!isLiked)
                     setIsLiked(false);
+                console.log(res.data.article.Body, "-- aaaaaaa -- ye dykho idhar ---")
                 setBlogConfig({
                     blogStats: {
                         numOfComments: numOfComments,

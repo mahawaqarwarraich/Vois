@@ -13,6 +13,8 @@
     "draft-js": "^0.11.7",
     "draft-js-custom-styles": "^2.1.1",
     "draft-js-export-html": "^1.4.1",
+    "draft-js-image-plugin": "^2.0.7",
+    "draft-js-plugins-editor": "^3.0.0",
     "form-data": "^3.0.0",
     "html-docx-js": "^0.3.1",
     "html-to-docx": "^1.1.32",
