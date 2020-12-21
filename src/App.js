@@ -100,12 +100,16 @@ function App(props) {
                                    render={props => <SearchInDirectory
                                        setCommands={newState => setSidebarState(newState)}
                                        {...props}/>}/>
+                            <Route path="/articles-directory/user-articles/:userId" exact
+                                   render={props => <ArticlesPage
+                                       setCommands={newState => setSidebarState(newState)}
+                                       {...props}/>}/>
                             <Route
                                 path="/signup"
                                 exact
                                 render={(props) => <SignupPage {...props} />}
                             />
-                            <Route path="/login" exact render={(props) => <LoginPage {...props} />} />
+                            <Route path="/login" exact render={(props) => <LoginPage {...props} />}/>
                             <Route
                                 path="/profile/:userId"
                                 exact

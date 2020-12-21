@@ -6,11 +6,34 @@ import ArticleCard from "../../../../components/ArticlesDirectory/ArticleCardUI/
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { Skeleton } from "@material-ui/lab";
 import {useSpeechRecognition} from "react-speech-recognition";
+import Button from "@material-ui/core/Button";
+import BottomNavigationAction from "@material-ui/core/BottomNavigationAction";
+import DescriptionIcon from '@material-ui/icons/Description';
+import ViewDayIcon from '@material-ui/icons/ViewDay';
+import PictureInPictureIcon from '@material-ui/icons/PictureInPicture';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import BottomNavigation from "@material-ui/core/BottomNavigation";
+import Modal from "@material-ui/core/Modal";
+import CameraFrontIcon from '@material-ui/icons/CameraFront';
+
 
 
 const ProfileUI = (props) => {
 
   let inputElement = null;
+
+  let modalStyle = {
+    position:"relative"
+  }
+
+  let modalBodyStyle = {
+    position:"fixed",
+    top:"50%",
+    left: "50%",
+    transform: "translate(-50%,-50%)",
+    backgroundColor: "#FFFFFF",
+    padding: "1rem 5rem 3rem 5rem"
+  }
 
   const [myLatestFavArticles, setMyLatestFavArticles] = useState(null);
   const [myLatestArticles, setMyLatestArticles] = useState(null);
@@ -19,6 +42,8 @@ const ProfileUI = (props) => {
   const [loading, setLoading] = useState(false);
   const [userId,setUserId] = useState(null);
   const [uploadPictureDialogState, setUploadPictureDialogState] = useState(false);
+  const [view, setView] = useState("Private View");
+  const [modelOpen, setModelOpen] = useState(false);
 
 
   const commands = [
@@ -26,6 +51,26 @@ const ProfileUI = (props) => {
       command: 'upload profile picture',
       callback: () => {uploadProfilePicture()},
       description: 'Uploads new profile picture'
+    },
+    {
+      command: 'public view',
+      callback: () => {profileViewHandler()},
+      description: 'Changes profile view to public'
+    },
+    {
+      command: 'private view',
+      callback: () => {profileViewHandler()},
+      description: 'Changes profile view to private'
+    },
+    {
+      command: 'view all articles',
+      callback: () => {viewMyAllBlogs()},
+      description: 'Views user all articles'
+    },
+    {
+      command: 'show user articles',
+      callback: () => {navigationHandler(null,0)},
+      description: 'Shows all user articles from navigation menu'
     },
     {
       command: 'go back',
@@ -48,7 +93,7 @@ const ProfileUI = (props) => {
 
   useEffect(() => {
     axios
-        .get("http://localhost:8000/get-my-latest-blogs", {
+        .get("http://localhost:8000/get-user-latest-articles/" + props.match.params.userId, {
           headers: authHeader(),
         })
         .then((response) => {
@@ -62,18 +107,23 @@ const ProfileUI = (props) => {
   }, []);
 
   useEffect(()=>{
-    axios
-        .get("http://localhost:8000/get-latest-fav-articles", {
-          headers: authHeader(),
-        })
-        .then((response) => {
-          console.log(response.data.favArticles);
-          setMyLatestFavArticles(response.data.favArticles);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-
+    if (props.match.params.userId === JSON.parse(localStorage.getItem("user"))
+        && view === "Private View") {
+      axios
+          .get("http://localhost:8000/get-latest-fav-articles", {
+            headers: authHeader(),
+          })
+          .then((response) => {
+            console.log(response.data.favArticles);
+            setMyLatestFavArticles(response.data.favArticles);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+    }
+    else {
+      setMyLatestFavArticles([]);
+    }
   },[]);
 
   useEffect(()=>{
@@ -95,9 +145,32 @@ const ProfileUI = (props) => {
 
   }, []);
 
+  const profileViewHandler = () => {
+    if (view === "Public View") {
+      setView("Private View");
+    } else {
+      setView("Public View");
+    }
+  }
+
+  const navigationHandler = (event, newValue) => {
+    // console.log(newValue);
+
+    if (newValue === 1) {
+      alert("Resume");
+    }
+    else if (newValue === 2) {
+      alert("Portfolio");
+    }
+    else {
+      const url = "/articles-directory/user-articles/" + props.match.params.userId;
+      props.history.push(url);
+    }
+  }
+
   const viewMyAllBlogs = () => {
-    const url = "blogs/my-blogs";
-    this.props.history.push(url);
+    const url = "/articles-directory/user-articles/" + props.match.params.userId;
+    props.history.push(url);
   };
 
   const viewAllFavBlogs = () => {
@@ -106,7 +179,7 @@ const ProfileUI = (props) => {
   };
 
   const uploadProfilePicture = () => {
-    setUploadPictureDialogState(true);
+    setModelOpen(true);
   };
 
   const fileSelectedHandler = (event) => {
@@ -135,12 +208,16 @@ const ProfileUI = (props) => {
                     className="profile__details--content-profile-pic"
                     style={{ backgroundImage: `url(${profilePicture})` }}
                 >
-                  {userId === JSON.parse(localStorage.getItem("user")).userId ? <React.Fragment><label
-                          htmlFor="upload-image"
-                          className="profile__details--content-profile-pic-change"
-                      >
-                        <h3>Upload New</h3>
-                      </label>
+                  {userId === JSON.parse(localStorage.getItem("user")).userId && view === "Private View"
+                      ? <React.Fragment>
+                        {/*<label*/}
+                        {/*  htmlFor="upload-image"*/}
+                        {/*  className="profile__details--content-profile-pic-change"*/}
+                      {/*>*/}
+                      <div className="profile__details--content-profile-pic-change">
+                        <h3 onClick={uploadProfilePicture}>Upload New</h3>
+                      </div>
+                      {/*</label>*/}
                       <input
                           id="upload-image"
                           type="file"
@@ -152,37 +229,34 @@ const ProfileUI = (props) => {
                 <h2 className="profile__details--content-username">
                   {username}
                 </h2>
-                <div className="profile__details--content-description">
-                  <div className="profile__details--content-description-header">
-                    <h3 className="profile__details--content-description-header-heading">
-                      Description
-                    </h3>
-                    <a
-                        href=""
-                        className="profile__details--content-description-header-edit"
-                    >
-                      Edit Description
-                    </a>
-                  </div>
-                  <p className="profile__details--content-description-content">
-                    Lorem ipsum, or lipsum as it is sometimes known, is dummy text
-                    used in laying out print, graphic or web designs. The passage is
-                    attributed to an unknown typesetter in the 15th century who is
-                    thought to have scrambled parts of Cicero's De Finibus Bonorum
-                    et Malorum for use in a type specimen book. Lorem ipsum, or
-                    lipsum as it is sometimes known, is dummy text used in laying
-                    out print, graphic or web designs. The passage is attributed to
-                    an unknown typesetter in the 15th century who is thought to have
-                    scrambled parts of Cicero's De Finibus Bonorum et Malorum for
-                    use in a type specimen book.
-                  </p>
-                </div>
+
+                {userId === JSON.parse(localStorage.getItem("user")).userId ?
+                    <div style={{textAlign: "center"}}>
+                      <Button variant="contained" color="primary" onClick={profileViewHandler}>
+                        {view === "Public View" ? "Private View" : "Public View"}
+                      </Button>
+                    </div> : <div style={{marginBottom: "-3rem"}}/> }
+                <BottomNavigation
+                    // value={value}
+                    // onChange={(event, newValue) => {
+                    //   setValue(newValue);
+                    // }}
+                    onChange={(event, newValue) => navigationHandler(event,newValue)}
+                    showLabels
+                    className="profile__details--content-menu"
+                >
+                  <BottomNavigationAction label="Articles" icon={<DescriptionIcon />} />
+                  <BottomNavigationAction label="Resume" icon={<ViewDayIcon />} />
+                  <BottomNavigationAction label="Portfolio" icon={<PictureInPictureIcon/>} />
+                </BottomNavigation>
               </div>
-              <div className="profile__details--boundary"></div>
+              <div className="profile__details--boundary"/>
             </div>
             <div className="profile__activity">
               <div className="profile__activity--blogs">
-                <h2 className="profile__activity--blogs-heading">My Published Articles</h2>
+                {userId === JSON.parse(localStorage.getItem("user")).userId && view === "Private View" ?
+                    <h2 className="profile__activity--blogs-heading">My Published Articles</h2>
+                    : <h2 className="profile__activity--blogs-heading">Published Articles</h2> }
                 <div className="profile__activity--blogs-my-blogs">
                   {myLatestArticles ? (
                       myLatestArticles.map((article) => (
@@ -216,6 +290,7 @@ const ProfileUI = (props) => {
                   View All
                 </a>
               </div>
+              {userId === JSON.parse(localStorage.getItem("user")).userId && view === "Private View" ?
               <div className="profile__activity--my-favorites">
                 <h2 className="profile__activity--blogs-heading">My Favorites</h2>
                 <div className="profile__activity--blogs-my-blogs">
@@ -251,8 +326,36 @@ const ProfileUI = (props) => {
                   View All
                 </a>
               </div>
+                  : <></>}
             </div>
           </div>
+          <Modal
+              style={modalStyle}
+              open={modelOpen}
+              // onClose={handleClose}
+              // aria-labelledby="simple-modal-title"
+              // aria-describedby="simple-modal-description"
+          >
+            <div style={modalBodyStyle}>
+              <h4 style={{marginBottom:"2rem",textAlign:"center"}}>Please Select Upload method</h4>
+              <Button
+                  style={{margin:"1rem"}}
+                  variant="contained"
+                  color="default"
+                  startIcon={<CloudUploadIcon />}
+              >
+                Upload from computer
+              </Button>
+              <Button
+                  style={{margin:"1rem"}}
+                  variant="contained"
+                  color="default"
+                  startIcon={<CameraFrontIcon />}
+              >
+                Take Picture From Webcam
+              </Button>
+            </div>
+          </Modal>
         </React.Fragment>
     );
 }

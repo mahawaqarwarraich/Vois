@@ -36,6 +36,7 @@ const ArticleTopicsPage = (props) => {
                 Button1="All Topics"
                 Button2="Popular"
                 Button3="Trending"
+                fromProfile = {false}
             />
             <SearchBar
                 placeHolder="Ex. Information Technlogy"
