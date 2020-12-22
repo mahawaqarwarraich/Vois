@@ -15,12 +15,13 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import BottomNavigation from "@material-ui/core/BottomNavigation";
 import Modal from "@material-ui/core/Modal";
 import CameraFrontIcon from '@material-ui/icons/CameraFront';
+import WebcamCapture from "../../../../components/WebcamCapture/WebcamCapture";
 
 
 
 const ProfileUI = (props) => {
 
-  let inputElement = null;
+  let textInput = React.createRef();
 
   let modalStyle = {
     position:"relative"
@@ -44,6 +45,7 @@ const ProfileUI = (props) => {
   const [uploadPictureDialogState, setUploadPictureDialogState] = useState(false);
   const [view, setView] = useState("Private View");
   const [modelOpen, setModelOpen] = useState(false);
+  const [webcamModalOpen, setWebcamModalOpen] = useState(false);
 
 
   const commands = [
@@ -51,6 +53,26 @@ const ProfileUI = (props) => {
       command: 'upload profile picture',
       callback: () => {uploadProfilePicture()},
       description: 'Uploads new profile picture'
+    },
+    {
+      command: 'close modal',
+      callback: () => {ModalClosedHandler()},
+      description: 'Closed Profile Picture Selection Modal'
+    },
+    {
+      command: 'upload from computer',
+      callback: () => {UploadFromComputer()},
+      description: 'Uploads profile picture from file system'
+    },
+    {
+      command: 'take picture from webcam',
+      callback: () => {uploadPictureFromWebcamHandler()},
+      description: 'Uploads profile picture from Webcam'
+    },
+    {
+      command: 'close webcam',
+      callback: () => {ProfileModalClosedHandler()},
+      description: 'Closes Webcam modal'
     },
     {
       command: 'public view',
@@ -182,15 +204,40 @@ const ProfileUI = (props) => {
     setModelOpen(true);
   };
 
-  const fileSelectedHandler = (event) => {
-    setProfilePicture(event.target.files[0]);
+  const ModalClosedHandler = () => {
+    setModelOpen(false);
+  };
+  const UploadFromComputer = () => {
+    textInput.current.click();
+  }
+  const uploadPictureFromWebcamHandler = () => {
+    setModelOpen(false);
+    setWebcamModalOpen(true);
+  }
+
+  const ProfileModalClosedHandler = () => {
+    setWebcamModalOpen(false);
+  }
+
+  const fileSelectedHandler = (event, blob) => {
 
     const fd = new FormData();
-    fd.append("picture", event.target.files[0]);
+    if (event) {
+      setProfilePicture(event.target.files[0]);
+
+      fd.append("picture", event.target.files[0]);
+    }
+    else {
+      setProfilePicture(blob);
+
+      fd.append("picture", blob);
+    }
+    setModelOpen(false);
     setLoading(true);
     axios
         .post("http://localhost:8000/upload-profile-picture", fd, {
           headers: authHeader(),
+          'content-type': 'multipart/form-data'
         })
         .then((response) => {
           setLoading(false);
@@ -218,11 +265,6 @@ const ProfileUI = (props) => {
                         <h3 onClick={uploadProfilePicture}>Upload New</h3>
                       </div>
                       {/*</label>*/}
-                      <input
-                          id="upload-image"
-                          type="file"
-                          onChange={fileSelectedHandler}
-                      />
                   </React.Fragment> : <></>
                   }
                 </div>
@@ -332,30 +374,67 @@ const ProfileUI = (props) => {
           <Modal
               style={modalStyle}
               open={modelOpen}
-              // onClose={handleClose}
+              onClose={ModalClosedHandler}
               // aria-labelledby="simple-modal-title"
               // aria-describedby="simple-modal-description"
           >
             <div style={modalBodyStyle}>
               <h4 style={{marginBottom:"2rem",textAlign:"center"}}>Please Select Upload method</h4>
-              <Button
-                  style={{margin:"1rem"}}
-                  variant="contained"
-                  color="default"
-                  startIcon={<CloudUploadIcon />}
-              >
-                Upload from computer
-              </Button>
-              <Button
-                  style={{margin:"1rem"}}
-                  variant="contained"
-                  color="default"
-                  startIcon={<CameraFrontIcon />}
-              >
-                Take Picture From Webcam
-              </Button>
+              <input
+                  id="upload-image"
+                  class="upload-image"
+                  type="file"
+                  onChange={fileSelectedHandler}
+              />
+              <div>
+                <Button
+                    style={{margin:"1rem"}}
+                    variant="contained"
+                    color="default"
+                    startIcon={<CloudUploadIcon />}
+                    ref = {textInput}
+                    onClick={()=>{
+                      document.getElementById("upload-image").click();
+                    }}
+                >
+                  Upload from computer
+                </Button>
+                <Button
+                    style={{margin:"1rem"}}
+                    variant="contained"
+                    color="default"
+                    startIcon={<CameraFrontIcon />}
+                    onClick={uploadPictureFromWebcamHandler}
+                >
+                  Take Picture From Webcam
+                </Button>
+              </div>
             </div>
           </Modal>
+
+
+          <Modal
+              style={modalStyle}
+              open={webcamModalOpen}
+              onClose={ProfileModalClosedHandler}
+              // aria-labelledby="simple-modal-title"
+              // aria-describedby="simple-modal-description"
+          >
+            <div style={modalBodyStyle}>
+              <h4 style={{marginBottom:"2rem",textAlign:"center"}}>Please Capture Profile Image</h4>
+              <input
+                  id="upload-image"
+                  class="upload-image"
+                  type="file"
+                  onChange={fileSelectedHandler}
+              />
+              <div>
+                <WebcamCapture
+                    fileSelectedHandler = {fileSelectedHandler}/>
+              </div>
+            </div>
+          </Modal>
+
         </React.Fragment>
     );
 }
