@@ -140,6 +140,10 @@ function BlogManager(props) {
         }
     }
 
+    const handleEditArticleClicked = () => {
+        props.history.push("/edit-article/" + blogId);
+    }
+
 
     const commands = [
         {
@@ -169,6 +173,15 @@ function BlogManager(props) {
     const updateSidebar = () => {
         props.setCommands(commands);
     }
+    if (owner) {
+        commands.push({
+            command: 'edit article',
+            callback: handleEditArticleClicked,
+            description: 'Opens the article in editor mode',
+        })
+        updateSidebar();
+    }
+
     useEffect(() => {
         updateSidebar();
     }, [])
@@ -178,6 +191,8 @@ function BlogManager(props) {
         setShowAddComment(false);
         updateSidebar();
     }
+
+
 
 
     const updateBlogConfig = (userId) => {
@@ -220,6 +235,7 @@ function BlogManager(props) {
                         title: res.data.article.Title,
                         author: res.data.article.Author.authorName,
                         createdOn: date,
+                        handleEditArticleClicked: handleEditArticleClicked,
                         // editArticle: () => editArticle(res.data.article._id),
                         // deleteArticle: () => deleteArticle(res.data.article._id),
                     },

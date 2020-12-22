@@ -9,6 +9,8 @@ import ArticleTopics from "../../ArticlesDirectory/ArticleTopics/ArticleTopics";
 import Button from "../../../components/ArticlesDirectory/UIElements/Button/Button";
 import ArticlesPage from "../ArticlesPage/ArticlesPage";
 import {Route} from "react-router-dom";
+import MicIcon from "@material-ui/icons/Mic";
+import Fab from "@material-ui/core/Fab";
 
 const ArticleTopicsPage = (props) => {
     // const commands = [
@@ -52,6 +54,10 @@ const ArticleTopicsPage = (props) => {
                     borderRadius="10px"
                 />
             </div>
+            <Fab color="secondary" aria-label="add" style={{position: "fixed", bottom: "5%", right: "5%"}} variant="extended">
+                <MicIcon style={{marginRight:"0.7rem"}} />
+                Create New Article
+            </Fab>
 
         </React.Fragment>
     );

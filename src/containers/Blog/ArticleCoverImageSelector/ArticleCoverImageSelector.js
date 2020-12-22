@@ -73,7 +73,13 @@ function ArticleCoverImageSelector(props) {
                 })
             }
         },
-    ]
+        {
+            command: 'close',
+            callback: () => props.hide(),
+            description: 'It will close this modal',
+        }
+
+]
     const {transcript} = useSpeechRecognition({commands});
     const commandsAndDesc = [];
 

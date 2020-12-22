@@ -1,4 +1,6 @@
 import React, {useContext} from "react";
+import MicIcon from '@material-ui/icons/Mic';
+import Typography from '@material-ui/core/Typography';
 
 import BlogSignatureHeading from "../../../../components/UIWidgets/Typography/BlogSignatureHeading";
 import DotList from "../../../../components/UIWidgets/DotList";
@@ -6,6 +8,13 @@ import DotList from "../../../../components/UIWidgets/DotList";
 import ThemeContext from "../../../../contexts/ThemeContext";
 
 import "./style.scss";
+import {withStyles} from "@material-ui/core/styles";
+
+const WhiteTextTypography = withStyles({
+    root: {
+        color: "#fff"
+    }
+})(Typography);
 
 function BlogHeader(props) {
     const theme = useContext(ThemeContext);
@@ -28,6 +37,26 @@ function BlogHeader(props) {
                         padding: '7px 18px',
                         color: '#fff',
                     }} onClick={props.config.setShowCoverImageSelector}>Set cover image
+                    </button>
+                    : ''}
+                {props.config.owner ?
+                    <button style={{
+                        position: 'absolute',
+                        top: '10px',
+                        right: '10px',
+                        background: '#4285f4',
+                        border: 0,
+                        borderRadius: '4px',
+                        padding: '7px 18px',
+                        color: '#fff',
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                    onClick={props.config.handleEditArticleClicked}>
+                        <MicIcon style={{fill: '#fff'}} />
+                        <WhiteTextTypography variant={"button"}>
+                            Edit Article
+                        </WhiteTextTypography>
                     </button>
                     : ''}
 

@@ -11,6 +11,7 @@ import HomePage from "./containers/Pages/HomePage";
 // import ArticleTopics from "./containers/ArticlesDirectory/ArticleTopics/ArticleTopics";
 import ArticleTopicsPage from "./containers/Pages/ArticleTopicsPage/ArticleTopicsPage";
 // import TextEditor from "./containers/TextEditor";
+import VCS from "./containers/Blog/VCS/VCS";
 
 import SignupPage from "./components/Pages/User/SingupPage/SIgnupPage";
 import LoginPage from "./components/Pages/User/LoginPage/LoginPage";
@@ -83,6 +84,30 @@ function App(props) {
                             <Route path="/text-editor" render={props => (
                                 <Suspense fallback={<LinearProgress />}>
                                     <TextEditor
+                                        doc={true}
+                                        setCommands={newState => setSidebarState(newState)}
+                                        {...props} />
+                                </Suspense>)
+                            }/>
+                            <Route path="/new-article" render={props => (
+                                <Suspense fallback={<LinearProgress />}>
+                                    <TextEditor
+                                        setCommands={newState => setSidebarState(newState)}
+                                        {...props} />
+                                </Suspense>)
+                            }/>
+                            <Route path="/edit-article/:id" exact render={props => (
+                                <Suspense fallback={<LinearProgress />}>
+                                    <TextEditor
+                                        editor={true}
+                                        setCommands={newState => setSidebarState(newState)}
+                                        {...props} />
+                                </Suspense>)
+                            }/>
+                            <Route path="/edit-article/:id/:vid" render={props => (
+                                <Suspense fallback={<LinearProgress />}>
+                                    <TextEditor
+                                        editor={true}
                                         setCommands={newState => setSidebarState(newState)}
                                         {...props} />
                                 </Suspense>)
@@ -103,6 +128,10 @@ function App(props) {
                                        {...props}/>}/>
                             <Route path="/articles-directory/user-articles/:userId" exact
                                    render={props => <ArticlesPage
+                                       setCommands={newState => setSidebarState(newState)}
+                                       {...props}/>}/>
+                            <Route path="/vcs/:id" exact
+                                   render={props => <VCS
                                        setCommands={newState => setSidebarState(newState)}
                                        {...props}/>}/>
                             <Route

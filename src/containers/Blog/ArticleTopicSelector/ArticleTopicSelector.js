@@ -35,7 +35,7 @@ function ArticleTopicSelector(props) {
 
     const commands = [
         {
-            command: 'set *',
+            command: 'set topic of *',
             callback: (topic) => {
                 if (topicNames.includes(topic.toLowerCase())) {
                     articleTopics.forEach(tp => {

@@ -9,6 +9,9 @@ import {stateToHTML} from 'draft-js-export-html';
 import FormData from "form-data";
 import {useSnackbar} from 'notistack';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Typography from '@material-ui/core/Typography';
+import MicIcon from '@material-ui/icons/Mic';
+import TextField from '@material-ui/core/TextField';
 
 
 import DraftEditor from "./DraftEditor";
@@ -17,12 +20,54 @@ import ArticleTopicSelector from "../Blog/ArticleTopicSelector";
 import ArticleCoverImageSelector from "../Blog/ArticleCoverImageSelector";
 
 import authHeader from "../../services/auth-header";
+import authService from "../../services/auth-service";
+import {withStyles} from "@material-ui/core/styles";
+
+const TitleField = withStyles({
+    root: {
+        '& label': {
+            color: '#4285f4',
+            fontWeight: 'bold',
+        },
+        '& label.Mui-focused': {
+            color: '#4285f4',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: '#4285f4',
+                borderWidth: '2px',
+            },
+            '&:hover fieldset': {
+                borderColor: '#4285f4',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: '#4285f4',
+            },
+        },
+    },
+})(TextField);
+
+const BlueTextTypography = withStyles({
+    root: {
+        color: "#4285f4"
+    }
+})(Typography);
 
 function TextEditor(props) {
     const [editorState, setEditorState] = useState(EditorState.createEmpty());
     const [showTopics, setShowTopics] = useState(false);
     const [topic, setTopic] = useState('');
     const [loading, setLoading] = useState(false);
+    const [blogId, setBlogId] = useState(props.editor ? props.match.params.id : '');
+    const [secureURL, setSecureURL] = useState('');
+    const [publicURL, setPublicURL] = useState('');
+
+    const [blogHeaderConfig, setBlogHeaderConfig] = useState({
+        imageURL: '',
+        author: '...',
+        createdOn: `${(new Date()).toDateString()}`,
+    })
+    const [owner, setOwner] = useState(false);
 
     const customStylesToManage = ["font-size", "color", "font-family"];
     const {styles, customStyleFn, exporter} = createStyles(customStylesToManage, "CUSTOM_")
@@ -56,11 +101,6 @@ function TextEditor(props) {
             command: 'set topic',
             callback: () => setShowTopics(true),
             description: 'Opens the list of topics to select from',
-        },
-        {
-            command: 'publish article',
-            callback: () => publishArticle(),
-            description: 'Publishes the article and navigates to the published article page',
         },
         {
             command: 'bold',
@@ -177,24 +217,178 @@ function TextEditor(props) {
                 let footerHTMLString = '<p></p>';
             },
             description: 'Downloads the document in docx format'
+        },
+        {
+            command: 'publish article',
+            callback: () => publishArticle(),
+            description: 'Publishes the article and navigates to the published article page',
+        },
+        {
+            command: 'generate Word document',
+            callback: () => {
+                let contentState = editorState.getCurrentContent();
+                let htmlString = stateToHTML(contentState);
+                let headerHTMLString = '<p></p>';
+                let footerHTMLString = '<p></p>';
+                axios.post("http://localhost:8000/convert-to-docx", {
+                    htmlString: htmlString,
+                    headerHTMLString: headerHTMLString,
+                    footerHTMLString: footerHTMLString,
+                    documentOptions: {
+                        title: title
+                    },
+                })
+                    .then(res => {
+                        console.log(res);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+            },
+            description: 'Generates word document'
         }
 
     ];
 
+
+    const handleViewVersionHistory = () => {
+        props.history.push("/vcs/" + blogId);
+    }
+
+    const updateSidebar = () => {
+        props.setCommands(commands);
+    }
+    if (props.editor) {
+        commands.push({
+            command: 'view version history',
+            callback: handleViewVersionHistory,
+            description: 'Opens the version control system for this article',
+        })
+        updateSidebar();
+    }
     const commandsAndDesc = [];
 
     commands.forEach(cmd => {
         commandsAndDesc.push({command: cmd.command, description: cmd.description})
     })
 
-    const updateSidebar = () => {
-        props.setCommands(commandsAndDesc);
-    }
 
     useEffect(() => {
         updateSidebar()
 
     }, [])
+
+    const [versions, setVersions] = useState([]);
+
+    const updateBlogConfig = (userId) => {
+        if (props.match.params.vid) {
+            axios.get("http://localhost:8000/get-articles-version-history/" + props.match.params.id, {
+                headers: authHeader(),
+            })
+                .then(res => {
+                    console.log(res);
+                    setLoading(false);
+                    const versionHistory = res.data["version_history"]["Version_History"];
+                    setVersions([...versionHistory]);
+                    let article = versionHistory[parseInt(props.match.params.vid)].article;
+
+                    let owner = false;
+                    if (userId) {
+                        if (userId === article.Author.id) {
+                            owner = true;
+                            setOwner(true);
+                        } else {
+                            //change later
+                            owner = true;
+                            setOwner(true);
+                        }
+                    }
+                    let d = new Date(article.PostedOn);
+                    const date = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+
+
+                    setBlogHeaderConfig({
+                        imageURL: article.PictureSecureId,
+                        createdOn: date,
+                        author: article.Author.authorName,
+                    });
+                    setTitle(article.Title);
+                    setTopic(article.Topic);
+
+                    setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(article.Body))));
+
+
+                    updateSidebar()
+                })
+                .catch(err => {
+                    console.log(err);
+                    // props.history.push("/");
+                })
+        } else {
+            axios
+                .get("http://localhost:8000/get-article/" + blogId)
+                .then((res) => {
+                    console.log(res.data.article, "article");
+                    setLoading(false);
+                    let owner = false;
+                    if (userId) {
+                        if (userId === res.data.article.Author.id) {
+                            owner = true;
+                            setOwner(true);
+                        } else {
+                            props.history.push("/");
+                        }
+                    }
+                    let d = new Date(res.data.article.PostedOn);
+                    const date = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+
+
+                    setBlogHeaderConfig({
+                        imageURL: res.data.article.PictureSecureId,
+                        createdOn: date,
+                        author: res.data.article.Author.authorName,
+                    });
+                    setTitle(res.data.article.Title);
+                    setTopic(res.data.article.Topic);
+
+                    setEditorState(EditorState.createWithContent(convertFromRaw(JSON.parse(res.data.article.Body))));
+
+                    setLoading(false);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    };
+
+
+    useEffect(() => {
+        if (props.editor) {
+            setLoading(prevState => {
+                return true;
+            });
+            let _user = authService.getCurrentUser();
+            if (_user && _user.userId) {
+                updateBlogConfig(_user.userId);
+            } else {
+                props.history.push("/");
+            }
+        } else {
+            let _user = authService.getCurrentUser();
+            if (_user && _user.userId) {
+                setBlogHeaderConfig({
+                    imageURL: '',
+                    createdOn: `${(new Date()).toDateString()}`,
+                    author: _user.username,
+                });
+            } else {
+                props.history.push('/login');
+            }
+        }
+
+
+    }, []);
+
 
     const {resetTranscript, interimTranscript, finalTranscript} = useSpeechRecognition({commands});
     const [editorJSON, setEditorJSON] = useState('');
@@ -240,6 +434,8 @@ function TextEditor(props) {
             shouldProvoke = false;
         if (showCoverImageSelector)
             shouldProvoke = false;
+        if (text.includes('set topic of'))
+            shouldProvoke = false
         if (shouldProvoke) {
             setEditorState(currEditorState => {
                 return insertText(text.length > 0 ? text + ' ' : text, currEditorState);
@@ -252,6 +448,10 @@ function TextEditor(props) {
     const titleInputEl = useRef(null);
 
     const publishArticle = () => {
+        let url = "http://localhost:8000/add-article";
+        if (props.editor) {
+            url = "http://localhost:8000/edit-article";
+        }
         // let _state = JSON.stringify(convertToRaw(editorState.getCurrentContent()));
         // console.log(_state);
         // let _updated_state = EditorState.createWithContent(convertFromRaw(JSON.parse(_state)));
@@ -259,29 +459,38 @@ function TextEditor(props) {
         if (title !== '' && editorState.getCurrentContent().hasText() && topic !== '' && blogHeaderConfig.imageURL !== '') {
             setLoading(true);
             let data = new FormData();
-            if (isImageLocal)
+            if (isImageLocal) {
                 data.append("picture", document.querySelector("#coverImage").files[0]);
-            else
-                data.append("link", blogHeaderConfig.imageURL);
+            } else {
+                if (props.editor)
+                    data.append("secure_url", blogHeaderConfig.imageURL);
+                else
+                    data.append("link", blogHeaderConfig.imageURL);
+            }
 
+            if (props.editor) {
+                data.append("articleId", blogId);
+            }
             data.append("title", title);
             data.append("topic", topic);
             data.append("body", JSON.stringify(convertToRaw(editorState.getCurrentContent())));
             console.log(blogHeaderConfig.imageURL);
             console.log(isImageLocal);
+            console.log(data.title, "reqData");
 
-            axios.post("http://localhost:8000/add-article", data, {
-                headers: authHeader(),
-            }).then(res => {
-                console.log(res);
-                setLoading(false);
-                console.log(res.data.article._id);
-                const _id = res.data.article._id;
-
-                props.history.push("/article/" + _id);
-                // alert("Blog published successfully!");
-            })
-            console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())), "tada!");
+            // axios.post(url, data, {
+            //     headers: authHeader(),
+            // }).then(res => {
+            //     console.log(res);
+            //     setLoading(false);
+            //     console.log(res.data.article._id);
+            //     const _id = res.data.article._id;
+            //
+            //     props.history.push("/article/" + _id);
+            //     // alert("Blog published successfully!");
+            // }).catch(err => {
+            //     console.log(err);
+            // })
         } else {
             let variant = "error";
             let missingFields = [];
@@ -299,11 +508,7 @@ function TextEditor(props) {
         // )))
     }
 
-    const [blogHeaderConfig, setBlogHeaderConfig] = useState({
-        imageURL: '',
-        author: 'Haysam Bin Tahir',
-        createdOn: `${(new Date()).toDateString()}`,
-    })
+
     const [showCoverImageSelector, setShowImageSelector] = useState(false);
     const [isImageLocal, setIsImageLocal] = useState(false);
     const setCoverImage = (imageUrl, isImageLocal = false) => {
@@ -325,54 +530,79 @@ function TextEditor(props) {
     return (
         <React.Fragment>
             {loading ? <LinearProgress/> : ''}
-        <div style={{margin: '20px 2.5% 20px 2.5%', position: 'relative'}}>
-            <BlogHeader config={{
-                ...blogHeaderConfig,
-                title: title.length > 0 ? title : 'Untitled - Say "set title <titlename>" to set a title',
-                setCommands: props.setCommands,
-                showCoverImageSelectorButton: true,
-                setShowCoverImageSelector: () => setShowImageSelector(true),
-            }}/>
-            {showCoverImageSelector ? <ArticleCoverImageSelector
-                setCoverImage={setCoverImage}
-                hide={() => setShowImageSelector(false)}
-                setCommands={props.setCommands}
-                handleCoverImageChange={handleCoverImageChange}/> : ''}
-            <input
-                id={"coverImage"}
-                type={"file"}
-                accept={"image/*"}
-                onChange={handleCoverImageChange}
-                hidden
-            />
-            <ArticleTopicSelector topic={topic} setCommands={props.setCommands} show={showTopics}
-                                  setTopic={handleTopicChange}
-                                  hide={hideTopics}/>
+            <div style={{margin: '20px 2.5% 20px 2.5%', position: 'relative'}}>
+                {props.doc ?
+                    <TitleField gutterBottom variant={"outlined"} value={title} onChange={e => setTitle(e.target.value)}
+                                label={"Say set title <titlename> to set the title for this document"} fullWidth/> : ''}
+                <br/>
+                <div style={{marginBottom: '25px'}}></div>
+                {props.doc ? '' : <BlogHeader config={{
+                    ...blogHeaderConfig,
+                    title: title.length > 0 ? title : 'Untitled - Say "set title <titlename>" to set a title',
+                    setCommands: props.setCommands,
+                    showCoverImageSelectorButton: true,
+                    setShowCoverImageSelector: () => setShowImageSelector(true),
+                }}/>}
 
-            {/*<input style={{*/}
-            {/*    width: '75%',*/}
-            {/*    padding: '7px 18px',*/}
-            {/*    border: '1px solid #d3d3d3',*/}
-            {/*    borderRadius: '4px',*/}
-            {/*    marginBottom: '25px',*/}
-            {/*    fontSize: '18px',*/}
-            {/*    position: 'absolute',*/}
-            {/*    top: '10px',*/}
-            {/*    left: '50%',*/}
-            {/*    transform: 'translateX(-50%)',*/}
-            {/*    backgroundColor: 'transparent',*/}
-            {/*    borderColor: '#1a1616'*/}
+                {props.doc ? '' : showCoverImageSelector ? <ArticleCoverImageSelector
+                    setCoverImage={setCoverImage}
+                    hide={() => setShowImageSelector(false)}
+                    setCommands={props.setCommands}
+                    handleCoverImageChange={handleCoverImageChange}/> : ''}
 
-            {/*}} ref={titleInputEl} name="article-title" type="text" value={title}*/}
-            {/*       onChange={e => setTitle(e.target.value)} placeholder='Untitled - Say " Set Article Title*/}
-            {/*<titlename>" to set the title for this article'/>*/}
+                <input
+                    id={"coverImage"}
+                    type={"file"}
+                    accept={"image/*"}
+                    onChange={handleCoverImageChange}
+                    hidden
+                />
+                {props.doc ? '' : <ArticleTopicSelector topic={topic} setCommands={props.setCommands} show={showTopics}
+                                                        setTopic={handleTopicChange}
+                                                        hide={hideTopics}/>}
 
-            <DraftEditor interimTranscript={interimTranscript} transcript={finalTranscript}
-                         resetTranscript={resetTranscript} onEditorStateChange={onEditorStateChange}
-                         setEditorContentProgramatically={setEditorContentProgramatically} editorState={editorState}
-                         customStyleFn={customStyleFn}/>
-            {interimTranscript}
-        </div>
+                {props.doc ? (
+                    <div style={{display: 'flex', alignItems: 'center', direction: 'rtl', marginBottom: '10px'}}>
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                            <BlueTextTypography variant={"button"}>Generate word document</BlueTextTypography>
+                            <MicIcon style={{fill: '#4285f4'}}/>
+                        </div>
+                        <div style={{display: 'flex', alignItems: 'center', margin: '0 12.5px'}}>
+                            <BlueTextTypography variant={"button"}>Generate PDF</BlueTextTypography>
+                            <MicIcon style={{fill: '#4285f4'}}/>
+                        </div>
+                    </div>
+                ) : props.editor ?
+                    <div style={{display: 'flex', alignItems: 'center', direction: 'rtl', marginBottom: '10px'}}>
+                        <BlueTextTypography variant={"button"}>View Version History</BlueTextTypography>
+                        <MicIcon style={{fill: '#4285f4'}}/>
+                    </div> : ''}
+
+
+                {/*<input style={{*/}
+                {/*    width: '75%',*/}
+                {/*    padding: '7px 18px',*/}
+                {/*    border: '1px solid #d3d3d3',*/}
+                {/*    borderRadius: '4px',*/}
+                {/*    marginBottom: '25px',*/}
+                {/*    fontSize: '18px',*/}
+                {/*    position: 'absolute',*/}
+                {/*    top: '10px',*/}
+                {/*    left: '50%',*/}
+                {/*    transform: 'translateX(-50%)',*/}
+                {/*    backgroundColor: 'transparent',*/}
+                {/*    borderColor: '#1a1616'*/}
+
+                {/*}} ref={titleInputEl} name="article-title" type="text" value={title}*/}
+                {/*       onChange={e => setTitle(e.target.value)} placeholder='Untitled - Say " Set Article Title*/}
+                {/*<titlename>" to set the title for this article'/>*/}
+
+                <DraftEditor interimTranscript={interimTranscript} transcript={finalTranscript}
+                             resetTranscript={resetTranscript} onEditorStateChange={onEditorStateChange}
+                             setEditorContentProgramatically={setEditorContentProgramatically} editorState={editorState}
+                             customStyleFn={customStyleFn}/>
+                {interimTranscript}
+            </div>
         </React.Fragment>
     );
 

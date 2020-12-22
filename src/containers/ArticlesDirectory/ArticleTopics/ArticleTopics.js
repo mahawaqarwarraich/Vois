@@ -12,6 +12,11 @@ const ArticleTopics = (props) => {
 
     const commands = [
         {
+            command: 'create new article',
+            callback: () => props.history.push('/new-article'),
+            description: 'Opens the text editor to create a new article',
+        },
+        {
             command: 'go back',
             callback: () => props.history.goBack(),
             description: "Goes back to the previous page",
