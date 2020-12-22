@@ -37,9 +37,9 @@
 .profile__details--content-profile-pic-change h3 {
     color: #FFFFFF;
 }
-.profile__details--content-profile-pic input {
-    visibility: hidden;
-}
+/*.profile__details--content-profile-pic input {*/
+/*    visibility: hidden;*/
+/*}*/
 .profile__details--content-profile-pic:hover .profile__details--content-profile-pic-change {
     visibility: visible;
     cursor: pointer;
@@ -79,4 +79,7 @@
 .profile__activity--blogs-view:hover {
     cursor: pointer;
     color: #4285F4;
+}
+.upload-image {
+    visibility: hidden;
 }
