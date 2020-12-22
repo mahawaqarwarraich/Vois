@@ -4,11 +4,14 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter} from 'react-router-dom';
+import {SnackbarProvider} from "notistack";
 
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
+            <SnackbarProvider maxSnack={3}>
             <App/>
+            </SnackbarProvider>
         </BrowserRouter>
     </React.StrictMode>,
     document.getElementById('root')

@@ -9,8 +9,14 @@ import {Route} from "react-router-dom";
 import Fab from "@material-ui/core/Fab";
 import MicIcon from '@material-ui/icons/Mic';
 
+import LinearProgress from '@material-ui/core/LinearProgress';
+
 const ArticlesPage = (props) => {
     const [buttonClickedName, setButtonClickedName] = useState("all-articles");
+    const [loading, setLoading] = useState(true);
+
+    const showLoading = () => setLoading(true);
+    const hideLoading = () => setLoading(false);
 
     const toolBarButtonClickedHandler = (buttonName) => {
         setButtonClickedName(buttonName);
@@ -19,6 +25,7 @@ const ArticlesPage = (props) => {
     console.log(props.match.params.topicName);
     return (
         <React.Fragment style={{position:"relative"}}>
+            {loading ? <LinearProgress /> : ''}
             <ArticleMainHeader
                 Button1 = "All Articles"
                 Button2 = "My Articles"
@@ -31,6 +38,8 @@ const ArticlesPage = (props) => {
                 placeHolder="Ex. 10 business that grow exponentially"
             />
             <Articles
+                showLoading={showLoading}
+                hideLoading={hideLoading}
                 setCommands={props.setCommands}
                 {...props}
                 buttonName = {buttonClickedName}/>

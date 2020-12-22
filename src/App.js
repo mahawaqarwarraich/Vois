@@ -1,6 +1,7 @@
 import React, {useEffect, useState, lazy, Suspense} from 'react';
 import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition';
 import {Route} from 'react-router-dom';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import HomePage from "./containers/Pages/HomePage";
 // import ArticleTopicCard from "./components/ArticlesDirectory/ArticleTopicCard/ArticleTopicCard";
@@ -80,7 +81,7 @@ function App(props) {
                 <div style={{width: '85%'}}>{setSidebarState ?
                     (<React.Fragment>
                             <Route path="/text-editor" render={props => (
-                                <Suspense fallback={"Loading..."}>
+                                <Suspense fallback={<LinearProgress />}>
                                     <TextEditor
                                         setCommands={newState => setSidebarState(newState)}
                                         {...props} />

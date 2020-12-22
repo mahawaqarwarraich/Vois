@@ -7,6 +7,10 @@ import AddComment from "../AddComment";
 import {useSpeechRecognition} from "react-speech-recognition";
 import authHeader from "../../../services/auth-header";
 import authService from "../../../services/auth-service";
+import LinearProgress from "@material-ui/core/LinearProgress";
+
+import {useSnackbar} from 'notistack';
+
 
 function BlogManager(props) {
     const [blogId, setBlogId] = useState(props.match.params.id);
@@ -19,6 +23,7 @@ function BlogManager(props) {
     const [isLiked, setIsLiked] = useState(false);
     const [numOfLikes, setNumOfLikes] = useState(0);
     const [numOfComments, setNumOfComments] = useState(0);
+    const {enqueueSnackbar} = useSnackbar();
 
     const handleBlogLikeToggled = () => {
         alert("Blog Liked");
@@ -85,6 +90,7 @@ function BlogManager(props) {
     // }, [])
 
     const handleLikeArticle = () => {
+        setLoading(true);
         let auth = authHeader();
         if (auth) {
             if (auth.Authorization) {
@@ -94,6 +100,7 @@ function BlogManager(props) {
                     headers: auth
                 }).then(res => {
                     console.log(res);
+
                     axios
                         .get("http://localhost:8000/get-article/" + blogId)
                         .then(res => {
@@ -106,11 +113,20 @@ function BlogManager(props) {
                                 }
                             })
                             setNumOfLikes(likes.length);
-                            if (!isLiked)
+                            if (!isLiked) {
                                 setIsLiked(false);
+                                enqueueSnackbar('You unliked this article');
+
+                            } else {
+                                let variant = 'success';
+                                enqueueSnackbar('You liked this article', {variant});
+                            }
+                            setLoading(false);
                         })
                         .catch(err => {
                             console.log(err)
+                            let variant = 'error';
+                            enqueueSnackbar('Something went wrong. Make sure you are connected to the internet', {variant});
                         })
 
                 }).catch(err => {
@@ -192,7 +208,6 @@ function BlogManager(props) {
                 setNumOfComments(res.data.article.Comments.length);
                 if (!isLiked)
                     setIsLiked(false);
-                console.log(res.data.article.Body, "-- aaaaaaa -- ye dykho idhar ---")
                 setBlogConfig({
                     blogStats: {
                         numOfComments: numOfComments,
@@ -259,37 +274,45 @@ function BlogManager(props) {
     }
 
     const handleAddComment = text => {
+        setLoading(true);
         axios.post("http://localhost:8000/comment/add-new", {
             text: text,
             articleId: blogId,
         }, {headers: authHeader()}).then(res => {
             console.log(res, "comment");
+            setLoading(false);
             updateCommentsStats();
             setShowAddComment(false);
             updateSidebar();
+            let variant = "success";
+            enqueueSnackbar("Your comment has been added successfully", {variant})
 
         }).catch(err => {
             console.log(err);
         })
     }
 
+
     return (
         <React.Fragment>
-            {blogConfig ? <BlogUI showAddComment={showAddComment} viewBlog={viewBlog}
-                                  config={{...blogConfig}} {...props} setCommands={props.setCommands}
-                                  isLiked={isLiked}
-                                  numOfLikes={numOfLikes}
-                                  numOfComments={numOfComments}
-                                  commentsConfig={{
-                                      addComment: handleAddComment,
-                                      imageURL: userPic,
-                                      username: username,
-                                      userId: userId,
-                                      articleTitle: blogConfig.header ? blogConfig.header.title : 'Loading article name...',
-                                      coverImageURL: blogConfig.header ? blogConfig.header.imageURL : '',
-                                      hide: hideAddComment
-                                  }}/> : 'Loading...'}
-
+                {loading ? <LinearProgress style={{
+                    // backgroundColor: '#4285f4'
+                    color: '#4285f4',
+                }}/> : ''}
+                {blogConfig ? <BlogUI showAddComment={showAddComment} viewBlog={viewBlog}
+                                      config={{...blogConfig}} {...props} setCommands={props.setCommands}
+                                      isLiked={isLiked}
+                                      numOfLikes={numOfLikes}
+                                      numOfComments={numOfComments}
+                                      commentsConfig={{
+                                          addComment: handleAddComment,
+                                          imageURL: userPic,
+                                          username: username,
+                                          userId: userId,
+                                          articleTitle: blogConfig.header ? blogConfig.header.title : 'Loading article name...',
+                                          coverImageURL: blogConfig.header ? blogConfig.header.imageURL : '',
+                                          hide: hideAddComment
+                                      }}/> : 'Loading...'}
         </React.Fragment>
     );
 }

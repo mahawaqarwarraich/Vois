@@ -6,6 +6,7 @@ import AuthService from "../../../services/auth-service";
 import {Route} from 'react-router-dom';
 import {EditorState, convertFromRaw} from 'draft-js';
 
+
 import ArticleListItem from "../../../components/ArticlesDirectory/ArticleListItem/ArticleListItem";
 
 const Articles = (props) => {
@@ -42,6 +43,7 @@ const Articles = (props) => {
     const {Transcript} = useSpeechRecognition({commands});
 
     useEffect(() => {
+        if (props.showLoading) props.showLoading();
         props.setCommands(commands);
         const topic = props.match.params.topicName;
         let url = "";
@@ -67,6 +69,7 @@ const Articles = (props) => {
                     tempArticles.push(articles[article]);
                 }
                 manipulateArticles(tempArticles);
+                if (props.hideLoading) props.hideLoading();
             })
             .catch(err => {
                 console.log(err);
@@ -91,7 +94,6 @@ const Articles = (props) => {
     }
     return (
         <div className="AllArticles">
-
             {allArticles.map(article => (
                 <ArticleListItem
                     key={article._id}

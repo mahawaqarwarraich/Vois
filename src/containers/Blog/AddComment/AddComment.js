@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import MicIcon from '@material-ui/icons/Mic';
+import LinearProgress from "@material-ui/core/LinearProgress";
 
 import Selector from "../../Selector";
 import {useSpeechRecognition} from "react-speech-recognition";
@@ -68,12 +69,14 @@ function AddComment(props) {
     const theme = useTheme();
 
     const [text, setText] = useState('');
+    const [loading, setLoading] = useState(false);
     const commands = [
         {
             command: 'submit comment',
             callback: () => {
+                setLoading(true);
                 props.addComment(text);
-                props.hide();
+                // props.hide();
             },
             description: 'Submits the comment on this blog'
         },
@@ -97,8 +100,8 @@ function AddComment(props) {
 
     return (
         <React.Fragment>
-
             <Selector commands={[...commands]} {...props}>
+
                 <div style={{
                     position: 'relative',
                     padding: '20px 4.5%',
@@ -120,6 +123,7 @@ function AddComment(props) {
                         backgroundColor: 'rgba(0,0,0,.36)'
                     }}></div>
                     <div style={{position: 'relative', zIndex: 2}}>
+                        {loading ? <LinearProgress /> : ''}
                     <Card className={classes.root}>
                         <CardMedia
                             className={classes.cover}
