@@ -46,7 +46,7 @@ export default function VCS(props) {
             callback: () => window.scrollTo({top: window.pageYOffset - 500, behavior: "smooth"})
         },
         {
-            command: 'view version level *',
+            command: 'open version level *',
             callback: (id) =>  {
                 if (id-1 < versions.length && id-1 >= 0)
                     props.history.push("/edit-article/" + props.match.params.id + "/" + (id-1))
@@ -106,7 +106,7 @@ export default function VCS(props) {
                                             items={[`Version${index+1}`, (new Date(version.timeChanged).toDateString())]}/>
                                         <div style={{display: 'flex', alignItems: 'center'}}>
                                             <MicIcon style={{fill: '#4285f4'}}/>
-                                            <BlueRegularTypography variant={"button"}>View Version
+                                            <BlueRegularTypography variant={"button"}>Open Version
                                                 Level {index + 1}</BlueRegularTypography>
                                         </div>
                                     </div>

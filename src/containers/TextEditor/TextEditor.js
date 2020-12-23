@@ -12,6 +12,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Typography from '@material-ui/core/Typography';
 import MicIcon from '@material-ui/icons/Mic';
 import TextField from '@material-ui/core/TextField';
+import saveAs from 'save-as'
 
 
 import DraftEditor from "./DraftEditor";
@@ -224,22 +225,91 @@ function TextEditor(props) {
             description: 'Publishes the article and navigates to the published article page',
         },
         {
-            command: 'generate Word document',
+            command: 'generate PDF',
             callback: () => {
+
                 let contentState = editorState.getCurrentContent();
+
                 let htmlString = stateToHTML(contentState);
                 let headerHTMLString = '<p></p>';
                 let footerHTMLString = '<p></p>';
-                axios.post("http://localhost:8000/convert-to-docx", {
-                    htmlString: htmlString,
+
+                let _html = `<!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Page Title</title>
+                </head>
+                <body>
+                ${htmlString}
+                </body>
+                </html>`
+
+
+                axios.post("http://localhost:8000/convert-to-pdf", {
+                    htmlString: _html,
                     headerHTMLString: headerHTMLString,
                     footerHTMLString: footerHTMLString,
                     documentOptions: {
                         title: title
                     },
+                }, {
+                    responseType: "blob",
                 })
                     .then(res => {
+
                         console.log(res);
+                        const url = window.URL.createObjectURL(res.data);
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `${title}.pdf`); //or any other extension
+                        document.body.appendChild(link);
+                        link.click();
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+            },
+            description: 'Generates PDF document',
+        },
+        {
+            command: 'generate Word document',
+            callback: () => {
+                let contentState = editorState.getCurrentContent();
+
+                let htmlString = stateToHTML(contentState);
+                let headerHTMLString = '<p></p>';
+                let footerHTMLString = '<p></p>';
+
+                let _html = `<!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Page Title</title>
+                </head>
+                <body>
+                ${htmlString}
+                </body>
+                </html>`
+
+
+                axios.post("http://localhost:8000/convert-to-docx", {
+                    htmlString: _html,
+                    headerHTMLString: headerHTMLString,
+                    footerHTMLString: footerHTMLString,
+                    documentOptions: {
+                        title: title
+                    },
+                }, {
+                    responseType: "blob",
+                })
+                    .then(res => {
+
+                        const url = window.URL.createObjectURL(new Blob([res.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `${title}.docx`); //or any other extension
+                        document.body.appendChild(link);
+                        link.click();
                     })
                     .catch(err => {
                         console.log(err);
@@ -478,19 +548,20 @@ function TextEditor(props) {
             console.log(isImageLocal);
             console.log(data.title, "reqData");
 
-            // axios.post(url, data, {
-            //     headers: authHeader(),
-            // }).then(res => {
-            //     console.log(res);
-            //     setLoading(false);
-            //     console.log(res.data.article._id);
-            //     const _id = res.data.article._id;
-            //
-            //     props.history.push("/article/" + _id);
-            //     // alert("Blog published successfully!");
-            // }).catch(err => {
-            //     console.log(err);
-            // })
+
+            axios.post(url, data, {
+                headers: authHeader(),
+            }).then(res => {
+                console.log(res);
+                setLoading(false);
+                console.log(res.data.article._id);
+                const _id = res.data.article._id;
+
+                props.history.push("/article/" + _id);
+                // alert("Blog published successfully!");
+            }).catch(err => {
+                console.log(err);
+            })
         } else {
             let variant = "error";
             let missingFields = [];
@@ -529,6 +600,7 @@ function TextEditor(props) {
 
     return (
         <React.Fragment>
+            <div id={"download-area"}></div>
             {loading ? <LinearProgress/> : ''}
             <div style={{margin: '20px 2.5% 20px 2.5%', position: 'relative'}}>
                 {props.doc ?
@@ -546,7 +618,7 @@ function TextEditor(props) {
 
                 {props.doc ? '' : showCoverImageSelector ? <ArticleCoverImageSelector
                     setCoverImage={setCoverImage}
-                    hide={() => setShowImageSelector(false)}
+                    hide={() => {setShowImageSelector(false); updateSidebar()}}
                     setCommands={props.setCommands}
                     handleCoverImageChange={handleCoverImageChange}/> : ''}
 
