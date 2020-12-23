@@ -132,7 +132,7 @@ const ProfileUI = (props) => {
     if (props.match.params.userId === JSON.parse(localStorage.getItem("user"))
         && view === "Private View") {
       axios
-          .get("http://localhost:8000/get-latest-fav-articles", {
+          .get("http://localhost:8000/get-user-latest-articles/" + props.match.params.userId, {
             headers: authHeader(),
           })
           .then((response) => {
