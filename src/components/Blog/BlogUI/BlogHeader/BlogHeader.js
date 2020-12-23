@@ -40,24 +40,45 @@ function BlogHeader(props) {
                     </button>
                     : ''}
                 {props.config.owner ?
-                    <button style={{
+                    <div style={{
                         position: 'absolute',
                         top: '10px',
                         right: '10px',
-                        background: '#4285f4',
-                        border: 0,
-                        borderRadius: '4px',
-                        padding: '7px 18px',
-                        color: '#fff',
                         display: 'flex',
                         alignItems: 'center',
-                    }}
-                    onClick={props.config.handleEditArticleClicked}>
-                        <MicIcon style={{fill: '#fff'}} />
-                        <WhiteTextTypography variant={"button"}>
-                            Edit Article
-                        </WhiteTextTypography>
-                    </button>
+                    }}>
+                        <button style={{
+                            background: '#4285f4',
+                            border: 0,
+                            borderRadius: '4px',
+                            padding: '7px 18px',
+                            color: '#fff',
+                            display: 'flex',
+                            alignItems: 'center',
+                            marginRight: '12.5px',
+                        }}
+                                onClick={props.config.handleEditArticleClicked}>
+                            <MicIcon style={{fill: '#fff'}} />
+                            <WhiteTextTypography variant={"button"}>
+                                Edit Article
+                            </WhiteTextTypography>
+                        </button>
+                        <button style={{
+                            background: '#ED4739',
+                            border: 0,
+                            borderRadius: '4px',
+                            padding: '7px 18px',
+                            color: '#fff',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                                onClick={props.config.handleDeleteArticleClicked}>
+                            <MicIcon style={{fill: '#fff'}} />
+                            <WhiteTextTypography variant={"button"}>
+                                Delete Article
+                            </WhiteTextTypography>
+                        </button>
+                    </div>
                     : ''}
 
                 <div style={{color: theme[currTheme].color}} className="blog-title">
