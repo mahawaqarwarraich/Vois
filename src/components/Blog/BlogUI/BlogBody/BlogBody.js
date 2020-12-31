@@ -76,7 +76,7 @@ function BlogBody(props) {
                                     <Typography variant="button">View Comments</Typography>
                                 </div>
                                 <div style={{display: 'flex', alignItems: 'center'}}>
-                                    <BlueTextTypography variant={"button"}>{props.numOfComments}</BlueTextTypography>
+                                    <BlueTextTypography variant={"button"}>{props.numComments}</BlueTextTypography>
                                     <CommentIcon style={{fill: '#4285f4'}}/>
                                 </div>
                             </div>

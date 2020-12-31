@@ -17,6 +17,11 @@ const ArticleTopics = (props) => {
             description: 'Opens the text editor to create a new article',
         },
         {
+            command: 'open user profile',
+            callback: () => props.history.push('/profile/5fdd051402816535287cb8fa'),
+            description: 'Opens user profile',
+        },
+        {
             command: 'go back',
             callback: () => props.history.goBack(),
             description: "Goes back to the previous page",

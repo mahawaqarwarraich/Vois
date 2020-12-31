@@ -23,6 +23,8 @@ function BlogManager(props) {
     const [isLiked, setIsLiked] = useState(false);
     const [numOfLikes, setNumOfLikes] = useState(0);
     const [numOfComments, setNumOfComments] = useState(0);
+    const [comments, setComments] = useState([]);
+    const [showComments, setShowComments] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
 
     const handleBlogLikeToggled = () => {
@@ -144,6 +146,39 @@ function BlogManager(props) {
         props.history.push("/edit-article/" + blogId);
     }
 
+    const handleDeleteArticleClicked = () => {
+        setLoading(true)
+        axios.post("http://localhost:8000/delete-article", {
+            articleId: blogId,
+        }, {
+            headers: authHeader()
+        })
+            .then(res => {
+                setLoading(false);
+                enqueueSnackbar(`The article, ${blogConfig.header.title}, deleted successfully`);
+                props.history.push('/articles-directory');
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+    }
+
+
+    const handleViewComments = () => {
+
+        setLoading(true);
+        axios.get("http://localhost:8000/get-blog-comments/" + blogId)
+            .then(res => {
+                setLoading(false);
+                setComments([...res.data.comments]);
+                setShowComments(true);
+                console.log(res);
+            })
+            .catch(err => {
+            })
+
+    }
 
     const commands = [
         {
@@ -169,6 +204,16 @@ function BlogManager(props) {
             callback: () => setShowAddComment(true),
             description: 'Opens up an input field for adding a comment.'
         },
+        {
+            command: 'view comments',
+            callback: handleViewComments,
+            description: 'Opens all the comments for this article',
+        },
+        {
+            command: 'delete article',
+            callback: handleDeleteArticleClicked,
+            description: 'Deletes the article',
+        }
     ];
     const updateSidebar = () => {
         props.setCommands(commands);
@@ -191,8 +236,6 @@ function BlogManager(props) {
         setShowAddComment(false);
         updateSidebar();
     }
-
-
 
 
     const updateBlogConfig = (userId) => {
@@ -220,6 +263,7 @@ function BlogManager(props) {
                     }
                 })
                 setNumOfLikes(res.data.article.Likes.length);
+                setComments([...res.data.article.Comments]);
                 setNumOfComments(res.data.article.Comments.length);
                 if (!isLiked)
                     setIsLiked(false);
@@ -280,9 +324,9 @@ function BlogManager(props) {
     const {Transcript} = useSpeechRecognition({commands});
 
     const updateCommentsStats = () => {
-        axios.get("http://localhost:8000/get-blog-comments?articleId=" + blogId)
+        axios.get("http://localhost:8000/get-blog-comments/" + blogId)
             .then(res => {
-                console.log(res, "comments fetched");
+                setNumOfComments(res.data.comments.length);
             })
             .catch(err => {
                 console.log(err);
@@ -297,8 +341,17 @@ function BlogManager(props) {
         }, {headers: authHeader()}).then(res => {
             console.log(res, "comment");
             setLoading(false);
-            updateCommentsStats();
             setShowAddComment(false);
+
+            axios.get("http://localhost:8000/get-blog-comments/" + blogId)
+                .then(res => {
+                    console.log(res);
+                    setNumOfComments(res.data.comments.length);
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+
             updateSidebar();
             let variant = "success";
             enqueueSnackbar("Your comment has been added successfully", {variant})
@@ -311,24 +364,32 @@ function BlogManager(props) {
 
     return (
         <React.Fragment>
-                {loading ? <LinearProgress style={{
-                    // backgroundColor: '#4285f4'
-                    color: '#4285f4',
-                }}/> : ''}
-                {blogConfig ? <BlogUI showAddComment={showAddComment} viewBlog={viewBlog}
-                                      config={{...blogConfig}} {...props} setCommands={props.setCommands}
-                                      isLiked={isLiked}
-                                      numOfLikes={numOfLikes}
-                                      numOfComments={numOfComments}
-                                      commentsConfig={{
-                                          addComment: handleAddComment,
-                                          imageURL: userPic,
-                                          username: username,
-                                          userId: userId,
-                                          articleTitle: blogConfig.header ? blogConfig.header.title : 'Loading article name...',
-                                          coverImageURL: blogConfig.header ? blogConfig.header.imageURL : '',
-                                          hide: hideAddComment
-                                      }}/> : 'Loading...'}
+            {loading ? <LinearProgress style={{
+                // backgroundColor: '#4285f4'
+                color: '#4285f4',
+            }}/> : ''}
+            {blogConfig ? <BlogUI
+                numOfComments={numOfComments}
+                showAddComment={showAddComment}
+                viewBlog={viewBlog}
+                showComments={showComments}
+                config={{...blogConfig}} {...props} setCommands={props.setCommands}
+                isLiked={isLiked}
+                numOfLikes={numOfLikes}
+                hideShowComment={() => {
+                    setShowComments(false);
+                    updateSidebar();
+                }}
+                comments={comments}
+                commentsConfig={{
+                    addComment: handleAddComment,
+                    imageURL: userPic,
+                    username: username,
+                    userId: userId,
+                    articleTitle: blogConfig.header ? blogConfig.header.title : 'Loading article name...',
+                    coverImageURL: blogConfig.header ? blogConfig.header.imageURL : '',
+                    hide: hideAddComment
+                }}/> : 'Loading...'}
         </React.Fragment>
     );
 }
