@@ -22,7 +22,7 @@ const ArticleListItem = (props) => (
             <div className="ArticleListItem__Content--DateAndButtonDiv">
                 <p className="ArticleListItem__Content--DateAndButtonDiv-PublishedDate">
                     {/*Oct 18 - 3:24 PM*/}
-                    {props.date}
+                    {(new Date(props.date)).toDateString()}
                 </p>
 
                 <Button

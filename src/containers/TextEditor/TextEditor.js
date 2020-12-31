@@ -81,6 +81,10 @@ function TextEditor(props) {
         updateSidebar();
     }
 
+    const handleViewVersionHistory = () => {
+        props.history.push("/vcs/" + blogId);
+    }
+
 
     const commands = [
         {
@@ -225,6 +229,11 @@ function TextEditor(props) {
             description: 'Publishes the article and navigates to the published article page',
         },
         {
+            command: 'view version history',
+            callback: props.editor ? handleViewVersionHistory : () => {enqueueSnackbar("Not allowed", {variant: "info"})},
+            description: 'Opens the version control system for this article',
+        },
+        {
             command: 'generate PDF',
             callback: () => {
 
@@ -321,21 +330,18 @@ function TextEditor(props) {
     ];
 
 
-    const handleViewVersionHistory = () => {
-        props.history.push("/vcs/" + blogId);
-    }
+
 
     const updateSidebar = () => {
+        if (props.editor) {
+            commands.push()
+        }
         props.setCommands(commands);
     }
-    if (props.editor) {
-        commands.push({
-            command: 'view version history',
-            callback: handleViewVersionHistory,
-            description: 'Opens the version control system for this article',
-        })
-        updateSidebar();
-    }
+
+
+
+
     const commandsAndDesc = [];
 
     commands.forEach(cmd => {
@@ -446,9 +452,11 @@ function TextEditor(props) {
         } else {
             let _user = authService.getCurrentUser();
             if (_user && _user.userId) {
+                const d = new Date();
+                const date = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
                 setBlogHeaderConfig({
                     imageURL: '',
-                    createdOn: `${(new Date()).toDateString()}`,
+                    createdOn: `${date}`,
                     author: _user.username,
                 });
             } else {
