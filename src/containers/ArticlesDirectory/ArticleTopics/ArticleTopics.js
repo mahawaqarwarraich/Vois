@@ -7,9 +7,10 @@ import ArticleTopicCard from "../../../components/ArticlesDirectory/ArticleTopic
 
 
 const ArticleTopics = (props) => {
-
+    //States Initialization for this component
     const [articleTopics,manipulateArticleTopics] = useState([]);
 
+    //Registered voice commads for this article
     const commands = [
         {
             command: 'create new article',
@@ -46,12 +47,14 @@ const ArticleTopics = (props) => {
         }
     ];
 
+    //On componentDidMount, set the new commands in the sidebar
     useEffect(() => {
         props.setCommands(commands);
     }, [])
 
     const { Transcript } = useSpeechRecognition({commands});
 
+    //On componentDidMount, get all the topics in the articles directory
     useEffect(()=> {
         axios.get('http://localhost:8000/get-topics')
             .then(result => {
@@ -66,7 +69,7 @@ const ArticleTopics = (props) => {
     },[]);
 
 
-
+    //Open articles of the selected topic
     const showArticlesByTopicHandler = topicName => {
         let isAvailable;
         articleTopics.forEach(articleTopic => {
