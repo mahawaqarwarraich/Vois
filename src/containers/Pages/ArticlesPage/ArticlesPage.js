@@ -12,9 +12,15 @@ import MicIcon from '@material-ui/icons/Mic';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 const ArticlesPage = (props) => {
+    //States Initialization for this component
     const [buttonClickedName, setButtonClickedName] = useState("all-articles");
     const [loading, setLoading] = useState(true);
 
+    /**
+     * Handling loading state
+     * Turn Loading ON
+     * Turn Loading OFF
+     * */
     const showLoading = () => setLoading(true);
     const hideLoading = () => setLoading(false);
 

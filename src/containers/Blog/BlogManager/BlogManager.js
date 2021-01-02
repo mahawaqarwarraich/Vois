@@ -13,25 +13,25 @@ import {useSnackbar} from 'notistack';
 
 
 function BlogManager(props) {
-    const [blogId, setBlogId] = useState(props.match.params.id);
-    const [blogLiked, setBlogLiked] = useState(false);
-    const [loading, setLoading] = useState(true);
-    const [userPic, setUserPic] = useState("");
-    const [userId, setUserId] = useState("");
-    const [username, setUsername] = useState("");
-    const [owner, setOwner] = useState(false);
-    const [isLiked, setIsLiked] = useState(false);
-    const [numOfLikes, setNumOfLikes] = useState(0);
-    const [numOfComments, setNumOfComments] = useState(0);
-    const [comments, setComments] = useState([]);
-    const [showComments, setShowComments] = useState(false);
-    const {enqueueSnackbar} = useSnackbar();
-
-    const handleBlogLikeToggled = () => {
-        alert("Blog Liked");
-    };
-
+    // BlogManager States Initialization
+    const [blogId, setBlogId] = useState(props.match.params.id); //Extracted from the URL
+    const [blogLiked, setBlogLiked] = useState(false); //Used for setting the blog liked status for current user
+    const [loading, setLoading] = useState(true); //Shows loader while an http request is under progress
+    const [userPic, setUserPic] = useState(""); //Needed to be shown while the user adds a comment
+    const [userId, setUserId] = useState(""); //Needed for user authorization
+    const [username, setUsername] = useState(""); //Needed to be shown while the user adds a comment
+    const [owner, setOwner] = useState(false); //Checks whether the current user is also the author of the current blog
+    const [isLiked, setIsLiked] = useState(false); //Used for checking if the blog is already liked by the current user
+    const [numOfLikes, setNumOfLikes] = useState(0); //Used to show the number of likes on this blog
+    const [numOfComments, setNumOfComments] = useState(0); //Used to show the number of comments on this blog
+    const [comments, setComments] = useState([]); //Used to store the comments on this blog
+    const [showComments, setShowComments] = useState(false); //To check whether to show the comments
+    const [blogConfig, setBlogConfig] = useState({}); //Holds the entire blog config
+    const [viewBlog, setViewBlog] = useState(false); //Becomes true when the blog has been fetched
+    const [showAddComment, setShowAddComment] = useState(false); //If true then show the comment input for new comment
     const [counter, setCounter] = useState(0);
+    const {enqueueSnackbar} = useSnackbar(); //Shows alert messages at the bottom left of the screen
+
 
     const handleCommentBoxOpened = () => {
         setCounter((prevState) => prevState + 1);
@@ -41,72 +41,30 @@ function BlogManager(props) {
         alert("comment manager responded with status: " + status);
     };
 
-    const [blogConfig, setBlogConfig] = useState({});
-    const [viewBlog, setViewBlog] = useState(false);
 
-    // useEffect(() => {
-    //     const id = props.match.params.id;
-    //
-    //     axios.get('http://localhost:8000/get-article/' + id)
-    //         .then(res => {
-    //             console.log(res);
-    //             let article = res.data.article;
-    //             let config;
-    //
-    //             console.log(article.Body);
-    //             if (props.json) {
-    //                 config = {
-    //                     header: {
-    //                         imageURL: article.PictureSecureId,
-    //                         title: article.Title,
-    //                         author: "Haysam Tahir",
-    //                         createdOn: article.PostedOn,
-    //                     },
-    //                     body: {
-    //                         likeToggled: handleBlogLikeToggled,
-    //                         content: EditorState.createWithContent(convertFromRaw(JSON.parse(article.Body))),
-    //                     },
-    //                 }
-    //                 console.log(config.body.content);
-    //             } else {
-    //                 config = {
-    //                     header: {
-    //                         imageURL: article.PictureSecureId,
-    //                         title: article.Title,
-    //                         author: "Haysam Tahir",
-    //                         createdOn: article.PostedOn,
-    //                     },
-    //                     body: {
-    //                         likeToggled: handleBlogLikeToggled,
-    //                         content: article.Body,
-    //                     },
-    //
-    //             }
-    //
-    //             setBlogConfig(prevconfig => {
-    //                 setViewBlog(true);
-    //                 return config;
-    //             });
-    //         })
-    //
-    // }, [])
-
+    // Handler Function for liking this blog
     const handleLikeArticle = () => {
         setLoading(true);
+        //Fetch authHeaders from local storage of the browser to authorize the current user
         let auth = authHeader();
+        //If there is a user stored in the local storage
         if (auth) {
+            //If the auth object includes the Authorization headers i.e. it has not been corrupted manually
             if (auth.Authorization) {
+                //Post a like request
                 axios.post("http://localhost:8000/like-article", {
                     articleId: blogId,
                 }, {
                     headers: auth
-                }).then(res => {
-                    console.log(res);
-
+                }).then(res => { //On successful request
+                    //Another axios request to check for the updated number of likes to show with this blog
                     axios
                         .get("http://localhost:8000/get-article/" + blogId)
-                        .then(res => {
+                        .then(res => {//On Successful request
+                            //Set new data received in the response
                             let likes = res.data.article.Likes;
+
+                            //Check whether the current user has liked this article or not
                             let isLiked;
                             likes.forEach(likerId => {
                                 if (likerId == userId) {
@@ -114,6 +72,7 @@ function BlogManager(props) {
                                     isLiked = true;
                                 }
                             })
+
                             setNumOfLikes(likes.length);
                             if (!isLiked) {
                                 setIsLiked(false);
@@ -125,9 +84,10 @@ function BlogManager(props) {
                             }
                             setLoading(false);
                         })
-                        .catch(err => {
+                        .catch(err => { //On unsuccessful request
                             console.log(err)
                             let variant = 'error';
+                            //Show error message in the snackbar
                             enqueueSnackbar('Something went wrong. Make sure you are connected to the internet', {variant});
                         })
 
@@ -142,44 +102,60 @@ function BlogManager(props) {
         }
     }
 
+    const handleBlogLikeToggled = () => {
+        handleLikeArticle();
+    }
+
+    //Routes to the edit article page
     const handleEditArticleClicked = () => {
         props.history.push("/edit-article/" + blogId);
     }
 
+    //Handler Function for deleting the article
     const handleDeleteArticleClicked = () => {
         setLoading(true)
         axios.post("http://localhost:8000/delete-article", {
             articleId: blogId,
         }, {
-            headers: authHeader()
+            headers: authHeader() //Auth headers for authorizing the user whether he is authorized to delete this blog or not
         })
-            .then(res => {
+            .then(res => { //On successful request
                 setLoading(false);
+                //Show success message in the snackbar
                 enqueueSnackbar(`The article, ${blogConfig.header.title}, deleted successfully`);
+                //Route to the articles directory as the currently loaded blog does not exist any more
                 props.history.push('/articles-directory');
+            })
+            .catch(err => { //On unsuccessful request
+                console.log(err);
+                let variant = 'error';
+                //Show error message in the snackbar
+                enqueueSnackbar('Article could not be deleted.', {variant});
+            })
+
+    }
+
+
+    //Handler Function for displaying the comments
+    const handleViewComments = () => {
+        setLoading(true);
+        //GET request to fetch all the comments on the current blog
+        axios.get("http://localhost:8000/get-blog-comments/" + blogId)
+            .then(res => { //On successful request
+                setLoading(false);
+                setComments([...res.data.comments]); //Set the commands state to the loaded comments
+                setShowComments(true); //Also set the showComments true so that the comments are displayed
             })
             .catch(err => {
                 console.log(err);
+                let variant = 'error';
+                //Show error message in the snackbar
+                enqueueSnackbar('Comments could not be loaded.', {variant});
             })
 
     }
 
-
-    const handleViewComments = () => {
-
-        setLoading(true);
-        axios.get("http://localhost:8000/get-blog-comments/" + blogId)
-            .then(res => {
-                setLoading(false);
-                setComments([...res.data.comments]);
-                setShowComments(true);
-                console.log(res);
-            })
-            .catch(err => {
-            })
-
-    }
-
+    //Registered Voice Commands for this Component
     const commands = [
         {
             command: 'go back',
@@ -215,9 +191,11 @@ function BlogManager(props) {
             description: 'Deletes the article',
         }
     ];
+    //Updates the sidebar to show the registered commands for this component
     const updateSidebar = () => {
         props.setCommands(commands);
     }
+    //If the current user is also the author of this article then add another comment for editing the article
     if (owner) {
         commands.push({
             command: 'edit article',
@@ -231,13 +209,13 @@ function BlogManager(props) {
         updateSidebar();
     }, [])
 
-    const [showAddComment, setShowAddComment] = useState(false);
     const hideAddComment = () => {
         setShowAddComment(false);
         updateSidebar();
     }
 
 
+    //Updates the blog config with the fetched blog data
     const updateBlogConfig = (userId) => {
         axios
             .get("http://localhost:8000/get-article/" + blogId)
@@ -298,6 +276,7 @@ function BlogManager(props) {
     };
 
 
+    //On componentDidMount, check for the current user and also fetch the user's profile picture
     useEffect(() => {
         let _user = authService.getCurrentUser();
         if (_user && _user.userId) {
@@ -321,7 +300,9 @@ function BlogManager(props) {
     }, []);
 
 
+    //The transcribed text from voice is stored in this variable - Transcript
     const {Transcript} = useSpeechRecognition({commands});
+
 
     const updateCommentsStats = () => {
         axios.get("http://localhost:8000/get-blog-comments/" + blogId)
@@ -333,6 +314,7 @@ function BlogManager(props) {
             })
     }
 
+    //Handler function for adding a comment
     const handleAddComment = text => {
         setLoading(true);
         axios.post("http://localhost:8000/comment/add-new", {
@@ -357,7 +339,10 @@ function BlogManager(props) {
             enqueueSnackbar("Your comment has been added successfully", {variant})
 
         }).catch(err => {
+            setLoading(false);
             console.log(err);
+            let variant = "error";
+            enqueueSnackbar("Your comment could not be added", {variant})
         })
     }
 
