@@ -126,17 +126,16 @@ const ProfileUI = (props) => {
           console.log(error);
         });
 
-  }, []);
+  }, [props.match.params.userId]);
 
   useEffect(()=>{
-    if (props.match.params.userId === JSON.parse(localStorage.getItem("user"))
+    if (props.match.params.userId === JSON.parse(localStorage.getItem("user")).userId
         && view === "Private View") {
       axios
-          .get("http://localhost:8000/get-user-latest-articles/" + props.match.params.userId, {
+          .get("http://localhost:8000/get-latest-fav-articles/" + props.match.params.userId, {
             headers: authHeader(),
           })
           .then((response) => {
-            console.log(response.data.favArticles);
             setMyLatestFavArticles(response.data.favArticles);
           })
           .catch((error) => {
@@ -146,7 +145,7 @@ const ProfileUI = (props) => {
     else {
       setMyLatestFavArticles([]);
     }
-  },[]);
+  },[props.match.params.userId,view]);
 
   useEffect(()=>{
     axios
@@ -165,7 +164,7 @@ const ProfileUI = (props) => {
           console.log(error);
         });
 
-  }, []);
+  }, [props.match.params.userId]);
 
   const profileViewHandler = () => {
     if (view === "Public View") {
@@ -228,6 +227,7 @@ const ProfileUI = (props) => {
       fd.append("picture", event.target.files[0]);
     }
     else {
+      console.log(blob);
       setProfilePicture(blob);
 
       fd.append("picture", blob);
@@ -430,7 +430,8 @@ const ProfileUI = (props) => {
               />
               <div>
                 <WebcamCapture
-                    fileSelectedHandler = {fileSelectedHandler}/>
+                    fileSelectedHandler = {fileSelectedHandler}
+                    ProfileModalClosedHandler = {ProfileModalClosedHandler}/>
               </div>
             </div>
           </Modal>
