@@ -8,7 +8,7 @@ const WebcamCapture = (props) => {
     const commands = [
         {
           command: 'capture photo',
-          callback: () => {capture()},
+          callback: () => { props.addFacialAuth || props.verifyFacialAuth ? captureForFacialAuth() : capture()},
           description: 'Captures Profile Photo'
         }
       ];
@@ -36,7 +36,8 @@ const WebcamCapture = (props) => {
         return new File([u8arr], filename, {type:mime});
     }
 
-    const capture = React.useCallback(async () => {
+    const capture = async () => {
+        console.log("Profile Pic");
         const imageSrc = webcamRef.current.getScreenshot();
         // console.log(imageSrc);
         // const blob = await fetch(imageSrc).then((res) => res.blob());
@@ -47,21 +48,48 @@ const WebcamCapture = (props) => {
         // blob.lastModifiedDate = new Date();
         // blob.name = "profilePicture";
 
-        var file = dataURLtoFile(imageSrc,`profile${JSON.parse(localStorage.getItem("user")).userId}.jpg`);
+        var file = await dataURLtoFile(imageSrc,`profile${JSON.parse(localStorage.getItem("user")).userId}.jpg`);
         // console.log(file);
         props.fileSelectedHandler(null,file);
         props.ProfileModalClosedHandler();
 
-    }, [webcamRef, props]);
+    }
+
+    const captureForFacialAuth = async () => {
+        console.log("Facial Auth");
+        const imageSrc = webcamRef.current.getScreenshot();
+        // console.log(imageSrc);
+        // const blob = await fetch(imageSrc).then((res) => res.blob());
+        // setImgSrc(imageSrc);
+
+        // console.log(blob);
+
+        // blob.lastModifiedDate = new Date();
+        // blob.name = "profilePicture";
+
+        var file = await dataURLtoFile(imageSrc,`profile${JSON.parse(localStorage.getItem("user")).userId}.jpg`);
+        // console.log(file);
+
+        if (props.verifyFacialAuth) {
+            props.verifyFacialAuthHandler(file);
+            props.FaceAuthModalClosedHandler();
+        }
+        else {
+            props.addFacialAuthHandler(file);
+            props.ProfileModalClosedHandler();
+        }
+
+    }
 
     return (
         <>
+        {console.log(props.addFacialAuth)}
             <Webcam
                 audio={false}
                 ref={webcamRef}
                 screenshotFormat="image/jpeg"
             />
-            <button style={{textAlign:"center"}} onClick={capture}>Capture photo</button>
+            <button style={{textAlign:"center"}} onClick={props.addFacialAuth ||  props.verifyFacialAuth ? captureForFacialAuth : capture}>Capture photo</button>
             {imgSrc && (
                 <img
                     src={imgSrc}

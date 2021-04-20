@@ -46,6 +46,7 @@ const ProfileUI = (props) => {
   const [view, setView] = useState("Private View");
   const [modelOpen, setModelOpen] = useState(false);
   const [webcamModalOpen, setWebcamModalOpen] = useState(false);
+  const [addFacialAuth, setAddFacialAuth] = useState(false);
 
 
   const commands = [
@@ -68,6 +69,11 @@ const ProfileUI = (props) => {
       command: 'take picture from webcam',
       callback: () => {uploadPictureFromWebcamHandler()},
       description: 'Uploads profile picture from Webcam'
+    },
+    {
+      command: 'add facial authentication',
+      callback: () => {trigerFacialAuth()},
+      description: 'Opens webcam to add facial authentication'
     },
     {
       command: 'close webcam',
@@ -214,8 +220,15 @@ const ProfileUI = (props) => {
     setWebcamModalOpen(true);
   }
 
+  const trigerFacialAuth = () => {
+    setModelOpen(false);
+    setWebcamModalOpen(true);
+    setAddFacialAuth(true);
+  }
+
   const ProfileModalClosedHandler = () => {
     setWebcamModalOpen(false);
+    setAddFacialAuth(false);
   }
 
   const fileSelectedHandler = (event, blob) => {
@@ -243,7 +256,37 @@ const ProfileUI = (props) => {
           setLoading(false);
           setProfilePicture(response.data.picture);
         });
+
+    // axios
+    // .post("http://localhost:8000/add-facial-auth", fd, {
+    //   headers: authHeader(),
+    //   'content-type': 'multipart/form-data'
+    // })
+    // .then((response) => {
+    //   setLoading(false);
+    //   setProfilePicture(response.data.picture);
+    // });
   };
+
+  const addFacialAuthHandler = (blob) => {
+    console.log("Entered addFacialAuthHandler")
+    const fd = new FormData();
+
+    fd.append("picture", blob);
+
+    setModelOpen(false);
+    setLoading(true);
+
+    axios
+    .post("http://localhost:8000/add-facial-auth", fd, {
+      headers: authHeader(),
+      'content-type': 'multipart/form-data'
+    })
+    .then((response) => {
+      setLoading(false);
+      console.log(response);
+    });
+  }
 
     return (
         <React.Fragment>
@@ -421,7 +464,8 @@ const ProfileUI = (props) => {
               // aria-describedby="simple-modal-description"
           >
             <div style={modalBodyStyle}>
-              <h4 style={{marginBottom:"2rem",textAlign:"center"}}>Please Capture Profile Image</h4>
+              <h4 style={{marginBottom:"2rem",textAlign:"center"}}>
+                {addFacialAuth ? "Please Capture a Straight and Clear Photo for Facial Authentication" : "Please Capture Profile Image"}</h4>
               <input
                   id="upload-image"
                   class="upload-image"
@@ -431,7 +475,10 @@ const ProfileUI = (props) => {
               <div>
                 <WebcamCapture
                     fileSelectedHandler = {fileSelectedHandler}
-                    ProfileModalClosedHandler = {ProfileModalClosedHandler}/>
+                    ProfileModalClosedHandler = {ProfileModalClosedHandler}
+                    addFacialAuth = {addFacialAuth}
+                    addFacialAuthHandler = {addFacialAuthHandler}
+                    />
               </div>
             </div>
           </Modal>
