@@ -12,9 +12,15 @@ import MicIcon from '@material-ui/icons/Mic';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 const ArticlesPage = (props) => {
+    //States Initialization for this component
     const [buttonClickedName, setButtonClickedName] = useState("all-articles");
     const [loading, setLoading] = useState(true);
 
+    /**
+     * Handling loading state
+     * Turn Loading ON
+     * Turn Loading OFF
+     * */
     const showLoading = () => setLoading(true);
     const hideLoading = () => setLoading(false);
 
@@ -53,16 +59,16 @@ const ArticlesPage = (props) => {
                     borderRadius = "10px"
                 />
             </div>
-            {!props.match.params.userId && JSON.parse(localStorage.getItem("user")) ?
-                // <Fab color="secondary" aria-label="add" style={{position: "fixed", bottom: "5%", right: "5%"}}>
-                //     <AddIcon/>
-                // </Fab>
-                <Fab color="secondary" aria-label="add" style={{position: "fixed", bottom: "5%", right: "5%"}} variant="extended">
-                    <MicIcon style={{marginRight:"0.7rem"}} />
-                    Create New Article
-                </Fab>
-                : <></>
-            }
+            {/*{!props.match.params.userId && JSON.parse(localStorage.getItem("user")) ?*/}
+            {/*    // <Fab color="secondary" aria-label="add" style={{position: "fixed", bottom: "5%", right: "5%"}}>*/}
+            {/*    //     <AddIcon/>*/}
+            {/*    // </Fab>*/}
+            {/*    <Fab color="secondary" aria-label="add" style={{position: "fixed", bottom: "5%", right: "5%"}} variant="extended">*/}
+            {/*        <MicIcon style={{marginRight:"0.7rem"}} />*/}
+            {/*        Create New Article*/}
+            {/*    </Fab>*/}
+            {/*    : <></>*/}
+            {/*}*/}
 
         </React.Fragment>
     );

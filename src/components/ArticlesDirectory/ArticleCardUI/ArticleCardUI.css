@@ -51,7 +51,9 @@
     font-size: 0.6rem;
 }
 .Card__Content--Overview {
-    height: 55%;
+    height: 45%;
+    max-height: 45%;
+    overflow: hidden;
 }
 
 .Card__Content--Overview p{

@@ -55,33 +55,38 @@ const BlueTextTypography = withStyles({
 })(Typography);
 
 function TextEditor(props) {
-    const [editorState, setEditorState] = useState(EditorState.createEmpty());
-    const [showTopics, setShowTopics] = useState(false);
-    const [topic, setTopic] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [blogId, setBlogId] = useState(props.editor ? props.match.params.id : '');
-    const [secureURL, setSecureURL] = useState('');
-    const [publicURL, setPublicURL] = useState('');
-
+    //State Initialization for this component
+    const [editorState, setEditorState] = useState(EditorState.createEmpty()); //state for setting the content of Draft Editor
+    const [showTopics, setShowTopics] = useState(false); //If true then shows the list of topics for the new article
+    const [topic, setTopic] = useState(''); //Topic for the current article
+    const [loading, setLoading] = useState(false); //Loading state to show loader while an http request is progressing
+    const [blogId, setBlogId] = useState(props.editor ? props.match.params.id : ''); //Feteches a blog if in edit mode
+    const [secureURL, setSecureURL] = useState(''); //Holds blog cover image url - secureId
+    const [publicURL, setPublicURL] = useState(''); //Holds blog cover image public url
     const [blogHeaderConfig, setBlogHeaderConfig] = useState({
         imageURL: '',
         author: '...',
         createdOn: `${(new Date()).toDateString()}`,
-    })
-    const [owner, setOwner] = useState(false);
-
+    }) //config for setting the Blog Header
+    const [owner, setOwner] = useState(false); //Check if the user is owner of this blog in edit mode
     const customStylesToManage = ["font-size", "color", "font-family"];
     const {styles, customStyleFn, exporter} = createStyles(customStylesToManage, "CUSTOM_")
 
     const {enqueueSnackbar} = useSnackbar();
 
+    //Updates the topic
     const handleTopicChange = topic => setTopic(topic);
+    //Hides the topics list
     const hideTopics = () => {
         setShowTopics(false);
         updateSidebar();
     }
+    //Routes to the Version Control System to show the edit history of an article
+    const handleViewVersionHistory = () => {
+        props.history.push("/vcs/" + blogId);
+    }
 
-
+    //Registered Voice Commands for this component
     const commands = [
         {
             command: 'go back',
@@ -225,6 +230,11 @@ function TextEditor(props) {
             description: 'Publishes the article and navigates to the published article page',
         },
         {
+            command: 'view version history',
+            callback: props.editor ? handleViewVersionHistory : () => {enqueueSnackbar("Not allowed", {variant: "info"})},
+            description: 'Opens the version control system for this article',
+        },
+        {
             command: 'generate PDF',
             callback: () => {
 
@@ -321,21 +331,18 @@ function TextEditor(props) {
     ];
 
 
-    const handleViewVersionHistory = () => {
-        props.history.push("/vcs/" + blogId);
-    }
+
 
     const updateSidebar = () => {
+        if (props.editor) {
+            commands.push()
+        }
         props.setCommands(commands);
     }
-    if (props.editor) {
-        commands.push({
-            command: 'view version history',
-            callback: handleViewVersionHistory,
-            description: 'Opens the version control system for this article',
-        })
-        updateSidebar();
-    }
+
+
+
+
     const commandsAndDesc = [];
 
     commands.forEach(cmd => {
@@ -350,6 +357,7 @@ function TextEditor(props) {
 
     const [versions, setVersions] = useState([]);
 
+    //Update blog config with the fetched blog data if in edit mode
     const updateBlogConfig = (userId) => {
         if (props.match.params.vid) {
             axios.get("http://localhost:8000/get-articles-version-history/" + props.match.params.id, {
@@ -433,6 +441,7 @@ function TextEditor(props) {
 
 
     useEffect(() => {
+        //If in edit mode load the blog data
         if (props.editor) {
             setLoading(prevState => {
                 return true;
@@ -443,12 +452,14 @@ function TextEditor(props) {
             } else {
                 props.history.push("/");
             }
-        } else {
+        } else { //If in create mode, initialize the state accordingly
             let _user = authService.getCurrentUser();
             if (_user && _user.userId) {
+                const d = new Date();
+                const date = `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
                 setBlogHeaderConfig({
                     imageURL: '',
-                    createdOn: `${(new Date()).toDateString()}`,
+                    createdOn: `${date}`,
                     author: _user.username,
                 });
             } else {
@@ -468,9 +479,6 @@ function TextEditor(props) {
 
             return editorState;
         });
-        // setEditorJSON(JSON.stringify(convertToRaw(editorState.getCurrentContent())))
-
-        // console.log(editorState.getCurrentContent());
 
     }
 
@@ -479,10 +487,11 @@ function TextEditor(props) {
     //     setEditorJSON(JSON.stringify(convertToRaw(editorState.getContents())));
     // }
 
-    useEffect(() => {
-        console.log(editorJSON, "here");
-    }, [editorJSON])
+    // useEffect(() => {
+    //     console.log(editorJSON, "here");
+    // }, [editorJSON])
 
+    //Insert the transcribed text into the text editor
     const insertText = (text, editorState) => {
         const currContent = editorState.getCurrentContent();
         const currSelection = editorState.getSelection();
@@ -491,8 +500,10 @@ function TextEditor(props) {
         return EditorState.forceSelection(newEditorState, newContent.getSelectionAfter());
     }
 
+    //Sets the text editor state programatically
     const setEditorContentProgramatically = (text) => {
         let shouldProvoke = true;
+        //Do not insert commands into the text editor as plain text
         commands.forEach(cmd => {
             if (text === cmd.command) {
                 shouldProvoke = false;
@@ -517,6 +528,7 @@ function TextEditor(props) {
     const [title, setTitle] = useState('');
     const titleInputEl = useRef(null);
 
+    //Published the article - If in edit mode then updates the article
     const publishArticle = () => {
         let url = "http://localhost:8000/add-article";
         if (props.editor) {
@@ -589,7 +601,7 @@ function TextEditor(props) {
         setBlogHeaderConfig({...blogHeaderConfigCopy});
 
     }
-
+    //Handle local file upload
     const handleCoverImageChange = (event) => {
         if (event.target.files && event.target.files[0]) {
             setCoverImage(URL.createObjectURL(event.target.files[0]), true);

@@ -4,7 +4,7 @@ import "./style.scss";
 
 function DotList(props) {
   return (
-    <ul className="py-dot-list py-fnt-s--1p4 py-fnt-w--bold">
+    <ul className="py-dot-list py-fnt-s--1p2 py-fnt-w--bold">
       {props.items.map((item) => {
         return (
           <li key={item} className="py-dot-list--item">

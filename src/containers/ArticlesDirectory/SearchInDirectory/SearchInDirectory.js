@@ -44,19 +44,23 @@ const SearchField = withStyles({
 })(TextField);
 
 function SearchInDirectory(props) {
-    const [directoryName, setDirectoryName] = useState(props.match.params.directoryName);
-    const [query, setQuery] = useState('');
-    const [articles, setArticles] = useState([]);
+    //States Initialization for this component
+    const [directoryName, setDirectoryName] = useState(props.match.params.directoryName); //Directory name to search in
+    const [query, setQuery] = useState(''); //User query to search
+    const [articles, setArticles] = useState([]); //Fetched articles against a search
     const [loading, setLoading] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
 
+    //Clear the search input field and also the results fetched against it
     const clearSearchField = () => {
         setQuery('');
         setArticles([]);
     }
+    //Handle manual input in the search field
     const handleQueryChange = e => {
         setQuery(e.target.value);
     }
+    //Open an article by sending its id to the article viewer route
     const showBlogByVoiceHandler = articleTitle => {
         articleTitle = articleTitle.toLowerCase();
 
@@ -72,6 +76,7 @@ function SearchInDirectory(props) {
         props.history.push(url);
     }
 
+    //Registered voice commands for this component
     const commands = [
         {
             command: 'search for *',
@@ -118,11 +123,13 @@ function SearchInDirectory(props) {
         props.setCommands(commandsAndDesc);
     }
 
+    //On componentDidMount, set new commands in the sidebar
     useEffect(() => {
         updateSidebar()
 
     }, [])
 
+    //Search the articles against a query - is called whenever the query value is updated
     useEffect(() => {
         let url = directoryName === 'All Articles'
             ? "http://localhost:8000/search-all-articles"

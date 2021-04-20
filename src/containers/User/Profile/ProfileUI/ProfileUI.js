@@ -16,6 +16,7 @@ import BottomNavigation from "@material-ui/core/BottomNavigation";
 import Modal from "@material-ui/core/Modal";
 import CameraFrontIcon from '@material-ui/icons/CameraFront';
 import WebcamCapture from "../../../../components/WebcamCapture/WebcamCapture";
+import {EditorState, convertFromRaw} from 'draft-js';
 
 
 
@@ -350,7 +351,7 @@ const ProfileUI = (props) => {
                               id={article._id}
                               title={article.Title}
                               picture={article.PictureSecureId}
-                              body={article.Body}
+                              body={EditorState.createWithContent(convertFromRaw(JSON.parse(article.Body)))}
                               postedOn={article.PostedOn}
                               author = {article.Author.authorName}
                           />

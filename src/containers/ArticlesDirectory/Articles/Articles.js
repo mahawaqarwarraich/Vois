@@ -10,9 +10,10 @@ import {EditorState, convertFromRaw} from 'draft-js';
 import ArticleListItem from "../../../components/ArticlesDirectory/ArticleListItem/ArticleListItem";
 
 const Articles = (props) => {
+    //State Initialization for this component
     const [allArticles, manipulateArticles] = useState([]);
 
-
+    //Registered Voice Commands for this component
     const commands = [
         {
             command: 'open *',
@@ -42,6 +43,7 @@ const Articles = (props) => {
 
     const {Transcript} = useSpeechRecognition({commands});
 
+    //Load the articles of the category under focus i.e. All Articles or My Articles
     useEffect(() => {
         if (props.showLoading) props.showLoading();
         props.setCommands(commands);
@@ -76,6 +78,7 @@ const Articles = (props) => {
             });
     }, [props.buttonName]);
 
+    //Open an article by passing its id to the article viewer route
     const showBlogByVoiceHandler = articleTitle => {
         console.log(articleTitle);
         articleTitle = articleTitle.toLowerCase();
