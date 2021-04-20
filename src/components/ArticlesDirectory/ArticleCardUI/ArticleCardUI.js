@@ -1,7 +1,7 @@
 import React from "react";
 import DotList from "../../UIWidgets/DotList";
 import "./ArticleCardUI.css";
-import {Editor} from "draft-js";
+// import {Editor} from "draft-js";
 
 const articleCard = (props) => (
     <div className="Card">
@@ -19,7 +19,8 @@ const articleCard = (props) => (
             </div>
             <div className="Card__Content--Overview">
                 <p>
-                    <Editor editorState={props.body} readOnly={true}/>
+                    {/* <Editor editorState={props.body} readOnly={true}/> */}
+                    {props.body}
                 </p>
                 {/*<p>{props.body.substr(0, 180) + "..."}</p>*/}
             </div>

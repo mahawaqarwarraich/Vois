@@ -3,7 +3,6 @@ import SigninForm from "../../../../containers/User/Auth/SigninForm/SigninForm";
 import WebcamCapture from "../../../../components/WebcamCapture/WebcamCapture";
 import Modal from "@material-ui/core/Modal";
 import axios from "axios";
-import authHeader from "../../../../services/auth-header";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import {useSpeechRecognition} from "react-speech-recognition";
 
@@ -70,6 +69,11 @@ const LoginPage = (props) => {
     .then((response) => {
       setLoading(false);
       console.log(response);
+
+      if (response.data.token) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        props.history.push("/");
+      }
     });
   }
 

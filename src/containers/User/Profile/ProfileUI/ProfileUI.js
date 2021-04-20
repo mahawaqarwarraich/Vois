@@ -16,7 +16,7 @@ import BottomNavigation from "@material-ui/core/BottomNavigation";
 import Modal from "@material-ui/core/Modal";
 import CameraFrontIcon from '@material-ui/icons/CameraFront';
 import WebcamCapture from "../../../../components/WebcamCapture/WebcamCapture";
-import {EditorState, convertFromRaw} from 'draft-js';
+// import {EditorState, convertFromRaw} from 'draft-js';
 
 
 
@@ -43,7 +43,7 @@ const ProfileUI = (props) => {
   const [username, setUsername] = useState("Loading...");
   const [loading, setLoading] = useState(false);
   const [userId,setUserId] = useState(null);
-  const [uploadPictureDialogState, setUploadPictureDialogState] = useState(false);
+  // const [uploadPictureDialogState, setUploadPictureDialogState] = useState(false);
   const [view, setView] = useState("Private View");
   const [modelOpen, setModelOpen] = useState(false);
   const [webcamModalOpen, setWebcamModalOpen] = useState(false);
@@ -351,7 +351,8 @@ const ProfileUI = (props) => {
                               id={article._id}
                               title={article.Title}
                               picture={article.PictureSecureId}
-                              body={EditorState.createWithContent(convertFromRaw(JSON.parse(article.Body)))}
+                              // body={EditorState.createWithContent(convertFromRaw(JSON.parse(article.Body)))}
+                              body={article.Body}
                               postedOn={article.PostedOn}
                               author = {article.Author.authorName}
                           />
