@@ -27,6 +27,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.4",
+    "react-skillbars": "^1.6.1",
     "react-speech-recognition": "^3.2.3",
     "react-webcam": "^5.2.2",
     "save-as": "^0.1.8"
