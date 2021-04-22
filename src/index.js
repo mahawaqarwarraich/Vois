@@ -5,12 +5,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {BrowserRouter} from 'react-router-dom';
 import {SnackbarProvider} from "notistack";
+import EyeGaze from './components/EyeGaze/EyeGaze';
 
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
             <SnackbarProvider maxSnack={3}>
-            <App/>
+            {/* <App/> */}
+            <EyeGaze />
             </SnackbarProvider>
         </BrowserRouter>
     </React.StrictMode>,

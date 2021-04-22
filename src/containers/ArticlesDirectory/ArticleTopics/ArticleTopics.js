@@ -19,7 +19,7 @@ const ArticleTopics = (props) => {
         },
         {
             command: 'open user profile',
-            callback: () => props.history.push('/profile/5fdd051402816535287cb8fa'),
+            callback: () => props.history.push(`/profile/${JSON.parse(localStorage.getItem("user")).userId}`),
             description: 'Opens user profile',
         },
         {
