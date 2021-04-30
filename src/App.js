@@ -28,6 +28,8 @@ import ArticlesPage from "./containers/Pages/ArticlesPage/ArticlesPage";
 
 import './App.css';
 import Sidebar from "./containers/Sidebar";
+import BMHPortfolioBuilder from "./containers/BMHPortfolioBuilder/BMHPortfolioBuilder";
+import BMHPortfolio from "./containers/BMHPortfolio/BMHPortfolio";
 
 const TextEditor = lazy(() => import("./containers/TextEditor"));
 
@@ -77,7 +79,7 @@ function App(props) {
                     position: 'fixed',
                     top: '0',
                     left: '0',
-                    zIndex: '1000',
+                    zIndex: '900',
                     backgroundColor: '#fff',
                 }}><Sidebar setsetStateFunc={setSidebarStateFunc}/></div>
                 <div style={{width: '85%'}}>{setSidebarState ?
@@ -86,6 +88,21 @@ function App(props) {
                                 <Suspense fallback={<LinearProgress />}>
                                     <TextEditor
                                         doc={true}
+                                        setCommands={newState => setSidebarState(newState)}
+                                        {...props} />
+                                </Suspense>)
+                            }/>
+                            <Route path="/portfolio-builder" render={props => (
+                                <Suspense fallback={<LinearProgress />}>
+                                    <BMHPortfolioBuilder
+                                        doc={true}
+                                        setCommands={newState => setSidebarState(newState)}
+                                        {...props} />
+                                </Suspense>)
+                            }/>
+                            <Route path="/portfolio/:id" exact render={props => (
+                                <Suspense fallback={<LinearProgress />}>
+                                    <BMHPortfolio
                                         setCommands={newState => setSidebarState(newState)}
                                         {...props} />
                                 </Suspense>)
@@ -144,7 +161,7 @@ function App(props) {
                             <Route
                                 path="/profile/:userId"
                                 exact
-                                render={(props) => <ProfilePage {...props} />}
+                                render={(props) => <ProfilePage setCommands={newState => setSidebarState(newState)} {...props} />}
                             />
                             <Route path="/" exact
                                    render={props => <HomePage

@@ -113,9 +113,26 @@ const ProfileUI = (props) => {
     {
       command: 'scroll up',
       callback: () => window.scrollTo({top: window.pageYOffset-500,behavior:"smooth"})
+    },
+    {
+      command: 'view portfolio',
+      callback: () => {
+        props.history.push(`portfolio/60829525d05bf230282aa436`);
+      }
     }
   ];
 
+  let commandsAndDesc = [];
+
+  commands.forEach(cmd => {
+    commandsAndDesc.push({command: cmd.command, description: cmd.description})
+  })
+
+  useEffect(() => {
+    if (props.setCommands)
+      props.setCommands(commandsAndDesc);
+
+  }, [])
 
   const {Transcript} = useSpeechRecognition({commands});
 

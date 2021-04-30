@@ -5,14 +5,14 @@ const Header = () => {
     return (
         <div className="header">
             <h3 className="header__insertbackground">
-                Say *Search Background Images*
+                {/*Say *Search Background Images**/}
             </h3>
             <div className="header__info">
                 <h1 className="header__name">
-                    *SET NAME YOURNAME*
+                    MUZAMIL HUSSAIN
                 </h1>
                 <h2 className="header__tagline">
-                    *SET TAGLINE YOUR TAGLINE*
+                    I AM A WEB DEVELOPER
                 </h2>
             </div>
         </div>

@@ -35,7 +35,10 @@ function HomePageManager(props) {
             setTabsConfigState([...(tabsConfigCopy.tabs)]);
         }
         setTimeout(() => {
-            props.history.push(gotourl);
+            if (gotourl != '/cv-builder')
+                props.history.push(gotourl)
+            else
+                window.location.href = 'http://localhost:3001?id=' + JSON.parse(localStorage.getItem("user")).userId + `&tok=${JSON.parse(localStorage.getItem("user")).token}`;
         }, 800)
     }
 

@@ -4,10 +4,10 @@ import "./Skills.scss";
 
 const Skills = () => {
     const skills = [
-        {type: "Communication", level: 85},
+        {type: "ENGLISH COMMUNICATION", level: 85},
         {type: "Writing", level: 90},
-        {type: "Management", level: 80},
-        {type: "Leading", level: 85},
+        // {type: "Management", level: 80},
+        // {type: "Leading", level: 85},
       ];
     return (
         <div className="skills">

@@ -17,14 +17,14 @@ ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
             <SnackbarProvider maxSnack={3}>
-            {/* <App/> */}
-            {/* <EyeGaze /> */}
-            <Header />
-            <About />
-            <RecentWork />
-            <Skills />
-            <Details />
-            <Footer />
+             <App/>
+             {/*<EyeGaze />*/}
+            {/*<Header />*/}
+            {/*<About />*/}
+            {/*<RecentWork />*/}
+            {/*<Skills />*/}
+            {/*<Details />*/}
+            {/*<Footer />*/}
             </SnackbarProvider>
         </BrowserRouter>
     </React.StrictMode>,
