@@ -42,6 +42,8 @@ export default function SignUp(props) {
     confirmPassword: "",
   });
 
+  const [image, setImage] = useState(null); // Store the file object
+  
   const [loading, setLoading] = useState(false);
 
   const classes = useStyles();
@@ -70,7 +72,7 @@ export default function SignUp(props) {
           error.message ||
           error.toString();
 
-        console.log(error.response.data.data[0].msg);
+        console.log(error.response?.data?.data[0]?.msg);
       });
   };
 
@@ -94,6 +96,15 @@ export default function SignUp(props) {
           </Typography>
           <form className={classes.form}>
             <Grid container spacing={2}>
+            <Grid item xs={12}>
+           
+  <input
+    type="file"
+    accept="image/*"
+    onChange={(event) => setImage(event.target.files[0])} // Store the selected image
+  />
+</Grid>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   autoComplete="fname"
@@ -144,6 +155,7 @@ export default function SignUp(props) {
                   label="Password"
                   type="password"
                   id="password"
+                  placeholder="hello"
                   value={form.password}
                   onChange={(event) => {
                     setForm({

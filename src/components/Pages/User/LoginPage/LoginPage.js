@@ -85,6 +85,7 @@ const LoginPage = (props) => {
     <React.Fragment>
       {loading ? <LinearProgress /> : ""}
       <SigninForm {...props} />
+      jkdjfkd
       <Modal
               style={modalStyle}
               open={webcamModalOpen}
@@ -92,6 +93,7 @@ const LoginPage = (props) => {
               // aria-labelledby="simple-modal-title"
               // aria-describedby="simple-modal-description"
           >
+            
             <div style={modalBodyStyle}>
               <h4 style={{marginBottom:"2rem",textAlign:"center"}}>Facial Authentication - <strong>Please Look Straight</strong></h4>
               <input

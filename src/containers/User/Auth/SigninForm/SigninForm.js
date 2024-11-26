@@ -11,6 +11,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import AuthService from "../../../../services/auth-service";
 import { Link } from "react-router-dom";
+import { Store } from 'react-notifications-component';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -51,6 +52,19 @@ export default function SignIn(props) {
       .then((response) => {
         setForm({ email: "", password: "" });
         setLoading(false);
+        Store.addNotification({
+          title: "Wonderful",
+          message: "Login Successful!",
+          type: "success", // 'success', 'danger', 'info', or 'default'
+          insert: "top", // 'top' or 'bottom'
+          container: "top-right", // 'top-left', 'top-right', 'bottom-left', or 'bottom-right'
+          animationIn: ["animate__animated", "animate__fadeIn"], // Animate.css classes
+          animationOut: ["animate__animated", "animate__fadeOut"],
+          dismiss: {
+            duration: 5000, // Auto-dismiss after 5 seconds
+            onScreen: true, // Keep the notification on screen when hovered
+          },
+        });
         props.history.push("/");
       })
       .catch((error) => {

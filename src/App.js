@@ -171,6 +171,8 @@ function App(props) {
                                                                                            setCommands={newState => setSidebarState(newState)} {...props} />}/>
                             <Route path="/article-new/:id" exact render={props => <BlogManager json={true}
                                                                                                setCommands={newState => setSidebarState(newState)} {...props} />}/>
+                          <Route path="/facial-login" exact render={props => <LoginPage json={true}
+                                                                                           setCommands={newState => setSidebarState(newState)} {...props} />}/>
                         </React.Fragment>
                     )
                     : ''}

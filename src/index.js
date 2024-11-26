@@ -3,28 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {BrowserRouter} from 'react-router-dom';
-import {SnackbarProvider} from "notistack";
-import EyeGaze from './components/EyeGaze/EyeGaze';
-import Header from './components/PortfolioBuilder/Header/Header';
-import About from './components/PortfolioBuilder/About/About';
-import Details from './components/PortfolioBuilder/Details/Details';
-import Skills from './components/PortfolioBuilder/Skills/Skills';
-import RecentWork from './components/PortfolioBuilder/RecentWork/RecentWork';
-import Footer from './components/PortfolioBuilder/Footer/Footer';
+import { BrowserRouter } from 'react-router-dom';
+import { SnackbarProvider } from "notistack";
+import { ReactNotifications } from 'react-notifications-component';
+import 'react-notifications-component/dist/theme.css';
+import 'animate.css/animate.min.css';
 
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
+            {/* Initialize ReactNotifications to make notifications work across the app */}
+            <ReactNotifications />
             <SnackbarProvider maxSnack={3}>
-             <App/>
-             {/*<EyeGaze />*/}
-            {/*<Header />*/}
-            {/*<About />*/}
-            {/*<RecentWork />*/}
-            {/*<Skills />*/}
-            {/*<Details />*/}
-            {/*<Footer />*/}
+                <App />
             </SnackbarProvider>
         </BrowserRouter>
     </React.StrictMode>,
