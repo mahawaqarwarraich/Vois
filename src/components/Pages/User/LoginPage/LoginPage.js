@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import SigninForm from "../../../../containers/User/Auth/SigninForm/SigninForm";
 import WebcamCapture from "../../../../components/WebcamCapture/WebcamCapture";
 import Modal from "@material-ui/core/Modal";
@@ -44,6 +44,10 @@ const LoginPage = (props) => {
     },
   ];
 
+  useEffect(()=> {
+    props.setCommands(commands)
+  }, [commands, props])
+
 
   const {Transcript} = useSpeechRecognition({commands});
 
@@ -85,7 +89,7 @@ const LoginPage = (props) => {
     <React.Fragment>
       {loading ? <LinearProgress /> : ""}
       <SigninForm {...props} />
-      jkdjfkd
+     
       <Modal
               style={modalStyle}
               open={webcamModalOpen}

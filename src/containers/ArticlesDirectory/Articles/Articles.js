@@ -1,10 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import './Articles.scss';
 import axios from 'axios';
-import {useSpeechRecognition} from "react-speech-recognition";
+import { useSpeechRecognition } from "react-speech-recognition";
 import AuthService from "../../../services/auth-service";
-import {Route} from 'react-router-dom';
-import {EditorState, convertFromRaw} from 'draft-js';
+import { Route } from 'react-router-dom';
+import { EditorState, convertFromRaw } from 'draft-js';
 
 
 import ArticleListItem from "../../../components/ArticlesDirectory/ArticleListItem/ArticleListItem";
@@ -22,26 +22,30 @@ const Articles = (props) => {
         },
         {
             command: 'search',
-            callback: () => {props.history.push(`${props.match.url}/search`)},
+            callback: () => { props.history.push(`${props.match.url}/search`) },
             description: 'Search in this directory'
         },
         {
             command: 'go back',
-            callback: () => props.history.goBack(),
+            callback: () => {
+                console.log("Go back command triggered");  // Debugging
+                props.history.goBack();
+
+            },
             description: "Goes back to the previous page",
         },
         {
             command: 'scroll down',
-            callback: () => window.scrollTo({top: window.pageYOffset+500,behavior:"smooth"})
+            callback: () => window.scrollTo({ top: window.pageYOffset + 500, behavior: "smooth" })
         },
         {
             command: 'scroll up',
-            callback: () => window.scrollTo({top: window.pageYOffset-500,behavior:"smooth"})
+            callback: () => window.scrollTo({ top: window.pageYOffset - 500, behavior: "smooth" })
         }
     ];
 
 
-    const {Transcript} = useSpeechRecognition({commands});
+    const { Transcript } = useSpeechRecognition({ commands });
 
     //Load the articles of the category under focus i.e. All Articles or My Articles
     useEffect(() => {
@@ -76,7 +80,7 @@ const Articles = (props) => {
             .catch(err => {
                 console.log(err);
             });
-    }, [props.buttonName]);
+    }, [commands, props, props.buttonName]);
 
     //Open an article by passing its id to the article viewer route
     const showBlogByVoiceHandler = articleTitle => {
@@ -84,7 +88,7 @@ const Articles = (props) => {
         articleTitle = articleTitle.toLowerCase();
 
         allArticles.forEach(article => {
-            if (article.Title.toLowerCase() == articleTitle) {
+            if (article.Title.toLowerCase() === articleTitle) {
                 const url = "/article/" + article._id;
                 props.history.push(url);
             }

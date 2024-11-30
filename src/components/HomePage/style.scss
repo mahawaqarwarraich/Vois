@@ -1,14 +1,43 @@
 .flex-center {
-  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  // height: 100vh;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  width: fit-content;
+ 
 }
+
+.welcome {
+  font-size: x-large;
+}
+
+.logo-container {
+  display: flex;
+  // justify-items: flex-end;
+  justify-content: space-between;
+  // padding-right: 70px;
+  // margin-top: 20px;
+ 
+
+align-items: center;
+}
+.logo2 {
+  width: 30%;
+  max-width: 100%;
+height: auto;
+padding-top: 30px;
+padding-bottom: 30px;
+
+
+}
+
 .bmh {
   &-container {
     padding: 0 2%;
     display: flex;
-    width: 100%;
+    width: 90%;
     max-width: 100%;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -16,8 +45,8 @@
       min-width: 48.5%;
       width: 48.5%;
       max-width: 48.5%;
-      height: 300px;
-      margin-bottom: 40px;
+      height: 250px;     
+      margin-bottom: 20px;
     }
   }
 }

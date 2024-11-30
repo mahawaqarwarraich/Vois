@@ -155,7 +155,7 @@ function App(props) {
                             <Route
                                 path="/signup"
                                 exact
-                                render={(props) => <SignupPage {...props} />}
+                                render={(props) => <SignupPage {...props} setCommands={newState => setSidebarState(newState)}/>}
                             />
                             <Route path="/login" exact render={(props) => <LoginPage {...props} />}/>
                             <Route

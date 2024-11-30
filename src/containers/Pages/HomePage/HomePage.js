@@ -61,7 +61,7 @@ function HomePageManager(props) {
         if (props.setCommands)
             props.setCommands(commandsAndDesc);
 
-    }, [])
+    }, [commandsAndDesc, props])
 
     if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
         return null

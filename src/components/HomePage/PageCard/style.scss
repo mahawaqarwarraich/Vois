@@ -4,6 +4,12 @@ $cardHeaderHeight: 75%;
 $cardCmdHeight: 100% - $cardHeaderHeight;
 $cardRadius: 8px;
 
+.module-icon {
+  width: 60%;
+  max-width: 100%;
+  height: auto;
+}
+
 .page-card {
 
   border-radius: $cardRadius;
@@ -11,12 +17,16 @@ $cardRadius: 8px;
   width: 100%;
   max-width: 100%;
   min-width: 100%;
-  height: 100%;
-  max-height: 100%;
-  min-height: 100%;
+
+  background-color: #F2F2F2;
+ 
+  
+  min-height: 95%;
+  
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+ 
+ 
 
 
   &-meta{
@@ -24,11 +34,10 @@ $cardRadius: 8px;
     max-width: 100%;
     min-width: 100%;
     &--header {
-      height: $cardHeaderHeight;
-      padding: 25px;
+      height: 0;
+      padding: 20px 30px;
       display: flex;
-      justify-content: space-between;
-      border: 2px solid #D3D3D3;
+      flex-direction: column;
       border-top-left-radius: $cardRadius;
       border-top-right-radius: $cardRadius;
       border-bottom: 0;
@@ -37,11 +46,12 @@ $cardRadius: 8px;
         width: 30%;
       }
       .card-content {
-        width: 67%;
+        width: 100%;
         display: flex;
         flex-direction: column;
+        margin-top: 10px;          
         &--title {
-
+           
         }
         &--desc {
 
@@ -58,11 +68,11 @@ $cardRadius: 8px;
       align-items: center;
       &-icon {
         width: 20px;
-        margin-right: 10px;
+        margin-left: auto;
       }
       &-text {
         font-family: 'Roboto Medium';
-        font-size: 16px;
+        font-size: 2px;
         color: #fff;
       }
     }
@@ -73,12 +83,12 @@ $cardRadius: 8px;
 }
 .title-heading-black {
   font-family: 'Roboto Black', sans-serif;
-  font-size: 40px;
+  font-size: 20px;
   color: $col-title-black;
-  margin-bottom: 10px;
+  
 }
 .card-desc {
   font-family: 'Roboto Regular', sans-serif;
-  font-size: 20px;
+  font-size: 18px;
   color: $col-text-gray;
 }

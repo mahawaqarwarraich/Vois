@@ -19,7 +19,7 @@ const config = {
         {
             id: 'ntl',
             theme: 'red',
-            heroImgSrc: portfolioBuilderIcon,
+            heroImgSrc: '/images/portfolio.svg',
             cmdImgSrc: micIconOptions['red'],
             title: 'Portfolio Web Page',
             desc: 'Select among some amazing portfolio templates, do some editing with the layout, content, theme, and have your very own portfolio web page online',
@@ -31,7 +31,7 @@ const config = {
         {
             id: 'ntr',
             theme: 'green',
-            heroImgSrc: cvBuilderIcon,
+            heroImgSrc: '/images/portfolio.svg',
             cmdImgSrc: micIconOptions['green'],
             title: 'CV Builder',
             desc: 'Build a professional CV with this fully fledged CV Builder, allowing you to add your personal info, education and job history, skills, websites and more',
@@ -43,7 +43,7 @@ const config = {
         {
             id: 'nbl',
             theme: 'blue',
-            heroImgSrc: textEditorIcon,
+            heroImgSrc: '/images/texteditor.svg',
             cmdImgSrc: micIconOptions['blue'],
             title: 'Text Editor',
             desc: 'Write and format articles, blog posts, essays and much more; add images to your document; all this, using this Text Editor',
@@ -55,7 +55,7 @@ const config = {
         {
             id: 'nbr',
             theme: 'yellow',
-            heroImgSrc: articlesDirectoryIcon,
+            heroImgSrc: '/images/texteditor.svg',
             cmdImgSrc: micIconOptions['yellow'],
             title: 'Articles Directory',
             desc: 'Publish your text documents directly onto our site and find all of them right here, in your personal Articles Directory',
