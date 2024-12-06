@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Avatar from "@material-ui/core/Avatar"; // Avatar is a component
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -10,11 +10,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { Link } from "react-router-dom"; // Link is also a component
+import { useSpeechRecognition } from "react-speech-recognition";
 import './SignupForm.css'; // CSS file
 
 import axios from "axios";
 import AuthService from "../../../../services/auth-service";
-import { SentimentVerySatisfied } from "@material-ui/icons";
+import { Description, SentimentVerySatisfied } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({ // useStyles is a function that returns an object
   paper: {
@@ -36,8 +37,47 @@ const useStyles = makeStyles((theme) => ({ // useStyles is a function that retur
     margin: theme.spacing(3, 0, 2),
   }
 }));
-
+////////////////////////////////////////////////////////////
 export default function SignUp(props) {
+  const [focusState, setFocusState] = useState(true)
+
+  const commandsAndDesc = [];
+  commandsAndDesc.push({
+    command: "Navigate signup page",
+    description: "Navigate to the signup page"
+  },
+ {
+  command: "Enter username",
+  description: "Activate and focus the username input"
+ }
+
+)
+
+//   const commands = [
+//     {
+//         command: 'Navigate *',
+//         callback: cmd => handleNavigation('Navigate', cmd)
+//     },
+//     {
+//         command: 'remove',
+//         callback: ({resetTranscript}) => resetTranscript()
+//     }
+// ];
+
+const commands = [
+  {
+    command: 'Enter username',
+    callback: (focusState) => setFocusState(true)
+  }
+]
+const {transcript} = useSpeechRecognition({commands});
+
+
+useEffect(() => {
+    if (props.setCommands)
+        props.setCommands(commandsAndDesc);
+
+}, [commandsAndDesc, props])
 
   const [form, setForm] = useState({
     username: "",
@@ -129,7 +169,7 @@ export default function SignUp(props) {
                   fullWidth
                   id="username"
                   label="Username"
-                  autoFocus
+              autoFocus={focusState}
                   value={form.username}
                   onChange={(event) => {
                     setForm({
@@ -139,6 +179,7 @@ export default function SignUp(props) {
                       confirmPassword: form.confirmPassword,
                     });
                   }}
+                  
                 />
               </Grid>
               <Grid item xs={12}>
@@ -147,6 +188,7 @@ export default function SignUp(props) {
                   required
                   fullWidth
                   id="email"
+                  autoFocus={focusState}
                   label="Email Address"
                   name="email"
                   autoComplete="email"

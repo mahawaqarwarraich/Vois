@@ -8,9 +8,10 @@ import HomePage from "../../../components/HomePage";
 
 function HomePageManager(props) {
 
-    const [tabsConfigState, setTabsConfigState] = useState([...(tabsConfig.tabs)]);
+    const [tabsConfigState, setTabsConfigState] = useState([...(tabsConfig.tabs)]); // may: array of objects
     const urlForCmd = {};
     const commandsAndDesc = [];
+
     tabsConfig.tabs.forEach(tab => {
         urlForCmd[tab.cmdSlice.toLowerCase()] = {
             url: tab.goTo
@@ -35,7 +36,7 @@ function HomePageManager(props) {
             setTabsConfigState([...(tabsConfigCopy.tabs)]);
         }
         setTimeout(() => {
-            if (gotourl != '/cv-builder')
+            if (gotourl !== '/cv-builder')
                 props.history.push(gotourl)
             else
                 window.location.href = 'http://localhost:3001?id=' + JSON.parse(localStorage.getItem("user")).userId + `&tok=${JSON.parse(localStorage.getItem("user")).token}`;
@@ -56,6 +57,8 @@ function HomePageManager(props) {
     ];
 
     const {transcript} = useSpeechRecognition({commands});
+    console.log("hello")
+    console.log('transcript', transcript)
 
     useEffect(() => {
         if (props.setCommands)

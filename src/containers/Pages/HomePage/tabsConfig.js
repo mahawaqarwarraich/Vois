@@ -63,7 +63,32 @@ const config = {
             cmdSlice: 'Articles Directory',
             goTo: '/articles-directory',
             cmdDesc: 'Navigates to the Articles Directory Page',
-        },
+        }
+        // {
+        //     id: 'nbr',
+        //     theme: 'yellow',
+        //     heroImgSrc: '/images/texteditor.svg',
+        //     cmdImgSrc: micIconOptions['yellow'],
+        //     title: 'Signup',
+        //     desc: 'Register to the system.',
+        //     cmd: 'Navigate Signup Page',
+        //     cmdSlice: 'Signup Page',
+        //     goTo: '/signup',
+        //     cmdDesc: 'Navigates to the Sign up Page',
+        // },
+        // {
+        //     id: 'nbr',
+        //     theme: 'yellow',
+        //     heroImgSrc: '/images/texteditor.svg',
+        //     cmdImgSrc: micIconOptions['yellow'],
+        //     title: 'Articles Directory',
+        //     desc: 'Publish your text documents directly onto our site and find all of them right here, in your personal Articles Directory',
+        //     cmd: 'Navigate Signin Page',
+        //     cmdSlice: 'Signin Page',
+        //     goTo: '/facial-login',
+        //     cmdDesc: 'Navigates to Sign in Page',
+
+        // }
 
     ],
 };

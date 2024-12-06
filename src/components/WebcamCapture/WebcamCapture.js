@@ -1,5 +1,5 @@
 import React from "react";
-import Webcam from "react-webcam";
+import Webcam from "react-webcam"; // webcam is a component
 import './WebcamCapture.css';
 import {useSpeechRecognition} from "react-speech-recognition";
 
