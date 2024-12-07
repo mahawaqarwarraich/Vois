@@ -92,7 +92,7 @@ export default function SignUp(props) {
   // Validation functions
   const validateUsername = (username) => {
     if (!username) return "Username is required";
-    if (username.length < 6) return "Username must be at least 6 characters long";
+    if (username.length < 3 || username.length > 20) return "The username must be between 3 and 20 characters long.";
     return "";
   };
 
@@ -105,7 +105,7 @@ export default function SignUp(props) {
 
   const validatePassword = (password) => {
     if (!password) return "Password is required";
-    if (password.length < 8) return "Password must be at least 8 characters long";
+    if (password.length < 8 || password.length > 25) return "Password must be between 8 and 24 characters long";
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       return "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character";
@@ -176,7 +176,7 @@ export default function SignUp(props) {
       .then((response) => {
         setForm({ username: "", email: "", password: "", confirmPassword: "" });
         setLoading(false);
-        props.history.push("/login");
+        props.history.push("/facial-login");
       })
       .catch((error) => {
         setLoading(false);
@@ -184,7 +184,7 @@ export default function SignUp(props) {
           (error.response?.data?.message) ||
           error.message ||
           error.toString();
-        console.log(error.response?.data?.data[0]?.msg);
+        console.log(resMessage);
       });
   };
 
@@ -309,7 +309,7 @@ export default function SignUp(props) {
 
           <Grid container justify="flex-end">
             <Grid item>
-              <Link to="/login" style={{ textDecoration: "none", fontFamily: 'poppins, sans-serif' }}>
+              <Link to="/facial-login" style={{ textDecoration: "none", fontFamily: 'poppins, sans-serif' }}>
                 Already have an account? Sign in
               </Link>
             </Grid>

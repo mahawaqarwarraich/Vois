@@ -15,22 +15,22 @@ import { Store } from 'react-notifications-component';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(5),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.secondary.Avatar,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
+    width: "100%",
+    marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-  },
+  }
 }));
 
 export default function SignIn(props) {
@@ -39,12 +39,67 @@ export default function SignIn(props) {
     password: "",
   });
 
-  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    auth: "" // for authentication errors
+  });
 
+  const [loading, setLoading] = useState(false);
   const classes = useStyles();
+
+  // Validation functions
+  const validateEmail = (email) => {
+    if (!email) return "Email is required";
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return "Please enter a valid email address";
+    return "";
+  };
+
+  const validatePassword = (password) => {
+    if (!password) return "Password is required";
+    if (password.length < 8) return "Password must be at least 8 characters long";
+    return "";
+  };
+
+  // Handle input changes with validation
+  const handleInputChange = (field, value) => {
+    const newForm = { ...form, [field]: value };
+    setForm(newForm);
+
+    // Clear auth error when user starts typing
+    setErrors(prev => ({ ...prev, auth: "" }));
+
+    // Validate the changed field
+    let error = "";
+    switch (field) {
+      case "email":
+        error = validateEmail(value);
+        break;
+      case "password":
+        error = validatePassword(value);
+        break;
+      default:
+        break;
+    }
+    setErrors(prev => ({ ...prev, [field]: error }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      email: validateEmail(form.email),
+      password: validatePassword(form.password),
+    };
+    setErrors(prev => ({ ...prev, ...newErrors }));
+    return !Object.values(newErrors).some(error => error !== "");
+  };
 
   const SigninHandler = (event) => {
     event.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     setLoading(true);
 
@@ -55,14 +110,14 @@ export default function SignIn(props) {
         Store.addNotification({
           title: "Wonderful",
           message: "Login Successful!",
-          type: "success", // 'success', 'danger', 'info', or 'default'
-          insert: "top", // 'top' or 'bottom'
-          container: "top-right", // 'top-left', 'top-right', 'bottom-left', or 'bottom-right'
-          animationIn: ["animate__animated", "animate__fadeIn"], // Animate.css classes
+          type: "success",
+          insert: "top",
+          container: "top-right",
+          animationIn: ["animate__animated", "animate__fadeIn"],
           animationOut: ["animate__animated", "animate__fadeOut"],
           dismiss: {
-            duration: 5000, // Auto-dismiss after 5 seconds
-            onScreen: true, // Keep the notification on screen when hovered
+            duration: 5000,
+            onScreen: true,
           },
         });
         props.history.push("/");
@@ -70,91 +125,120 @@ export default function SignIn(props) {
       .catch((error) => {
         setLoading(false);
         const resMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
+          (error.response?.data?.message) ||
           error.message ||
           error.toString();
-
-        console.log(error.response);
+        
+        // Set authentication error
+        setErrors(prev => ({
+          ...prev,
+          auth: "Invalid email or password. Please try again."
+        }));
       });
   };
 
   return (
     <React.Fragment>
       {loading ? <LinearProgress /> : ""}
+      <div className="logo">
+        <div style={{ width: "45%", marginBottom: '20px' }}>
+          <h1 className="hero-line">Welcome back to the world of Voice Commands!</h1>
+        </div>
+        <img src='/images/voisLogo.svg' alt='logo' className="image" />
+      </div>
+
       <Container
         component="main"
-        maxWidth="xs"
+        maxWidth="sm"
         style={{
-          border: "1px solid rgba(0,0,0,0.2)",
-          margin: "5rem auto",
-          paddingBottom: "2rem",
+          marginLeft: "auto",
+          marginTop: "px",
+          padding: "30px 30px 15px 30px",
+          borderRadius: '5%',
+          backgroundColor: '#F2F2F2',
         }}
       >
         <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}></Avatar>
-          <Typography component="h1" variant="h5">
+        <div className="avatar">
+          <Avatar style={{ borderRadius: '3px' }} className='makeStyles-paper-2'></Avatar>
+          <Typography 
+            component="h1" 
+            variant="h4" 
+            style={{
+              borderBottom: '5px solid #FFD54B',
+              fontFamily: 'Poppins, sans-serif',
+              fontWeight: '550',
+              color: '#404040'
+            }}
+            className={classes.title}
+          >
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-              value={form.email}
-              onChange={(event) => {
-                setForm({
-                  email: event.target.value,
-                  password: form.password,
-                });
-              }}
-            />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-              value={form.password}
-              onChange={(event) => {
-                setForm({
-                  email: form.email,
-                  password: event.target.value,
-                });
-              }}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={SigninHandler}
-            >
-              Sign In
-            </Button>
-            <Grid container justify="flex-end">
-              <Grid item>
-                <Link to="/signup" style={{ textDecoration: "none" }}>
-                  Don't have an account? Sign Up
-                </Link>
-              </Grid>
-            </Grid>
-          </form>
         </div>
-        <Box mt={8}></Box>
+
+        <form className={classes.form} noValidate>
+          {errors.auth && (
+            <Typography color="error" align="center" style={{ marginBottom: '1rem' }}>
+              {errors.auth}
+            </Typography>
+          )}
+          
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+                value={form.email}
+                error={!!errors.email}
+                helperText={errors.email}
+                onChange={(event) => handleInputChange("email", event.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                value={form.password}
+                error={!!errors.password}
+                helperText={errors.password}
+                onChange={(event) => handleInputChange("password", event.target.value)}
+              />
+            </Grid>
+          </Grid>
+
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={SigninHandler}
+            style={{ fontFamily: 'poppins, sans-serif', backgroundColor: '#5D9B7C' }}
+          >
+            Sign In
+          </Button>
+
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link to="/signup" style={{ textDecoration: "none", fontFamily: 'poppins, sans-serif' }}>
+                Don't have an account? Sign Up
+              </Link>
+            </Grid>
+          </Grid>
+        </form>
       </Container>
     </React.Fragment>
   );
