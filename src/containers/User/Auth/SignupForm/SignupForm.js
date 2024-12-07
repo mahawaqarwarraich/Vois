@@ -270,9 +270,7 @@ useEffect(() => {
             >
               Sign Up
             </Button>
-            <button>
-        Toggle Focus
-      </button>
+           
             <Grid container justify="flex-end">
               <Grid item>
                 <Link to="/login" style={{ textDecoration: "none", fontFamily: 'poppins, sans-serif'}}>
