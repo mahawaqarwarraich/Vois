@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Avatar from "@material-ui/core/Avatar"; // Avatar is a component
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -39,7 +39,16 @@ const useStyles = makeStyles((theme) => ({ // useStyles is a function that retur
 }));
 ////////////////////////////////////////////////////////////
 export default function SignUp(props) {
-  const [focusState, setFocusState] = useState(true)
+  const [focusState, setFocusState] = useState(false)
+
+  const inputRef = useRef(null);
+
+  // useEffect(() => {
+  //   if (focusState) {
+  //     console.log('focus value', focusState)
+  //   //inputRef.current?.focus();
+  //   }
+  // }, [focusState]);
 
   const commandsAndDesc = [];
   commandsAndDesc.push({
@@ -67,9 +76,16 @@ export default function SignUp(props) {
 const commands = [
   {
     command: 'Enter username',
-    callback: (focusState) => setFocusState(true)
+    callback: () => setFocusState(true)
   }
-]
+];
+
+useEffect(()=> {
+  if (focusState) {
+   console.log('focus', focusState)
+  }
+},[focusState])
+
 const {transcript} = useSpeechRecognition({commands});
 
 
@@ -160,27 +176,25 @@ useEffect(() => {
             <Grid container spacing={2}>
     
               <Grid item xs={12}>
-                <TextField
-              
-                  autoComplete="fname"
-                  name="username"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="username"
-                  label="Username"
-              autoFocus={focusState}
-                  value={form.username}
-                  onChange={(event) => {
-                    setForm({
-                      username: event.target.value,
-                      email: form.email,
-                      password: form.password,
-                      confirmPassword: form.confirmPassword,
-                    });
-                  }}
-                  
-                />
+              {focusState ? "yes":"no"}
+      <TextField
+      autoFocus={focusState}
+        autoComplete="fname"
+        name="username"
+        variant="outlined"
+        required
+        fullWidth
+        id="username"
+        label="Username"
+        value={form.username}
+        onChange={(event) => {
+          setForm({
+            ...form,
+            username: event.target.value,
+          });
+        }}
+      />
+      
               </Grid>
               <Grid item xs={12}>
                 <TextField
@@ -188,7 +202,7 @@ useEffect(() => {
                   required
                   fullWidth
                   id="email"
-                  autoFocus={focusState}
+             
                   label="Email Address"
                   name="email"
                   autoComplete="email"
@@ -256,6 +270,9 @@ useEffect(() => {
             >
               Sign Up
             </Button>
+            <button>
+        Toggle Focus
+      </button>
             <Grid container justify="flex-end">
               <Grid item>
                 <Link to="/login" style={{ textDecoration: "none", fontFamily: 'poppins, sans-serif'}}>
