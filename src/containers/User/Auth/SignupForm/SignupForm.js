@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect} from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -46,7 +46,7 @@ export default function SignUp(props) {
     confirmPassword: "",
   });
 
-  const inputRef = useRef(null);
+  
   
   const commandsAndDesc = [
     {
