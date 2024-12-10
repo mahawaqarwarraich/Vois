@@ -45,7 +45,9 @@ const Articles = (props) => {
     ];
 
 
-    const { Transcript } = useSpeechRecognition({ commands });
+    const { transcript } = useSpeechRecognition({ commands });
+
+    console.log(transcript)
 
     //Load the articles of the category under focus i.e. All Articles or My Articles
     useEffect(() => {
@@ -84,6 +86,7 @@ const Articles = (props) => {
 
     //Open an article by passing its id to the article viewer route
     const showBlogByVoiceHandler = articleTitle => {
+        console.log("i am in the blog")
         console.log(articleTitle);
         articleTitle = articleTitle.toLowerCase();
 
