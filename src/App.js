@@ -4,6 +4,8 @@ import {Route} from 'react-router-dom';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import HomePage from "./containers/Pages/HomePage";
+import EmailPage from "./containers/Pages/EmailPage";
+import WaitPage from "./containers/Pages/WaitPage";
 // import ArticleTopicCard from "./components/ArticlesDirectory/ArticleTopicCard/ArticleTopicCard";
 // import ArticleListItem from "./components/ArticlesDirectory/ArticleListItem/ArticleListItem";
 // import ArticleMainHeader from "./components/ArticlesDirectory/ArticleMainHeader/ArticleMainHeader";
@@ -167,6 +169,15 @@ function App(props) {
                                    render={props => <HomePage
                                        setCommands={newState => setSidebarState(newState)}
                                        {...props} />}/>
+                             <Route path="/verify-email" exact
+                                   render={props => <EmailPage
+                                       setCommands={newState => setSidebarState(newState)}
+                                       {...props} />}/>
+                             <Route path="/verify-email/:token" exact
+                                   render={props => <WaitPage
+                                       setCommands={newState => setSidebarState(newState)}
+                                       {...props} />}/>
+                                       
                             <Route path="/article/:id" exact render={props => <BlogManager json={true}
                                                                                            setCommands={newState => setSidebarState(newState)} {...props} />}/>
                             <Route path="/article-new/:id" exact render={props => <BlogManager json={true}

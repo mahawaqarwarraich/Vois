@@ -174,9 +174,12 @@ export default function SignUp(props) {
       form.confirmPassword
     )
       .then((response) => {
+        props.history.push({
+          pathname: '/verify-email',
+          state: { email: form.email }
+        });
         setForm({ username: "", email: "", password: "", confirmPassword: "" });
-        setLoading(false);
-        props.history.push("/facial-login");
+        setLoading(false);      
       })
       .catch((error) => {
         setLoading(false);
