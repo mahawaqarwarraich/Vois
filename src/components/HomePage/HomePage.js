@@ -14,7 +14,7 @@ function HomePage(props) {
            
                 <div className="bmh-container">
                 <div className="logo-container">
-                <h1 className="welclome">Welcome, User!</h1>
+                <h1 className="welclome">Welcome, Maha!</h1>
                 <img src='/images/voisLogo.svg' alt='vois logo' className="logo2" />
             </div>
                     {props.config ? props.config.tabs ? props.config.tabs.map(tab =>

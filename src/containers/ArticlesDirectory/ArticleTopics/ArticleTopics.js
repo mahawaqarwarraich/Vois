@@ -50,7 +50,7 @@ const ArticleTopics = (props) => {
     //On componentDidMount, set the new commands in the sidebar
     useEffect(() => {
         props.setCommands(commands);
-    }, [])
+    }, [commands, props])
 
     const { Transcript } = useSpeechRecognition({commands});
 
@@ -79,7 +79,7 @@ const ArticleTopics = (props) => {
             }
         });
         if (isAvailable) {
-            const url = props.match.url + "/" + topicName;
+            const url = props.match.url  + "/" + topicName;
             props.history.push(url);
         }
     }

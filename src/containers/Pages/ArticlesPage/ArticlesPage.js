@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './ArticlesPage.scss';
 
 import ArticleMainHeader from "../../../components/ArticlesDirectory/ArticleMainHeader/ArticleMainHeader";
@@ -8,6 +8,7 @@ import Button from "../../../components/ArticlesDirectory/UIElements/Button/Butt
 import {Route} from "react-router-dom";
 import Fab from "@material-ui/core/Fab";
 import MicIcon from '@material-ui/icons/Mic';
+import AuthService from "../../../services/auth-service";
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -15,6 +16,7 @@ const ArticlesPage = (props) => {
     //States Initialization for this component
     const [buttonClickedName, setButtonClickedName] = useState("all-articles");
     const [loading, setLoading] = useState(true);
+    const [requestUrl, setRequestUrl] = useState("")
 
     /**
      * Handling loading state
@@ -29,6 +31,36 @@ const ArticlesPage = (props) => {
     }
     console.log(props.match.params.userId);
     console.log(props.match.params.topicName);
+
+    useEffect(()=> {
+        const topic = props.match.params.topicName;
+        console.log('from outer parent topic', topic)
+        let url = "";
+        console.log('user id from outer', props.match.params.userId)
+        // if (AuthService.getCurrentUser().userId) {
+        //     url = 'http://localhost:8000/get-all-user-articles/' + AuthService.getCurrentUser().userId;
+        // } else {
+        //     if (props.buttonName === "all-articles") {
+        //         url = 'http://localhost:8000/get-articles-by-topic/' + topic;
+        //     }
+        //     else if (props.buttonName === "my-articles") {
+        //         url = 'http://localhost:8000/get-articles-by-topic/' + topic + '/' + AuthService.getCurrentUser().userId;
+        //     }
+        //     else {
+
+        //     }
+        // }
+
+        if (buttonClickedName === "all-articles") {
+            url = 'http://localhost:8000/get-articles-by-topic/' + topic;
+        }
+        else if (buttonClickedName === "my-articles") {
+            url = 'http://localhost:8000/get-articles-by-topic/' + topic + '/' + AuthService.getCurrentUser().userId;
+        }
+        console.log('urequest url', url)
+        setRequestUrl(url)
+    }, [buttonClickedName, props.buttonName, props.match.params.topicName, props.match.params.userId])
+
     return (
         <React.Fragment style={{position:"relative"}}>
             {loading ? <LinearProgress /> : ''}
@@ -48,7 +80,9 @@ const ArticlesPage = (props) => {
                 hideLoading={hideLoading}
                 setCommands={props.setCommands}
                 {...props}
-                buttonName = {buttonClickedName}/>
+                buttonName = {buttonClickedName}
+                url={requestUrl}
+                />
             <div className="ArticleTopicsPage__Button">
                 <Button
                     buttonText="Show More"

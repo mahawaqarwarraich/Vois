@@ -50,25 +50,29 @@ const Articles = (props) => {
     console.log(transcript)
 
     //Load the articles of the category under focus i.e. All Articles or My Articles
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         if (props.showLoading) props.showLoading();
         props.setCommands(commands);
         const topic = props.match.params.topicName;
-        let url = "";
-        if (props.match.params.userId) {
-            url = 'http://localhost:8000/get-all-user-articles/' + props.match.params.userId;
-        } else {
-            if (props.buttonName === "all-articles") {
-                url = 'http://localhost:8000/get-articles-by-topic/' + topic;
-            }
-            else if (props.buttonName === "my-articles") {
-                url = 'http://localhost:8000/get-articles-by-topic/' + topic + '/' + AuthService.getCurrentUser().userId;
-            }
-            else {
+        console.log('topic name from innermost element:', topic)
+        console.log('user id from innner', props.match.params.userId)
+        // let url = "";
+        // if (props.match.params.userId) {
+        //     url = 'http://localhost:8000/get-all-user-articles/' + props.match.params.userId;
+        // } else {
+        //     if (props.buttonName === "all-articles") {
+        //         url = 'http://localhost:8000/get-articles-by-topic/' + topic;
+        //     }
+        //     else if (props.buttonName === "my-articles") {
+        //         url = 'http://localhost:8000/get-articles-by-topic/' + topic + '/' + AuthService.getCurrentUser().userId;
+        //     }
+        //     else {
 
-            }
-        }
-        axios.get(url)
+        //     }
+        // }
+        console.log('where wwe want url', props.url)
+        axios.get(props.url)
             .then(result => {
                 const articles = result.data.articles;
                 const tempArticles = [];
@@ -82,7 +86,7 @@ const Articles = (props) => {
             .catch(err => {
                 console.log(err);
             });
-    }, [commands, props, props.buttonName]);
+    }, [commands, props.match.params.topicName, props.match.params.userId, props.showLoading, props.hideLoading, manipulateArticles, props]);
 
     //Open an article by passing its id to the article viewer route
     const showBlogByVoiceHandler = articleTitle => {

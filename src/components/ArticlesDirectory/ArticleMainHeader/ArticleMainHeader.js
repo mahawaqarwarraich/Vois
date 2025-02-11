@@ -33,9 +33,9 @@ const ArticleMainHeader = (props) => {
     return (
         <div className="ArticleMainHeader">
             <div className="ArticleMainHeader__Img">
-                <h1 className="ArticleMainHeader__Img--AboveText">
+                {/* <h1 className="ArticleMainHeader__Img--AboveText">
                     {props.fromProfile ? "User Articles" : "Articles"}
-                </h1>
+                </h1> */}
             </div>
             <div className="ArticleMainHeader__Toolbar">
                 <div className="ArticleMainHeader__Toolbar--ButtonsPalette">
