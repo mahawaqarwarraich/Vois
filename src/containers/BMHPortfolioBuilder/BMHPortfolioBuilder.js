@@ -12,10 +12,12 @@ import authHeader from "../../services/auth-header";
 const BMHPortfolioBuilder = (props) => {
 
     const [showHeader, setShowHeader] = useState(false);
+    const [showFileName, setShowFileName] = useState(false);
     const [showAbout, setShowAbout] = useState(false);
     const [showSkills, setShowSkills] = useState(false);
     const [showDetails, setShowDetails] = useState(false);
     const [headername, setHeadername] = useState('');
+    const [filename, setFilename ] = useState('');
     const [headerheadline, setHeaderheadline] = useState('');
     const [aboutParagraph, setAboutParagraph] = useState('');
     const [skillField, setSkillField] = useState('');
@@ -29,7 +31,7 @@ const BMHPortfolioBuilder = (props) => {
 
     const commands = [
         {
-            command: 'add header section',
+            command: 'Add header section.',
             callback: cmd => {
                 setActive('header');
                 setTimeout(() => {
@@ -40,7 +42,18 @@ const BMHPortfolioBuilder = (props) => {
             description: 'Adds a header section'
         },
         {
-            command: 'add about section',
+            command: 'Add file name.',
+            callback: cmd => {
+                setActive('header');
+                setTimeout(() => {
+                    setShowFileName(true);
+                }, 310)
+                resetTranscript();
+            },
+            description: 'Adds a header section'
+        },
+        {
+            command: 'Add about section.',
             callback: cmd => {
                 setActive('about');
                 setTimeout(() => {
@@ -51,7 +64,7 @@ const BMHPortfolioBuilder = (props) => {
             description: 'Adds an about section'
         },
         {
-            command: 'add section of skill',
+            command: 'Add skill section.',
             callback: cmd => {
                 setActive('skills');
                 setTimeout(() => {
@@ -62,7 +75,7 @@ const BMHPortfolioBuilder = (props) => {
             description: 'Adds a skills section',
         },
         {
-            command: 'add detail section',
+            command: 'Add detail section.',
             callback: cmd => {
                 setActive('details');
                 setTimeout(() => {
@@ -73,7 +86,7 @@ const BMHPortfolioBuilder = (props) => {
             description: 'Adds a skills section',
         },
         {
-            command: 'set header name *',
+            command: 'Set header name *.',
             callback: (val) => {
                 setHeadername(val);
                 resetTranscript();
@@ -81,7 +94,15 @@ const BMHPortfolioBuilder = (props) => {
             description: 'Sets the name of the header',
         },
         {
-            command: 'set about *',
+            command: 'Set file name *.',
+            callback: (val) => {
+                setFilename(val);
+                resetTranscript();
+            },
+            description: 'Sets the name of the file',
+        },
+        {
+            command: 'Set about *.',
             callback: (val) => {
                 setAboutParagraph((prevState => prevState + ` ${val}`));
                 resetTranscript();
@@ -89,7 +110,7 @@ const BMHPortfolioBuilder = (props) => {
             description: 'Sets the about paragraph value',
         },
         {
-            command: 'skill value *',
+            command: 'Skill value *.',
             callback: (val) => {
                 setSkillField(val);
                 resetTranscript();
@@ -97,7 +118,7 @@ const BMHPortfolioBuilder = (props) => {
             description: 'Sets the name of the skill',
         },
         {
-            command: 'skill level :num',
+            command: 'Level :num.',
             callback: (num) => {
                 setSkillLevel(num);
                 resetTranscript();
@@ -105,11 +126,11 @@ const BMHPortfolioBuilder = (props) => {
             description: 'Sets the level of the skill',
         },
         {
-            command: 'enter value in list',
+            command: 'Enter value in list.',
             callback: (val) => {
                 let v = [...skills]
                 v.push({
-                    skill: skillField,
+                    type: skillField,
                     level: skillLevel,
                 });
                 setSkills([...v]);
@@ -120,37 +141,39 @@ const BMHPortfolioBuilder = (props) => {
             description: 'Adds the skill to skills list',
         },
         {
-            command: 'next',
+            command: 'View my portfolios.',
             callback: () => {
-                props.history.push('/portfolio');
-            }
+                props.history.push('/my-portfolio');
+            },
+            description: 'Opens the page that lists your created portfolios.',
         },
         {
-            command: 'set email *',
+            command: 'Set email *.',
             callback: (email) => {
                 setEmail(email);
                 resetTranscript();
             },
-            description: 'Sets the email',
-        }
-        ,
+            description: 'Sets the email.',
+        },
         {
-            command: 'close',
+            command: 'Close.',
             callback: () => {
                 setShowHeader(false);
+                setShowFileName(false);
                 setShowAbout(false);
                 setShowDetails(false);
                 setShowSkills(false);
                 setActive('');
                 resetTranscript();
             },
-            description: 'Clsoes any opened modal',
+            description: 'Closes any opened modal',
         },
         {
-            command: 'submit',
+            command: 'Submit.',
             callback: () => {
                 axios.post('http://localhost:8000/add-portfolio', {
                     data: {
+                        filename,
                         headername: headername,
                         aboutParagraph: aboutParagraph,
                         skills: skills,
@@ -162,17 +185,26 @@ const BMHPortfolioBuilder = (props) => {
                     headers: authHeader(),
                 }).then(res => {
                     console.log(res);
-                    props.history.push(`/portfolio/${res.data.portfolio._id}`)
+                    props.history.push({
+                        pathname: `/portfolio/${res.data.portfolio._id}`,
+                        state: { portfolioData: res.data.portfolio }
+                    });
                 }).catch(err => {
                     console.log(err);
                 })
                 resetTranscript();
             }
+        }, {
+
         }
     ];
+    
 
 
     const {transcript, resetTranscript} = useSpeechRecognition({commands});
+    console.log(transcript);
+
+    let wordCount = transcript.trim().split(/\s+/).length;
 
     commands.forEach(cmd => {
         commandsAndDesc.push({command: cmd.command, description: cmd.description})
@@ -184,11 +216,30 @@ const BMHPortfolioBuilder = (props) => {
         }, 3100)
     }
 
+
+    //Handling incorrect commands
+  const handleIncorrectCommand = () => {
+    if (wordCount >=3 && wordCount <= 6) {
+        resetTranscript();
+    }
+  };
+
+
+
+//   useEffect(() => {
+//     wordCount = transcript.trim().split(/\s+/).length;
+//     if (wordCount >=3 && wordCount <= 6) {
+//         resetTranscript();
+//     }
+//   }, [commands, resetTranscript, transcript]);
+
+
+
     useEffect(() => {
         if (props.setCommands)
             props.setCommands(commandsAndDesc);
 
-    }, [])
+    }, [commandsAndDesc, props])
 
     return (
         <>
@@ -200,8 +251,21 @@ const BMHPortfolioBuilder = (props) => {
             {/*    {...props}*/}
             {/*/>*/}
             <div className={'portfolio-builder-container'}>
+            {
+                    showFileName  &&
+
+                    (
+                        <Selector commands={commands} {...props}>
+                            <div className={'pad-20'}>
+                                <TextField label={'Set file name'} variant={'outlined'} name={'filename'}
+                                           value={filename} onChange={e => setFilename(e.target.value)} fullWidth/>
+                            </div>
+                        </Selector>
+                    )
+                }
                 {
                     showHeader &&
+
                     (
                         <Selector commands={commands} {...props}>
                             <div className={'pad-20'}>
@@ -242,7 +306,7 @@ const BMHPortfolioBuilder = (props) => {
                                             paddingLeft: '15px',
                                             marginBottom: '7.5px'
                                         }}>
-                                            <Typography>{skill.skill}</Typography>
+                                            <Typography>{skill.type}</Typography>
                                             <Typography>{skill.level}</Typography>
                                         </div>
                                     )
@@ -263,6 +327,16 @@ const BMHPortfolioBuilder = (props) => {
                         </Selector>
                     )
                 }
+
+<div className={'portfolio-form-element'}>
+                    <Paper style={{padding: '30px'}} variant={'outlined'} square>
+                        <div
+                            className={`${"paper-line paper-line-blue paper-line-left"}${" "}${active === 'header' ? 'paper-line-active' : ''}`}></div>
+                        <Typography variant={'button'}>Add File Name</Typography>
+                        <div
+                            className={`${"paper-line paper-line-blue paper-line-right"}${" "}${active === 'header' ? 'paper-line-active' : ''}`}></div>
+                    </Paper>
+                </div>
                 <div className={'portfolio-form-element'}>
                     <Paper style={{padding: '30px'}} variant={'outlined'} square>
                         <div
@@ -285,7 +359,7 @@ const BMHPortfolioBuilder = (props) => {
                     <Paper style={{padding: '30px'}} variant={'outlined'} square>
                         <div
                             className={`${"paper-line paper-line-green paper-line-left"}${" "}${active === 'skills' ? 'paper-line-active' : ''}`}></div>
-                        <Typography variant={'button'}>Add Skills</Typography>
+                        <Typography variant={'button'}>Add Skill section</Typography>
                         <div
                             className={`${"paper-line paper-line-green paper-line-right"}${" "}${active === 'skills' ? 'paper-line-active' : ''}`}></div>
                     </Paper>

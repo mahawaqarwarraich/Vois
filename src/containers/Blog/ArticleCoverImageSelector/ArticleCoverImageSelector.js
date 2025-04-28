@@ -29,7 +29,7 @@ function ArticleCoverImageSelector(props) {
 
     const commands = [
         {
-            command: 'search *',
+            command: 'Search *.',
             callback: query => {
                 setSearchQuery(query);
                 const url = "https://www.googleapis.com/customsearch/v1?key=AIzaSyAmFfu2RsIuY7DoarLaK-GNoMQAkXoq4sQ&cx=b99ad2dddfcac4813&searchType=image&q="
@@ -45,41 +45,41 @@ function ArticleCoverImageSelector(props) {
             description: 'Searches images from the web',
         },
         {
-            command: 'set image level *',
+            command: 'Set Image Level *.',
             callback: index => {
                 console.log(index);
                 index = parseInt(index);
-                index -= 1
+                index -= 1;
                 props.setCoverImage(searchResults[index].link);
                 props.hide();
             },
             description: 'Sets cover image equal to the image at the level specified'
         },
         {
-            command: 'scroll down',
+            command: 'Scroll Down.',
             callback: () => {
                 setOffsetTop(prevOffsetTop => {
-                    document.querySelector("#selector-element").scrollTo({top: prevOffsetTop + 320, behavior: "smooth"})
+                    document.querySelector("#selector-element").scrollTo({top: prevOffsetTop + 320, behavior: "smooth"});
                     return prevOffsetTop + 320;
-                })
+                });
             }
         },
         {
-            command: 'scroll up',
+            command: 'Scroll Up.',
             callback: () => {
                 setOffsetTop(prevOffsetTop => {
-                    document.querySelector("#selector-element").scrollTo({top: prevOffsetTop - 320, behavior: "smooth"})
+                    document.querySelector("#selector-element").scrollTo({top: prevOffsetTop - 320, behavior: "smooth"});
                     return prevOffsetTop - 320;
-                })
+                });
             }
         },
         {
-            command: 'close',
+            command: 'Close.',
             callback: () => props.hide(),
             description: 'It will close this modal',
         }
-
-]
+    ];
+    
     const {transcript} = useSpeechRecognition({commands});
     const commandsAndDesc = [];
 
@@ -93,7 +93,7 @@ function ArticleCoverImageSelector(props) {
 
     useEffect(() => {
         updateSidebar();
-    }, [])
+    }, [updateSidebar])
 
 
     return (

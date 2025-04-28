@@ -16,10 +16,14 @@ function HomePageManager(props) {
         urlForCmd[tab.cmdSlice.toLowerCase()] = {
             url: tab.goTo
         }
+        console.log("here is command object" , urlForCmd)
         commandsAndDesc.push({command: tab.cmd, description: tab.cmdDesc});
     });
 
-    const handleNavigation = (base, cmd) => {
+    const handleNavigation = (base, cmdT) => {
+        let msg = "hello";
+        const cmd = cmdT.replace(/[.]/g, '');
+        console.log("here is the cmd", cmd);
         console.log(urlForCmd[cmd.toLowerCase()] ? urlForCmd[cmd.toLowerCase()].url : 'Unknown Command : ' + cmd);
         let gotourl = '';
         if (urlForCmd[cmd.toLowerCase()]) {

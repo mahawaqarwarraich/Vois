@@ -6,7 +6,7 @@ const Footer = () => {
         <footer className="footer">
             <p className="footer__text">
                 {/*&copy; Copyright 2021 {JSON.parse(localStorage.getItem("user")).name}*/}
-                &copy; Copyright 2021 BeMyHand
+                &copy; Copyright 2025 VOIS
             </p>
         </footer>
     )

@@ -10,7 +10,9 @@ class AuthService {
         password,
       })
       .then((response) => {
+        console.log("the final response received after login", response)
         if (response.data.token) {
+          console.log("finally dekho", response.data)
           localStorage.setItem("user", JSON.stringify(response.data));
         }
         return response.data;

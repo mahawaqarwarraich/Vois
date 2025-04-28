@@ -31,11 +31,11 @@ function ArticleTopicSelector(props) {
                 console.log(err);
             })
 
-    }, []);
+    }, [enqueueSnackbar]);
 
     const commands = [
         {
-            command: 'set topic of *',
+            command: 'Set topic of *.',
             callback: (topic) => {
                 if (topicNames.includes(topic.toLowerCase())) {
                     articleTopics.forEach(tp => {
@@ -55,7 +55,7 @@ function ArticleTopicSelector(props) {
             description: 'Set <topicname> will set a topic for this article',
         },
         {
-            command: 'close',
+            command: 'Close.',
             callback: () => props.hide(),
             description: 'It will close this modal',
         }

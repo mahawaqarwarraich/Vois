@@ -1,5 +1,6 @@
+
 import axios from 'axios';
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -26,6 +27,8 @@ import IconButton from '@material-ui/core/IconButton';
 import { signinConfig } from './signinConfig';
 import AuthContext from '../../../contexts/AuthContext';
 import SimpleSnackbar from '../../../components/UI/Snackbar';
+
+import { AppContext } from '../../context/AppContext';
 
 const useStyles = makeStyles((theme) => ({
 	formRoot: {
@@ -67,6 +70,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Signin(props) {
+	const { auth, setAuth } = useContext(AppContext);
+
+	useEffect(()=> {
+		console.log("this is auth: ", auth)
+	}, [auth])
+	
+	
+
 	const classes = useStyles();
 
 	const [message, setMessage] = React.useState('');
@@ -168,11 +179,13 @@ export default function Signin(props) {
 	const handleSignin = () => {
 		if (isFormValidated(0)) {
 			axios
-				.post('http://localhost:7000/auth/login', {
+				.post('http://localhost:8000/auth/login', {
 					...formsData.signin,
 				})
 				.then((res) => {
 					window.localStorage.setItem('token', res.data.token);
+					console.log("aey lo user", res.data.user);
+					setAuth(res.data.user);
 					props.handleChange(4);
 					props.handleClick();
 					props.history.replace('/');
@@ -180,6 +193,7 @@ export default function Signin(props) {
 				.catch((err) => {
                     setOpen(true);
                     setMessage(err.response.data.message);
+					
 				});
 		}
 	};

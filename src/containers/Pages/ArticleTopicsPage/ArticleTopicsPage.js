@@ -13,25 +13,25 @@ import MicIcon from "@material-ui/icons/Mic";
 import Fab from "@material-ui/core/Fab";
 
 const ArticleTopicsPage = (props) => {
-    // const commands = [
-    //     {
-    //         command: 'go back',
-    //         callback: () => props.history.goBack(),
-    //         description: 'Goes back to the previous page'
-    //     }
-    // ]
-    //
-    // const { transcript } = useSpeechRecognition({commands});
+    const commands = [
+        {
+            command: 'go back',
+            callback: () => props.history.goBack(),
+            description: 'Goes back to the previous page'
+        }
+    ]
+    
+    const { transcript } = useSpeechRecognition({commands});
 
     const commandsAndDescription = [];
 
-    // commands.forEach(cmd => {
-    //     commandsAndDescription.push({command: cmd.command, description: cmd.description});
-    // })
+    commands.forEach(cmd => {
+        commandsAndDescription.push({command: cmd.command, description: cmd.description});
+    })
 
-    // useEffect(() => {
-    //     props.setCommands(commandsAndDescription);
-    // }, [])
+    useEffect(() => {
+        props.setCommands(commandsAndDescription);
+    }, [commandsAndDescription, props])
     return (
         <React.Fragment>
             <ArticleMainHeader
