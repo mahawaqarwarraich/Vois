@@ -72,7 +72,7 @@ function AddComment(props) {
     const [loading, setLoading] = useState(false);
     const commands = [
         {
-            command: 'submit comment',
+            command: 'Submit comment.',
             callback: () => {
                 setLoading(true);
                 props.addComment(text);
@@ -81,7 +81,7 @@ function AddComment(props) {
             description: 'Submits the comment on this blog'
         },
         {
-            command: 'close',
+            command: 'Close.',
             callback: () => props.hide(),
             description: 'Closes this modal.'
         },

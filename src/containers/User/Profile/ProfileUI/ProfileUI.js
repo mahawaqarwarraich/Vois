@@ -132,7 +132,7 @@ const ProfileUI = (props) => {
     if (props.setCommands)
       props.setCommands(commandsAndDesc);
 
-  }, [])
+  }, [commandsAndDesc, props])
 
   const {Transcript} = useSpeechRecognition({commands});
 

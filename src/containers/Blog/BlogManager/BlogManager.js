@@ -8,6 +8,7 @@ import {useSpeechRecognition} from "react-speech-recognition";
 import authHeader from "../../../services/auth-header";
 import authService from "../../../services/auth-service";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { useCallback } from "react";
 
 import {useSnackbar} from 'notistack';
 
@@ -158,43 +159,44 @@ function BlogManager(props) {
     //Registered Voice Commands for this Component
     const commands = [
         {
-            command: 'go back',
+            command: 'Go Back.',
             callback: () => props.history.goBack(),
             description: 'Goes back to the previous page',
         },
         {
-            command: 'scroll down',
+            command: 'Scroll Down.',
             callback: () => window.scrollTo({top: window.pageYOffset + 500, behavior: "smooth"})
         },
         {
-            command: 'scroll up',
+            command: 'Scroll Up.',
             callback: () => window.scrollTo({top: window.pageYOffset - 500, behavior: "smooth"})
         },
         {
-            command: 'like article',
+            command: 'Like Article.',
             callback: handleLikeArticle,
             description: 'Likes the article',
         },
         {
-            command: 'add comment',
+            command: 'Add Comment.',
             callback: () => setShowAddComment(true),
             description: 'Opens up an input field for adding a comment.'
         },
         {
-            command: 'view comments',
+            command: 'View Comments.',
             callback: handleViewComments,
             description: 'Opens all the comments for this article',
         },
         {
-            command: 'delete article',
+            command: 'Delete Article.',
             callback: handleDeleteArticleClicked,
             description: 'Deletes the article',
         }
     ];
+    
     //Updates the sidebar to show the registered commands for this component
-    const updateSidebar = () => {
+    const updateSidebar = useCallback(() => {
         props.setCommands(commands);
-    }
+    })
     //If the current user is also the author of this article then add another comment for editing the article
     if (owner) {
         commands.push({
@@ -207,7 +209,7 @@ function BlogManager(props) {
 
     useEffect(() => {
         updateSidebar();
-    }, [])
+    }, [updateSidebar])
 
     const hideAddComment = () => {
         setShowAddComment(false);
@@ -292,12 +294,14 @@ function BlogManager(props) {
                 .catch((err) => {
                     console.log(err);
                     updateBlogConfig(null);
+
+
                 });
         } else {
             updateBlogConfig(null);
         }
 
-    }, []);
+    }, [updateBlogConfig]);
 
 
     //The transcribed text from voice is stored in this variable - Transcript

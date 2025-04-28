@@ -13,36 +13,36 @@ const ArticleTopics = (props) => {
     //Registered voice commads for this article
     const commands = [
         {
-            command: 'create new article',
+            command: 'Create new article.',
             callback: () => props.history.push('/new-article'),
             description: 'Opens the text editor to create a new article',
         },
         {
-            command: 'open user profile',
+            command: 'Open user profile.',
             callback: () => props.history.push(`/profile/${JSON.parse(localStorage.getItem("user")).userId}`),
             description: 'Opens user profile',
         },
         {
-            command: 'go back',
+            command: 'Go back.',
             callback: () => props.history.goBack(),
             description: "Goes back to the previous page",
         },
         {
-            command: 'open *',
+            command: 'Open *.',
             callback: (articleTopic) => showArticlesByTopicHandler(articleTopic),
             description: 'Opens an article topic'
         },
         {
-            command: 'search',
+            command: 'Search.',
             callback: () => {props.history.push(`${props.match.url}/All%20Articles/search`)},
             description: 'Search in the entire directory'
         },
         {
-            command: 'scroll down',
+            command: 'Scroll down.',
             callback: () => window.scrollTo({top: window.pageYOffset+500,behavior:"smooth"})
         },
         {
-            command: 'scroll up',
+            command: 'Scroll up.',
             callback: () => window.scrollTo({top: window.pageYOffset-500,behavior:"smooth"})
         }
     ];
@@ -51,8 +51,9 @@ const ArticleTopics = (props) => {
     useEffect(() => {
         props.setCommands(commands);
     }, [commands, props])
-
-    const { Transcript } = useSpeechRecognition({commands});
+////yeh haiiiiiiiiiiiiiiiiiiiiiiiii
+    const { transcript } = useSpeechRecognition({commands});
+    console.log("yahan dot hai kya?", transcript)
 
     //On componentDidMount, get all the topics in the articles directory
     useEffect(()=> {

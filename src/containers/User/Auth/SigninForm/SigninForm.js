@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,6 +12,7 @@ import Container from "@material-ui/core/Container";
 import AuthService from "../../../../services/auth-service";
 import { Link } from "react-router-dom";
 import { Store } from 'react-notifications-component';
+import { AppContext } from "../../../../context/AppContext";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignIn(props) {
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -136,6 +138,7 @@ export default function SignIn(props) {
         }));
       });
   };
+
 
   return (
     <React.Fragment>

@@ -8,6 +8,7 @@ import { SnackbarProvider } from "notistack";
 import { ReactNotifications } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css/animate.min.css';
+import { AppProvider } from './context/AppContext'; 
 
 ReactDOM.render(
     <React.StrictMode>
@@ -15,7 +16,9 @@ ReactDOM.render(
             {/* Initialize ReactNotifications to make notifications work across the app */}
             <ReactNotifications />
             <SnackbarProvider maxSnack={3}>
+            <AppProvider>
                 <App />
+                </AppProvider>
             </SnackbarProvider>
         </BrowserRouter>
     </React.StrictMode>,

@@ -32,6 +32,7 @@ import './App.css';
 import Sidebar from "./containers/Sidebar";
 import BMHPortfolioBuilder from "./containers/BMHPortfolioBuilder/BMHPortfolioBuilder";
 import BMHPortfolio from "./containers/BMHPortfolio/BMHPortfolio";
+import MyPortfolio from "./containers/BMHMyPortfolio/MyPortfolio";
 
 const TextEditor = lazy(() => import("./containers/TextEditor"));
 
@@ -71,18 +72,17 @@ function App(props) {
                 {/*<ArticlesPage />*/}
                 {/*<TextEditor/>*/}
 
-                <div style={{width: '15%', maxHeight: '100vh', height: '100vh'}}></div>
+                <div style={{width: '15%', height: '100vh', maxHeight: '100vh'}}></div>
                 <div style={{
-                    width: '15%',
-                    height: '100vh',
-                    maxHeight: '100vh',
-                    overflow: 'auto',
+                     width: '15%',
+               
+                     backgroundColor: '#1F2639',
                     borderRight: '1.5px solid #d3d3d3',
                     position: 'fixed',
                     top: '0',
                     left: '0',
                     zIndex: '900',
-                    backgroundColor: '#fff',
+                  
                 }}><Sidebar setsetStateFunc={setSidebarStateFunc}/></div>
                 <div style={{width: '85%'}}>{setSidebarState ?
                     (<React.Fragment>
@@ -97,6 +97,14 @@ function App(props) {
                             <Route path="/portfolio-builder" render={props => (
                                 <Suspense fallback={<LinearProgress />}>
                                     <BMHPortfolioBuilder
+                                        doc={true}
+                                        setCommands={newState => setSidebarState(newState)}
+                                        {...props} />
+                                </Suspense>)
+                            }/>
+                              <Route path="/my-portfolio" render={props => (
+                                <Suspense fallback={<LinearProgress />}>
+                                    <MyPortfolio
                                         doc={true}
                                         setCommands={newState => setSidebarState(newState)}
                                         {...props} />
@@ -159,7 +167,9 @@ function App(props) {
                                 exact
                                 render={(props) => <SignupPage {...props} setCommands={newState => setSidebarState(newState)}/>}
                             />
-                            <Route path="/login" exact render={(props) => <LoginPage {...props} />}/>
+                            <Route path="/login" exact render={(props) => <umnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn
+                            
+                            Page {...props} />}/>
                             <Route
                                 path="/profile/:userId"
                                 exact

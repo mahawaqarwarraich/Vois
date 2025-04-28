@@ -4,32 +4,36 @@ import About from "../../components/PortfolioBuilder/About/About";
 import Skills from "../../components/PortfolioBuilder/Skills/Skills";
 import Details from "../../components/PortfolioBuilder/Details/Details";
 import Footer from "../../components/PortfolioBuilder/Footer/Footer";
-
+import { useLocation } from 'react-router-dom';
 import {useSpeechRecognition} from "react-speech-recognition";
 import RecentWork from "../../components/PortfolioBuilder/RecentWork/RecentWork";
 import axios from "axios";
 
 const BMHPortfolio = (props) => {
+    const location = useLocation();
+    const portfolioData = location.state?.portfolioData;
+    const parsedData = JSON.parse(portfolioData.PortfolioData);
+    console.log("parsed data", parsedData)
 
     const commands = [
         {
-            command: 'go back',
+            command: 'Go back.',
             callback: () => props.history.goBack(),
             description: 'Go back to the previous page',
         },
         {
-            command: 'view resume',
+            command: 'View resume.',
             callback: () => {
                 window.location.href = 'http://localhost:3001?id=' + JSON.parse(localStorage.getItem("user")).userId + `&tok=${JSON.parse(localStorage.getItem("user")).token}&preview=true`;
             }
         }
         ,
         {
-            command: 'scroll down',
+            command: 'Scroll down.',
             callback: () => window.scrollTo({top: window.pageYOffset+500,behavior:"smooth"}),
         },
         {
-            command: 'scroll up',
+            command: 'Scroll up.',
             callback: () => window.scrollTo({top: window.pageYOffset-500,behavior:"smooth"})
         }
     ];
@@ -45,16 +49,16 @@ const BMHPortfolio = (props) => {
     useEffect(() => {
         if (props.setCommands)
             props.setCommands(commandsAndDesc);
-    }, [])
+    }, [commandsAndDesc, props])
 
 
     return (
         <div>
-            <Header/>
-            <About/>
+            <Header headerName={parsedData?.headername}/>
+            <About about={parsedData?.aboutParagraph}/>
             <RecentWork />
-            <Skills/>
-            <Details email={'muzamilhussain@gmail.com'}/>
+            <Skills skillss={parsedData?.skills}/>
+            <Details email={parsedData?.email}/>
             <Footer/>
         </div>
     );
